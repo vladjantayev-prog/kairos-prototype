@@ -3,38 +3,57 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Kairos — конструктор питания</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f7f9fc;
-      margin: 0;
-      padding: 20px;
-      text-align: center;
-    }
-    .card {
-      background: white;
-      padding: 14px;
-      margin: 10px auto;
-      width: 200px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-      font-size: 18px;
-    }
-  </style>
+  <title>Kairos — конструктор питания (MVP)</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
-  <h2>Конструктор питания</h2>
-  <p>Здесь будет сборка еды как в твоём прототипе.</p>
+  <header class="wrap">
+    <h1>Конструктор питания</h1>
+    <div class="budget">
+      <div class="budget_item"><b id="calUsed">0</b>/<span id="calGoal">1800</span> ккал</div>
+      <div class="budget_item">Б: <b id="pUsed">0</b>/<span id="pGoal">130</span> г</div>
+      <div class="budget_item">У: <b id="cUsed">0</b>/<span id="cGoal">240</span> г</div>
+      <div class="budget_item">Ж: <b id="fUsed">0</b>/<span id="fGoal">60</span> г</div>
+    </div>
+  </header>
 
-  <div class="card">Завтрак</div>
-  <div class="card">Обед</div>
-  <div class="card">Ужин</div>
-  <div class="card">Перекус</div>
+  <main class="wrap grid">
+    <nav class="tabs">
+      <button data-tab="breakfast" class="tab active">Завтрак</button>
+      <button data-tab="lunch" class="tab">Обед</button>
+      <button data-tab="dinner" class="tab">Ужин</button>
+      <button data-tab="snack" class="tab">Перекус</button>
+    </nav>
 
-  <p style="margin-top:40px; font-size:14px; color:#666;">
-     Это тестовая версия. Дальше добавим логику, выбор еды и подсчёт калорий.
-  </p>
+    <section id="screen" class="card">
+      <!-- сюда JS подставит карточки выбора: Белок → Овощи → Гарнир/Жиры -->
+      <div class="hint">Выбери продукты на приём пищи. Нажми «Добавить» — они попадут в корзину и учтутся в КБЖУ.</div>
+      <div id="stepRoot"></div>
+    </section>
+
+    <aside class="card cart">
+      <h3>🧺 Корзина дня</h3>
+      <div id="cartList" class="cart_list"></div>
+      <div class="cart_totals">
+        <div>Калории: <b id="tCal">0</b></div>
+        <div>Белки: <b id="tP">0</b> г</div>
+        <div>Углеводы: <b id="tC">0</b> г</div>
+        <div>Жиры: <b id="tF">0</b> г</div>
+      </div>
+      <div class="cart_actions">
+        <button id="saveMeal" class="btn">Сохранить приём пищи</button>
+        <button id="clearDay" class="btn btn--ghost">Очистить день</button>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="wrap foot">
+    <button id="doublePortion" class="btn btn--ghost">×2 порция (для выделенного)</button>
+    <button id="undo" class="btn btn--ghost">Отменить</button>
+    <button id="sendToBot" class="btn">Отправить в бота (позже)</button>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
