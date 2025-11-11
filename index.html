@@ -4,56 +4,182 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Kairos — конструктор питания (MVP)</title>
+
+  <!-- Стили проекта -->
   <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    /* Небольшие базовые стили, если пока пустой styles.css */
+    :root { --bg:#f6f7fb; --ink:#0b1020; --muted:#6b7292; --brand:#5b6cff; }
+    *{box-sizing:border-box}
+    body{margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; background:var(--bg); color:var(--ink)}
+    .container{max-width:1080px; margin:0 auto; padding:24px 16px}
+    .header{display:flex; align-items:center; justify-content:space-between; gap:12px}
+    .title{font-weight:700; font-size:20px}
+    .card{background:#fff; border-radius:16px; padding:16px; box-shadow:0 6px 24px rgba(0,0,0,.06); margin:12px 0}
+    .budget .macros{display:flex; gap:16px; margin-top:6px; color:var(--muted)}
+    .goals-bar{display:flex; gap:8px; margin:12px 0}
+    .btn-primary{background:var(--brand); color:#fff; border:none; padding:10px 14px; border-radius:10px; cursor:pointer}
+    .btn-ghost{background:transparent; color:var(--brand); border:1px solid var(--brand); padding:10px 14px; border-radius:10px; cursor:pointer}
+    .grid{display:grid; gap:12px}
+    .grid-2{grid-template-columns:1fr 1fr}
+    .grid-4{grid-template-columns:repeat(4,1fr)}
+    @media (max-width:880px){ .grid-2,.grid-4{grid-template-columns:1fr} }
+
+    /* Итог дня */
+    .summary-list{list-style:none; padding:0; margin:0 0 8px}
+    .summary-list li{display:flex; justify-content:space-between; gap:8px; padding:8px 0; border-bottom:1px dashed #eee}
+    .summary-list button{border:none; background:transparent; color:#c33; cursor:pointer}
+    .totals{display:flex; gap:16px; font-weight:600}
+
+    /* Модалка */
+    .modal{position:fixed; inset:0; display:none}
+    .modal[aria-hidden="false"]{display:block}
+    .modal__backdrop{position:absolute; inset:0; background:rgba(0,0,0,.45)}
+    .modal__dialog{position:relative; max-width:760px; margin:6vh auto; background:#fff; border-radius:18px; padding:20px}
+    .modal__actions{display:flex; justify-content:flex-end; gap:8px; margin-top:10px}
+    .hint{font-size:12px; color:#666; margin-top:6px}
+    label{display:block; font-size:14px; color:var(--muted)}
+    input,select{width:100%; margin-top:6px; padding:10px 12px; border-radius:10px; border:1px solid #e6e7ef; background:#fafbff}
+    details{margin-top:8px}
+  </style>
 </head>
 <body>
-  <header class="wrap">
-    <h1>Конструктор питания</h1>
-    <div class="budget">
-      <div class="budget_item"><b id="calUsed">0</b>/<span id="calGoal">1800</span> ккал</div>
-      <div class="budget_item">Б: <b id="pUsed">0</b>/<span id="pGoal">130</span> г</div>
-      <div class="budget_item">У: <b id="cUsed">0</b>/<span id="cGoal">240</span> г</div>
-      <div class="budget_item">Ж: <b id="fUsed">0</b>/<span id="fGoal">60</span> г</div>
-    </div>
-  </header>
+  <div class="container">
 
-  <main class="wrap grid">
-    <nav class="tabs">
-      <button data-tab="breakfast" class="tab active">Завтрак</button>
-      <button data-tab="lunch" class="tab">Обед</button>
-      <button data-tab="dinner" class="tab">Ужин</button>
-      <button data-tab="snack" class="tab">Перекус</button>
-    </nav>
+    <!-- Шапка -->
+    <header class="header">
+      <div class="title">Kairos — конструктор питания</div>
+      <nav class="header__actions">
+        <button id="openOnboarding" class="btn-ghost">Настроить цели</button>
+      </nav>
+    </header>
 
-    <section id="screen" class="card">
-      <!-- сюда JS подставит карточки выбора: Белок → Овощи → Гарнир/Жиры -->
-      <div class="hint">Выбери продукты на приём пищи. Нажми «Добавить» — они попадут в корзину и учтутся в КБЖУ.</div>
-      <div id="stepRoot"></div>
+    <!-- Бюджет/цели -->
+    <section class="budget card">
+      <div>Твой дневной бюджет: <strong id="budgetKcal">—</strong> калорий</div>
+      <div class="macros">
+        <span>Белки: <strong id="goalP">—</strong> г</span>
+        <span>Углеводы: <strong id="goalC">—</strong> г</span>
+        <span>Жиры: <strong id="goalF">—</strong> г</span>
+      </div>
     </section>
 
-    <aside class="card cart">
-      <h3>🧺 Корзина дня</h3>
-      <div id="cartList" class="cart_list"></div>
-      <div class="cart_totals">
-        <div>Калории: <b id="tCal">0</b></div>
-        <div>Белки: <b id="tP">0</b> г</div>
-        <div>Углеводы: <b id="tC">0</b> г</div>
-        <div>Жиры: <b id="tF">0</b> г</div>
-      </div>
-      <div class="cart_actions">
-        <button id="saveMeal" class="btn">Сохранить приём пищи</button>
-        <button id="clearDay" class="btn btn--ghost">Очистить день</button>
-      </div>
-    </aside>
-  </main>
+    <!-- Быстрые действия -->
+    <div class="goals-bar">
+      <button id="resetDay" class="btn-ghost">Сбросить день</button>
+      <button id="openMeals" class="btn-primary">Собрать приём пищи</button>
+    </div>
 
-  <footer class="wrap foot">
-    <button id="doublePortion" class="btn btn--ghost">×2 порция (для выделенного)</button>
-    <button id="undo" class="btn btn--ghost">Отменить</button>
-    <button id="sendToBot" class="btn">Отправить в бота (позже)</button>
-  </footer>
+    <!-- Блоки экранов приёмов пищи (пока простые-заглушки: вставишь свои карточки) -->
+    <section class="card">
+      <h3>Приёмы пищи</h3>
+      <div class="grid grid-4">
+        <button class="btn-ghost" data-meal="breakfast">Завтрак</button>
+        <button class="btn-ghost" data-meal="lunch">Обед</button>
+        <button class="btn-ghost" data-meal="dinner">Ужин</button>
+        <button class="btn-ghost" data-meal="snack">Перекус</button>
+      </div>
+      <p style="color:#6b7292;margin-top:10px">Тут рендерятся твои экраны выбора: белок → гарнир → овощи → жиры и т.д. 
+        В обработчиках клика просто вызывай <code>addToDay({...})</code>.</p>
+    </section>
 
-  <script src="data.js"></script>
+    <!-- Итог дня -->
+    <section class="summary card">
+      <h3>Итог дня</h3>
+      <ul id="summaryList" class="summary-list"></ul>
+      <div class="totals">
+        <div>Калории: <strong id="sumKcal">0</strong></div>
+        <div>Белки: <strong id="sumP">0 г</strong></div>
+        <div>Углеводы: <strong id="sumC">0 г</strong></div>
+        <div>Жиры: <strong id="sumF">0 г</strong></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Модалка онбординга -->
+  <div class="modal" id="onboardingModal" aria-hidden="true">
+    <div class="modal__backdrop" data-close></div>
+    <div class="modal__dialog">
+      <h3>Параметры для расчёта</h3>
+      <form id="onboardingForm">
+        <div class="grid grid-2">
+          <label>Пол
+            <select name="sex" required>
+              <option value="male">Мужской</option>
+              <option value="female">Женский</option>
+            </select>
+          </label>
+          <label>Возраст
+            <input name="age" type="number" min="14" max="90" required />
+          </label>
+          <label>Рост (см)
+            <input name="height" type="number" min="120" max="230" required />
+          </label>
+          <label>Вес (кг)
+            <input name="weight" type="number" step="0.1" min="35" max="250" required />
+          </label>
+          <label>Активность
+            <select name="activity" required>
+              <option value="1.2">Минимальная</option>
+              <option value="1.375">Лёгкая (1–3 трен/нед)</option>
+              <option value="1.55">Средняя (3–5 трен/нед)</option>
+              <option value="1.725">Высокая (6–7 трен/нед)</option>
+              <option value="1.9">Очень высокая</option>
+            </select>
+          </label>
+          <label>Цель
+            <select name="goal" required>
+              <option value="cut">Похудение</option>
+              <option value="recomp">Поддержание/Рекомп</option>
+              <option value="bulk">Набор массы</option>
+            </select>
+          </label>
+        </div>
+
+        <details>
+          <summary>Продвинутые (оставь как есть, если не уверен)</summary>
+          <div class="grid grid-2">
+            <label>Белок (г/кг)
+              <input name="pPerKg" type="number" step="0.1" value="1.8" />
+            </label>
+            <label>Жиры (г/кг)
+              <input name="fPerKg" type="number" step="0.1" value="0.8" />
+            </label>
+            <label>Дефицит/профицит (%)
+              <input name="deltaPct" type="number" step="1" value="15" />
+            </label>
+          </div>
+        </details>
+
+        <div class="modal__actions">
+          <button type="button" class="btn-ghost" data-close>Отмена</button>
+          <button type="submit" class="btn-primary">Сохранить</button>
+        </div>
+        <p class="hint">Формула Миффлина—Сан Жеора. Макросы: белок и жир — по массе тела, углеводы — остаток калорий.</p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Данные (по желанию). Если нет файла, просто убери эту строку -->
+  <script type="module" src="data.js"></script>
+
+  <!-- Логика приложения -->
   <script src="app.js"></script>
+
+  <script>
+    // Быстрый UX: открыть модалку с кнопки и закрытие по фону
+    const modal = document.getElementById('onboardingModal');
+    document.getElementById('openOnboarding')?.addEventListener('click', ()=> modal.setAttribute('aria-hidden','false'));
+    modal?.addEventListener('click', (e)=>{ if(e.target.dataset.close!==undefined) modal.setAttribute('aria-hidden','true'); });
+
+    // Заглушка: если нет сохранённых целей — показать онбординг при первом заходе (app.js также это делает, но дубль не повредит)
+    if(!localStorage.getItem('kairos_goals_v1')) modal.setAttribute('aria-hidden','false');
+
+    // Кнопка «Собрать приём пищи» — просто скролл к блоку (потом подцепим реальный рендер)
+    document.getElementById('openMeals')?.addEventListener('click', ()=>{
+      document.querySelector('.summary')?.scrollIntoView({behavior:'smooth'});
+    });
+  </script>
 </body>
 </html>
