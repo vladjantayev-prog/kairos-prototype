@@ -1,107 +1,373 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kairos — конструктор питания</title>
-  <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kairos - мини-приложение для управления временем">
+    <title>Kairos</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 420px;
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:active {
+            transform: scale(0.98);
+        }
+
+        .card h3 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+
+        .button:active {
+            opacity: 0.8;
+            transform: scale(0.98);
+        }
+
+        .button-secondary {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            color: #333;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .input-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .list-item {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .list-item-content {
+            flex: 1;
+        }
+
+        .list-item-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .list-item-subtitle {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            background: #667eea;
+            color: white;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .footer {
+            padding: 15px 20px;
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                border-radius: 0;
+                min-height: 100vh;
+            }
+
+            body {
+                padding: 0;
+            }
+        }
+    </style>
 </head>
 <body>
-  <main class="app">
-    <header class="app-header">
-      <h1>Kairos — конструктор питания</h1>
-      <button id="openParams" class="primary-btn">Настроить цели</button>
-    </header>
+    <div class="container">
+        <div class="header">
+            <h1>Kairos</h1>
+            <p>Управление временем</p>
+        </div>
 
-    <section class="card">
-      <h2>Твой дневной бюджет</h2>
-      <p id="dailyCalories">Пока не рассчитан</p>
-    </section>
+        <div class="content" id="content">
+            <!-- Главный экран -->
+            <div id="mainScreen">
+                <div class="card">
+                    <h3>Добро пожаловать!</h3>
+                    <p>Начните использовать Kairos для эффективного управления вашим временем.</p>
+                </div>
 
-    <section class="card">
-      <h2>Итог дня</h2>
-      <p>Калории: <span id="sumCalories">0</span></p>
-      <p>Белки: <span id="sumProtein">0</span> г</p>
-      <p>Углеводы: <span id="sumCarbs">0</span> г</p>
-      <p>Жиры: <span id="sumFat">0</span> г</p>
-    </section>
-  </main>
+                <button class="button" onclick="showScreen('tasks')">
+                    Задачи
+                </button>
+                <button class="button button-secondary" onclick="showScreen('settings')">
+                    Настройки
+                </button>
+            </div>
 
-  <!-- Модалка с анкетой -->
-  <div id="paramsModal" class="modal" aria-hidden="true">
-    <div class="modal__backdrop" data-close="1"></div>
-    <div class="modal__window">
-      <h2>Параметры для расчёта</h2>
+            <!-- Экран задач -->
+            <div id="tasksScreen" class="hidden">
+                <div class="input-group">
+                    <label>Новая задача</label>
+                    <input type="text" id="taskInput" placeholder="Введите название задачи">
+                </div>
+                <button class="button" onclick="addTask()">Добавить задачу</button>
+                
+                <div id="tasksList" style="margin-top: 20px;"></div>
+            </div>
 
-      <div class="grid-2">
-        <label>
-          Пол
-          <select id="gender">
-            <option value="male">Мужской</option>
-            <option value="female">Женский</option>
-          </select>
-        </label>
+            <!-- Экран настроек -->
+            <div id="settingsScreen" class="hidden">
+                <div class="card">
+                    <h3>О приложении</h3>
+                    <p>Kairos v1.0.0</p>
+                    <p style="margin-top: 10px;">Мини-приложение для управления временем и задачами.</p>
+                </div>
+                <button class="button button-secondary" onclick="showScreen('main')">
+                    Назад
+                </button>
+            </div>
+        </div>
 
-        <label>
-          Возраст
-          <input id="age" type="number" min="10" max="90" inputmode="numeric" />
-        </label>
-
-        <label>
-          Рост (см)
-          <input id="height" type="number" min="120" max="230" inputmode="numeric" />
-        </label>
-
-        <label>
-          Вес (кг)
-          <input id="weight" type="number" min="35" max="250" inputmode="numeric" />
-        </label>
-
-        <label>
-          Активность
-          <select id="activity">
-            <option value="1.2">Минимальная</option>
-            <option value="1.375">Лёгкая (1–3 тренировки)</option>
-            <option value="1.55">Средняя (3–5 тренировок)</option>
-            <option value="1.725">Высокая (6+ трен.)</option>
-          </select>
-        </label>
-
-        <label>
-          Цель
-          <select id="goal">
-            <option value="loss">Похудение</option>
-            <option value="maintain">Поддержание</option>
-            <option value="gain">Набор</option>
-          </select>
-        </label>
-      </div>
-
-      <p class="hint">
-        Формула Миффлина—Сан Жеора. Макросы: белок и жир — по массе тела, углеводы — остаток калорий.
-      </p>
-
-      <div class="modal__actions">
-        <button type="button" class="secondary-btn" data-close="1">Отмена</button>
-        <button type="button" class="primary-btn" id="saveParamsBtn">Сохранить</button>
-      </div>
+        <div class="footer">
+            © 2025 Kairos
+        </div>
     </div>
-  </div>
 
-  <!-- Telegram SDK -->
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        // Инициализация Telegram Web App
+        const tg = window.Telegram?.WebApp;
 
-  <!-- Твой JS -->
-  <script src="data.js"></script>
-  <script src="app.js"></script>
+        if (tg) {
+            tg.ready();      // сказать Телеге: всё ок
+            tg.expand();     // развернуть на весь экран
+            
+            // Использование цветов темы Telegram (опционально)
+            if (tg.themeParams) {
+                document.documentElement.style.setProperty('--tg-theme-bg-color', tg.themeParams.bg_color || '#ffffff');
+                document.documentElement.style.setProperty('--tg-theme-text-color', tg.themeParams.text_color || '#000000');
+                document.documentElement.style.setProperty('--tg-theme-button-color', tg.themeParams.button_color || '#667eea');
+                document.documentElement.style.setProperty('--tg-theme-button-text-color', tg.themeParams.button_text_color || '#ffffff');
+            }
+        }
 
-  <!-- Инициализация мини-аппа -->
-  <script>
-    const tg = window.Telegram?.WebApp;
-    if (tg) {
-      tg.ready();
-      tg.expand();
-    }
-  </script>
+        let tasks = JSON.parse(localStorage.getItem('kairos_tasks') || '[]');
+
+        function showScreen(screenName) {
+            // Скрыть все экраны
+            document.getElementById('mainScreen').classList.add('hidden');
+            document.getElementById('tasksScreen').classList.add('hidden');
+            document.getElementById('settingsScreen').classList.add('hidden');
+
+            // Показать нужный экран
+            if (screenName === 'main') {
+                document.getElementById('mainScreen').classList.remove('hidden');
+            } else if (screenName === 'tasks') {
+                document.getElementById('tasksScreen').classList.remove('hidden');
+                renderTasks();
+            } else if (screenName === 'settings') {
+                document.getElementById('settingsScreen').classList.remove('hidden');
+            }
+        }
+
+        function addTask() {
+            const input = document.getElementById('taskInput');
+            const taskText = input.value.trim();
+            
+            if (taskText) {
+                const task = {
+                    id: Date.now(),
+                    text: taskText,
+                    completed: false,
+                    createdAt: new Date().toISOString()
+                };
+                tasks.push(task);
+                saveTasks();
+                input.value = '';
+                renderTasks();
+            }
+        }
+
+        function deleteTask(id) {
+            tasks = tasks.filter(task => task.id !== id);
+            saveTasks();
+            renderTasks();
+        }
+
+        function toggleTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (task) {
+                task.completed = !task.completed;
+                saveTasks();
+                renderTasks();
+            }
+        }
+
+        function saveTasks() {
+            localStorage.setItem('kairos_tasks', JSON.stringify(tasks));
+        }
+
+        function renderTasks() {
+            const tasksList = document.getElementById('tasksList');
+            
+            if (tasks.length === 0) {
+                tasksList.innerHTML = '<div class="card"><p style="text-align: center; color: #999;">Нет задач. Добавьте первую задачу!</p></div>';
+                return;
+            }
+
+            tasksList.innerHTML = tasks.map(task => `
+                <div class="list-item" style="opacity: ${task.completed ? '0.6' : '1'};">
+                    <div class="list-item-content" onclick="toggleTask(${task.id})">
+                        <div class="list-item-title" style="text-decoration: ${task.completed ? 'line-through' : 'none'}">
+                            ${escapeHtml(task.text)}
+                        </div>
+                        <div class="list-item-subtitle">
+                            ${new Date(task.createdAt).toLocaleDateString('ru-RU')}
+                        </div>
+                    </div>
+                    <button onclick="deleteTask(${task.id})" style="background: #dc3545; color: white; border: none; border-radius: 6px; padding: 8px 12px; font-size: 12px; cursor: pointer; margin-left: 10px;">
+                        Удалить
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Обработка Enter в поле ввода задачи
+        document.getElementById('taskInput')?.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addTask();
+            }
+        });
+
+        // Инициализация
+        if (tasks.length > 0) {
+            renderTasks();
+        }
+    </script>
 </body>
 </html>
