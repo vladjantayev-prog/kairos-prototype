@@ -147,3 +147,37 @@ el('#doublePortion').onclick = ()=>{
 
 // init
 renderTabs(); renderStep(); recalcTotals(); renderCart();
+document.addEventListener('DOMContentLoaded', () => {
+    const saveBtn = document.getElementById('saveParamsBtn');
+
+    saveBtn?.addEventListener('click', () => {
+        const gender = document.getElementById('gender').value;
+        const age = document.getElementById('age').value;
+        const height = document.getElementById('height').value;
+        const weight = document.getElementById('weight').value;
+        const activity = document.getElementById('activity').value;
+        const goal = document.getElementById('goal').value;
+
+        if (!age || !height || !weight) {
+            alert("Пожалуйста, заполните обязательные поля ✅");
+            return;
+        }
+
+        const userParams = {
+            gender,
+            age,
+            height,
+            weight,
+            activity,
+            goal,
+        };
+
+        localStorage.setItem('kairos_user_params', JSON.stringify(userParams));
+
+        alert("Сохранено ✅");
+
+        if (window.Telegram && Telegram.WebApp) {
+            Telegram.WebApp.close();
+        }
+    });
+});
