@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kairos — конструктор питания</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f9fc;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    .card {
+      background: white;
+      padding: 14px;
+      margin: 10px auto;
+      width: 200px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      font-size: 18px;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>Конструктор питания</h2>
+  <p>Здесь будет сборка еды как в твоём прототипе.</p>
+
+  <div class="card">Завтрак</div>
+  <div class="card">Обед</div>
+  <div class="card">Ужин</div>
+  <div class="card">Перекус</div>
+
+  <p style="margin-top:40px; font-size:14px; color:#666;">
+     Это тестовая версия. Дальше добавим логику, выбор еды и подсчёт калорий.
+  </p>
+</body>
+</html>
