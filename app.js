@@ -150,34 +150,54 @@ renderTabs(); renderStep(); recalcTotals(); renderCart();
 document.addEventListener('DOMContentLoaded', () => {
     const saveBtn = document.getElementById('saveParamsBtn');
 
-    saveBtn?.addEventListener('click', () => {
-        const gender = document.getElementById('gender').value;
-        const age = document.getElementById('age').value;
-        const height = document.getElementById('height').value;
-        const weight = document.getElementById('weight').value;
-        const activity = document.getElementById('activity').value;
-        const goal = document.getElementById('goal').value;
+// ===== Сохранение анкеты (максимально "живучее") =====
+(function attachSaveHandler() {
+  function save() {
+    const g  = document.getElementById('gender')?.value ?? '';
+    const a  = document.getElementById('age')?.value ?? '';
+    const h  = document.getElementById('height')?.value ?? '';
+    const w  = document.getElementById('weight')?.value ?? '';
+    const ac = document.getElementById('activity')?.value ?? '';
+    const go = document.getElementById('goal')?.value ?? '';
 
-        if (!age || !height || !weight) {
-            alert("Пожалуйста, заполните обязательные поля ✅");
-            return;
-        }
+    if (!a || !h || !w) {
+      alert('Пожалуйста, заполните возраст, рост и вес ✅');
+      return;
+    }
 
-        const userParams = {
-            gender,
-            age,
-            height,
-            weight,
-            activity,
-            goal,
-        };
+    const params = { gender: g, age: +a, height: +h, weight: +w, activity: ac, goal: go };
+    try {
+      localStorage.setItem('kairos_user_params', JSON.stringify(params));
+    } catch (e) {
+      console.error('localStorage error', e);
+    }
 
-        localStorage.setItem('kairos_user_params', JSON.stringify(userParams));
+    alert('Сохранено ✅');
+    if (window.Telegram?.WebApp?.close) {
+      window.Telegram.WebApp.close(); // закроем мини-апп
+    }
+  }
 
-        alert("Сохранено ✅");
+  // 1) Прямое навешивание на кнопку по id
+  function bind() {
+    const btn = document.getElementById('saveParamsBtn');
+    if (btn && !btn.dataset.bound) {
+      btn.addEventListener('click', (e) => { e.preventDefault(); save(); });
+      btn.dataset.bound = '1';
+    }
+  }
 
-        if (window.Telegram && Telegram.WebApp) {
-            Telegram.WebApp.close();
-        }
-    });
-});
+  // 2) Делегирование на весь документ (если кнопка рендерится динамически)
+  document.addEventListener('click', (e) => {
+    const el = e.target;
+    if (el && el.id === 'saveParamsBtn') {
+      e.preventDefault();
+      save();
+    }
+  });
+
+  // 3) Пробуем привязаться при загрузке и если DOM перерисуют
+  document.addEventListener('DOMContentLoaded', bind);
+  window.addEventListener('load', bind);
+  setTimeout(bind, 300);
+})();
