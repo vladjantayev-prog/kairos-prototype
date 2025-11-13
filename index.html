@@ -717,8 +717,44 @@
                     Ты можешь "тратить" его на еду, собирая приёмы пищи в конструкторе. Чем лучше ты распределяешь бюджет, тем сильнее становится твой бог! ⚡
                 </p>
             </div>
-            <button class="btn btn-primary" id="continue-to-hero" style="margin-top: 24px;">Понятно, продолжить →</button>
+            <button class="btn btn-primary" id="continue-to-mode" style="margin-top: 24px;">Понятно, продолжить →</button>
             <button class="btn btn-secondary" id="back-to-form" style="margin-top: 12px;">← Назад к анкете</button>
+        </section>
+
+        <!-- Mode Selection -->
+        <section id="mode-selection" class="card hidden">
+            <h1>Выбери способ контроля</h1>
+            <p class="subtitle">Как тебе удобнее отслеживать питание?</p>
+            
+            <div class="info-section" style="margin-bottom: 24px;">
+                <h3>📊 Вариант 1: Цифры</h3>
+                <p style="color: rgba(255, 255, 255, 0.9); line-height: 1.6; margin: 0;">
+                    Считаем калории и БЖУ точно. Видишь цифры, прогресс-бары, остаток бюджета. 
+                    Подходит для тех, кто любит точность и контроль.
+                </p>
+            </div>
+            
+            <div class="info-section" style="margin-bottom: 24px;">
+                <h3>🎮 Вариант 2: Интуитивно (баллы)</h3>
+                <p style="color: rgba(255, 255, 255, 0.9); line-height: 1.6; margin: 0;">
+                    Без строгого подсчёта калорий. Добавляешь продукты — получаешь XP и бонусы по трекам прокачки. 
+                    Фокус на качестве питания и привычках, а не на цифрах.
+                </p>
+            </div>
+            
+            <div class="options-grid" style="margin-top: 24px;">
+                <div class="option-card" id="mode-numbers" onclick="selectTrackingMode('numbers')">
+                    <div class="option-name">📊 Цифры</div>
+                    <div class="option-portion">Точный подсчёт КБЖУ</div>
+                </div>
+                <div class="option-card" id="mode-intuitive" onclick="selectTrackingMode('intuitive')">
+                    <div class="option-name">🎮 Интуитивно</div>
+                    <div class="option-portion">XP и треки прокачки</div>
+                </div>
+            </div>
+            
+            <button class="btn btn-primary" id="continue-to-hero" style="margin-top: 24px; display: none;">Продолжить →</button>
+            <button class="btn btn-secondary" id="back-to-results" style="margin-top: 12px;">← Назад</button>
         </section>
 
         <!-- Hero Selection -->
@@ -824,20 +860,30 @@
                     <div class="menu-icon">😴</div>
                     <div class="menu-title">Сон</div>
                 </div>
+                <div class="menu-card" onclick="addWater()">
+                    <div class="menu-icon">💧</div>
+                    <div class="menu-title">Вода 300 мл</div>
+                </div>
             </main>
 
             <!-- Hero Widget -->
             <div class="hero-widget">
                 <div class="hero-avatar" id="hero-avatar">⚡</div>
                 <div class="hero-level" id="hero-name">Зевс</div>
+                <div id="hero-level-text" style="font-size: 16px; color: rgba(255, 255, 255, 0.7); margin-bottom: 8px;">Уровень 1</div>
+                <div id="hero-streak" style="font-size: 14px; color: #ffd700; margin-bottom: 12px;">🔥 Серия: 0 дней</div>
                 <div class="hero-progress">
                     <div class="hero-progress-bar" id="hero-progress-bar" style="width: 0%"></div>
                 </div>
-                <div style="font-size: 18px; font-weight: 700; color: #ffd700; margin-bottom: 16px;">
-                    <span id="hero-points">0</span> / 100 баллов
+                <div style="font-size: 16px; font-weight: 700; color: #ffd700; margin-bottom: 16px;">
+                    <span id="hero-points">0 / 100 XP</span>
                 </div>
-                <div id="achievements-list" style="text-align: left; font-size: 13px; line-height: 1.8;">
-                    <div style="color: rgba(255, 255, 255, 0.5); font-style: italic;">Выполни задачи, чтобы получить баллы</div>
+                <!-- Треки прокачки -->
+                <div id="tracks-display" style="text-align: left; font-size: 12px; line-height: 1.6;">
+                    <div style="color: rgba(255, 255, 255, 0.7); margin-bottom: 8px; font-weight: 600;">Треки прокачки:</div>
+                    <div id="tracks-list">
+                        <div style="color: rgba(255, 255, 255, 0.5); font-style: italic;">Добавляй продукты для прокачки</div>
+                    </div>
                 </div>
             </div>
 
@@ -1013,9 +1059,168 @@
     <script>
         // Инициализация Telegram Web App
         const tg = window.Telegram?.WebApp;
+        let telegramUser = null;
+        let telegramInitData = null;
+
         if (tg) {
+            // Инициализация приложения
             tg.ready();
             tg.expand();
+            
+            // Получаем данные пользователя
+            telegramUser = tg.initDataUnsafe?.user || null;
+            telegramInitData = tg.initData || null;
+            
+            // Используем цвета темы Telegram, если доступны
+            if (tg.themeParams) {
+                // Применяем цвета темы к CSS переменным
+                const root = document.documentElement;
+                
+                if (tg.themeParams.bg_color) {
+                    // Можно использовать цвет фона Telegram, но сохраняем наш греческий стиль
+                    // root.style.setProperty('--tg-theme-bg-color', tg.themeParams.bg_color);
+                }
+                
+                if (tg.themeParams.text_color) {
+                    // Можно использовать цвет текста Telegram
+                    // root.style.setProperty('--tg-theme-text-color', tg.themeParams.text_color);
+                }
+                
+                if (tg.themeParams.button_color) {
+                    // Используем цвет кнопок Telegram для акцентов
+                    // root.style.setProperty('--tg-theme-button-color', tg.themeParams.button_color);
+                }
+                
+                if (tg.themeParams.button_text_color) {
+                    // root.style.setProperty('--tg-theme-button-text-color', tg.themeParams.button_text_color);
+                }
+            }
+            
+            // Настройка главной кнопки (MainButton)
+            tg.MainButton.setText('Сохранить');
+            tg.MainButton.color = '#ffd700';
+            tg.MainButton.textColor = '#1a1a2e';
+            
+            // Обработчик клика на главную кнопку будет устанавливаться динамически
+            // в функциях nextStep() и selectOption()
+            
+            // Настройка кнопки "Назад"
+            tg.BackButton.hide(); // Скрываем по умолчанию, показываем при необходимости
+            tg.BackButton.onClick(() => {
+                // Логика возврата будет добавлена в функции навигации
+                handleBackButton();
+            });
+            
+            // Обработка изменения видимости
+            tg.onEvent('viewportChanged', (event) => {
+                // Адаптация под изменение размера окна
+                console.log('Viewport changed:', event);
+            });
+            
+            // Обработка закрытия приложения
+            tg.onEvent('close', () => {
+                // Можно отправить финальные данные в бота перед закрытием
+                sendDataToBot();
+            });
+            
+            // Включение закрытия по свайпу вниз
+            tg.enableClosingConfirmation();
+            
+            // Показываем информацию о пользователе в консоли (для отладки)
+            if (telegramUser) {
+                console.log('Telegram User:', {
+                    id: telegramUser.id,
+                    first_name: telegramUser.first_name,
+                    username: telegramUser.username
+                });
+                
+                // Персонализируем приветствие
+                const welcomeText = document.querySelector('#onboarding-step1 .subtitle');
+                if (welcomeText && telegramUser.first_name) {
+                    welcomeText.textContent = `${telegramUser.first_name}, давайте рассчитаем вашу норму калорий и белка`;
+                }
+            }
+        }
+        
+        // Функция для отправки данных в бота
+        function sendDataToBot() {
+            if (!tg || !telegramInitData) return;
+            
+            const data = {
+                userData: userData,
+                meals: allMeals,
+                dailyUsed: dailyUsed,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Отправка данных через sendData
+            // tg.sendData(JSON.stringify(data));
+            
+            // Или через postEvent для отправки в бота
+            // tg.postEvent('data', data);
+            
+            console.log('Data to send:', data);
+        }
+        
+        // Функция для обработки кнопки "Назад"
+        function handleBackButton() {
+            // Проверяем текущий экран и возвращаемся назад
+            const sections = ['plate-guide', 'constructor', 'activity', 'problems', 'sleep'];
+            const visibleSection = sections.find(id => {
+                const el = document.getElementById(id);
+                return el && !el.classList.contains('hidden');
+            });
+            
+            if (visibleSection) {
+                showMainMenu();
+                tg.HapticFeedback.impactOccurred('light');
+            } else if (!document.getElementById('app-main').classList.contains('hidden')) {
+                // Если мы в главном меню, можно закрыть приложение или показать меню
+                tg.BackButton.hide();
+            }
+        }
+        
+        // Функция для вибрации при действиях
+        function hapticFeedback(type = 'light') {
+            if (tg && tg.HapticFeedback) {
+                tg.HapticFeedback.impactOccurred(type);
+            }
+        }
+        
+        // Функция для показа уведомления через Telegram
+        function showTelegramAlert(message, callback) {
+            if (tg && tg.showAlert) {
+                tg.showAlert(message, callback);
+            } else {
+                alert(message);
+                if (callback) callback();
+            }
+        }
+        
+        // Функция для показа подтверждения через Telegram
+        function showTelegramConfirm(message, callback) {
+            if (tg && tg.showConfirm) {
+                tg.showConfirm(message, callback);
+            } else {
+                const result = confirm(message);
+                if (callback) callback(result);
+            }
+        }
+        
+        // Функция для открытия ссылки через Telegram
+        function openTelegramLink(url) {
+            if (tg && tg.openLink) {
+                tg.openLink(url);
+            } else {
+                window.open(url, '_blank');
+            }
+        }
+        
+        // Функция для закрытия приложения
+        function closeTelegramApp() {
+            if (tg && tg.close) {
+                tg.close();
+            }
         }
 
         const heroData = {
@@ -1029,18 +1234,21 @@
 
         let userData = JSON.parse(localStorage.getItem('kairos_userData') || 'null');
         let selectedHero = null;
-        let dailyTargets = {
-            calories: 1800,
-            protein: 90,
-            carbs: 200,
-            fats: 60
-        };
-
+        
         let dailyUsed = {
             calories: 0,
             protein: 0,
             carbs: 0,
-            fats: 0
+            fats: 0,
+            fiber: 0
+        };
+        
+        let dailyTargets = {
+            calories: 1800,
+            protein: 90,
+            carbs: 200,
+            fats: 60,
+            fiber: 30 // Примерная норма клетчатки
         };
 
         let currentMeal = {
@@ -1051,68 +1259,292 @@
         };
 
         let allMeals = JSON.parse(localStorage.getItem('kairos_meals') || '[]');
+        
+        // Система треков прокачки (7 направлений)
+        const TRACKS = {
+            MUSCLES: { id: 'muscles', name: 'Мышцы/сила', icon: '💪', color: '#ff6b6b' },
+            ENERGY: { id: 'energy', name: 'Энергия/выносливость', icon: '⚡', color: '#ffd93d' },
+            IMMUNITY: { id: 'immunity', name: 'Иммунитет/воспаление', icon: '🛡️', color: '#6bcf7f' },
+            HORMONES: { id: 'hormones', name: 'Гормоны/восстановление', icon: '🔄', color: '#4ecdc4' },
+            GUT: { id: 'gut', name: 'ЖКТ/микробиота', icon: '🌱', color: '#95e1d3' },
+            SKIN: { id: 'skin', name: 'Кожа/волосы', icon: '✨', color: '#f38181' },
+            BRAIN: { id: 'brain', name: 'Мозг/фокус', icon: '🧠', color: '#a8e6cf' }
+        };
+        
+        // Треки пользователя
+        let userTracks = JSON.parse(localStorage.getItem('kairos_tracks') || JSON.stringify({
+            muscles: 0, energy: 0, immunity: 0, hormones: 0, gut: 0, skin: 0, brain: 0
+        }));
+        
+        // Общий XP и уровень
+        let userXP = parseInt(localStorage.getItem('kairos_xp') || '0');
+        let userLevel = parseInt(localStorage.getItem('kairos_level') || '1');
+        let streak = parseInt(localStorage.getItem('kairos_streak') || '0');
+        let lastActiveDate = localStorage.getItem('kairos_lastActiveDate') || null;
+        
+        // Режим учёта: 'numbers' или 'intuitive'
+        let trackingMode = localStorage.getItem('kairos_trackingMode') || 'numbers';
+        
+        // База данных продуктов
+        const FOODS = {
+            // БЕЛКИ
+            egg_1: { id: 'egg_1', group: 'protein', label: 'Яйцо', portion: '1 шт (55 г)', p: 6, c: 0, f: 5, kcal: 70, meals: ['breakfast', 'lunch', 'dinner', 'snack'], baseQty: 1 },
+            chicken_120: { id: 'chicken_120', group: 'protein', label: 'Курица', portion: '120 г готового', p: 26, c: 0, f: 6, kcal: 160, meals: ['lunch', 'dinner'], baseQty: 1 },
+            turkey_120: { id: 'turkey_120', group: 'protein', label: 'Индейка', portion: '120 г готового', p: 25, c: 0, f: 4, kcal: 136, meals: ['lunch', 'dinner'], baseQty: 1 },
+            whitefish_120: { id: 'whitefish_120', group: 'protein', label: 'Рыба белая', portion: '120 г', p: 24, c: 0, f: 3, kcal: 123, meals: ['lunch', 'dinner'], baseQty: 1 },
+            salmon_120: { id: 'salmon_120', group: 'protein', label: 'Лосось', portion: '120 г', p: 24, c: 0, f: 12, kcal: 204, meals: ['lunch', 'dinner'], baseQty: 1 },
+            tuna_120: { id: 'tuna_120', group: 'protein', label: 'Тунец консерв.', portion: '120 г (в с/с)', p: 26, c: 0, f: 1, kcal: 113, meals: ['lunch', 'dinner'], baseQty: 1 },
+            cottage_5_150: { id: 'cottage_5_150', group: 'protein', label: 'Творог 5%', portion: '150 г', p: 22, c: 6, f: 7, kcal: 175, meals: ['breakfast', 'snack', 'dinner'], baseQty: 1 },
+            greek_150: { id: 'greek_150', group: 'protein', label: 'Йогурт греческий 2%', portion: '150 г', p: 17, c: 6, f: 3, kcal: 119, meals: ['breakfast', 'snack'], baseQty: 1 },
+            tofu_100: { id: 'tofu_100', group: 'protein', label: 'Тофу', portion: '100 г', p: 12, c: 3, f: 7, kcal: 123, meals: ['lunch', 'dinner', 'breakfast'], baseQty: 1 },
+            shake_1: { id: 'shake_1', group: 'protein', label: 'Протеиновый напиток', portion: '1 порция', p: 25, c: 2, f: 2, kcal: 120, meals: ['breakfast', 'snack', 'postworkout'], baseQty: 1 },
+            
+            // УГЛЕВОДЫ
+            rice_100: { id: 'rice_100', group: 'carb', label: 'Рис бурый', portion: '100 г готового', p: 2, c: 23, f: 1, kcal: 110, meals: ['lunch', 'dinner'], baseQty: 1, slowCarb: true },
+            buckwheat_100: { id: 'buckwheat_100', group: 'carb', label: 'Гречка', portion: '100 г готового', p: 3.5, c: 20, f: 1, kcal: 105, meals: ['lunch', 'dinner'], baseQty: 1, slowCarb: true },
+            bulgur_100: { id: 'bulgur_100', group: 'carb', label: 'Булгур', portion: '100 г готового', p: 3, c: 21, f: 0.5, kcal: 100, meals: ['lunch', 'dinner'], baseQty: 1, slowCarb: true },
+            potato_150: { id: 'potato_150', group: 'carb', label: 'Картофель', portion: '150 г', p: 3, c: 27, f: 0, kcal: 120, meals: ['lunch', 'dinner'], baseQty: 1, slowCarb: true },
+            pasta_whole_100: { id: 'pasta_whole_100', group: 'carb', label: 'Паста цельнозерн.', portion: '100 г готовой', p: 4, c: 25, f: 1, kcal: 125, meals: ['lunch', 'dinner'], baseQty: 1, slowCarb: true },
+            bread_40: { id: 'bread_40', group: 'carb', label: 'Хлеб цельнозерн.', portion: '1 ломтик (40 г)', p: 3, c: 18, f: 1.2, kcal: 95, meals: ['breakfast', 'snack'], baseQty: 1, slowCarb: true },
+            oats_50dry: { id: 'oats_50dry', group: 'carb', label: 'Овсянка', portion: '50 г сухого', p: 6, c: 30, f: 4.5, kcal: 185, meals: ['breakfast'], baseQty: 1, slowCarb: true },
+            banana_1: { id: 'banana_1', group: 'carb', label: 'Банан', portion: '1 шт', p: 1, c: 27, f: 0, kcal: 116, meals: ['breakfast', 'snack', 'postworkout'], baseQty: 1, fastCarb: true },
+            
+            // ПОЛЕЗНЫЕ ЖИРЫ
+            oil_tsp: { id: 'oil_tsp', group: 'fat', label: 'Оливковое масло', portion: '1 ч.л. (5 мл)', p: 0, c: 0, f: 4.5, kcal: 40, meals: ['breakfast', 'lunch', 'dinner'], baseQty: 1 },
+            oil_tbsp: { id: 'oil_tbsp', group: 'fat', label: 'Оливковое масло', portion: '1 ст.л. (15 мл)', p: 0, c: 0, f: 13.5, kcal: 120, meals: ['lunch', 'dinner'], baseQty: 1 },
+            nuts_20: { id: 'nuts_20', group: 'fat', label: 'Орехи', portion: '20 г', p: 4, c: 3, f: 11, kcal: 125, meals: ['snack', 'breakfast'], baseQty: 1 },
+            avocado_quarter: { id: 'avocado_quarter', group: 'fat', label: 'Авокадо', portion: '¼ шт', p: 1, c: 4, f: 8, kcal: 92, meals: ['breakfast', 'lunch', 'dinner'], baseQty: 1 },
+            seeds_10: { id: 'seeds_10', group: 'fat', label: 'Лён/чия/семечки', portion: '1 ст.л. (10 г)', p: 2, c: 1, f: 3.5, kcal: 45, meals: ['breakfast', 'snack'], baseQty: 1 },
+            
+            // ОВОЩИ
+            salad_200: { id: 'salad_200', group: 'veg', label: 'Свежий салат', portion: '200 г', p: 2, c: 6, f: 0, kcal: 32, meals: ['lunch', 'dinner'], baseQty: 1 },
+            veg_stew_200: { id: 'veg_stew_200', group: 'veg', label: 'Тушёные овощи', portion: '200 г (с 1 ч.л. масла)', p: 3, c: 10, f: 4, kcal: 88, meals: ['lunch', 'dinner'], baseQty: 1 },
+            veg_roast_200: { id: 'veg_roast_200', group: 'veg', label: 'Запечённые овощи', portion: '200 г (с 1 ч.л. масла)', p: 3, c: 15, f: 4, kcal: 108, meals: ['lunch', 'dinner'], baseQty: 1 },
+            veg_soup_250: { id: 'veg_soup_250', group: 'veg', label: 'Овощной суп', portion: '250 мл', p: 2, c: 8, f: 2, kcal: 58, meals: ['lunch', 'dinner'], baseQty: 1 },
+            
+            // ГОТОВЫЕ ПЕРЕКУСЫ
+            snack_yog_berries: { id: 'snack_yog_berries', group: 'snack', label: 'Йогурт греч. + ягоды', portion: '150 г + 100 г', p: 17, c: 13, f: 3, kcal: 150, meals: ['snack', 'breakfast'], baseQty: 1 },
+            snack_cottage_berries: { id: 'snack_cottage_berries', group: 'snack', label: 'Творог + ягоды', portion: '100 г + 100 г', p: 16, c: 12, f: 5, kcal: 160, meals: ['snack', 'breakfast'], baseQty: 1 },
+            snack_banana_pb: { id: 'snack_banana_pb', group: 'snack', label: 'Банан + арах. паста', portion: '1 шт + 1 ч.л.', p: 4, c: 29, f: 5, kcal: 180, meals: ['snack', 'postworkout'], baseQty: 1 },
+            snack_bar: { id: 'snack_bar', group: 'snack', label: 'Протеиновый батончик', portion: '1 шт', p: 20, c: 20, f: 7, kcal: 223, meals: ['snack', 'postworkout'], baseQty: 1 }
+        };
+        
+        // Функция для получения продуктов по группе и приёму пищи
+        function getFoodsByGroupAndMeal(group, mealType) {
+            return Object.values(FOODS).filter(food => 
+                food.group === group && food.meals.includes(mealType)
+            );
+        }
+        
+        // Функция для расчёта XP по трекам на основе продукта
+        function calculateTrackXP(food, qty = 1, macroProgress = {}) {
+            const tracks = { muscles: 0, energy: 0, immunity: 0, hormones: 0, gut: 0, skin: 0, brain: 0 };
+            const multiplier = getMultiplier(food.group, macroProgress);
+            
+            if (food.group === 'protein') {
+                const proteinAmount = food.p * qty;
+                if (proteinAmount >= 25) {
+                    tracks.muscles = Math.round(8 * multiplier);
+                    tracks.energy = Math.round(3 * multiplier);
+                    tracks.immunity = Math.round(2 * multiplier);
+                } else {
+                    // Пропорционально для меньших порций
+                    const ratio = proteinAmount / 25;
+                    tracks.muscles = Math.round(8 * ratio * multiplier);
+                    tracks.energy = Math.round(3 * ratio * multiplier);
+                    tracks.immunity = Math.round(2 * ratio * multiplier);
+                }
+            } else if (food.group === 'carb') {
+                const carbAmount = food.c * qty;
+                if (food.slowCarb) {
+                    // Медленные угли
+                    if (carbAmount >= 20) {
+                        tracks.energy = Math.round(8 * multiplier);
+                        tracks.hormones = Math.round(2 * multiplier);
+                        tracks.gut = Math.round(2 * multiplier);
+                    }
+                } else if (food.fastCarb) {
+                    // Быстрые угли (у тренировки)
+                    tracks.energy = Math.round(10 * multiplier);
+                    tracks.muscles = Math.round(2 * multiplier);
+                }
+            } else if (food.group === 'fat') {
+                tracks.hormones = Math.round(8 * multiplier);
+                tracks.skin = Math.round(3 * multiplier);
+                tracks.brain = Math.round(2 * multiplier);
+            } else if (food.group === 'veg') {
+                tracks.gut = Math.round(8 * multiplier);
+                tracks.immunity = Math.round(4 * multiplier);
+            } else if (food.group === 'snack') {
+                // Готовые комбо перекусы - смешанные бонусы
+                if (food.p >= 15) {
+                    tracks.muscles = Math.round(5 * multiplier);
+                    tracks.energy = Math.round(3 * multiplier);
+                }
+                if (food.c >= 10) {
+                    tracks.energy = Math.round(5 * multiplier);
+                }
+                if (food.f >= 3) {
+                    tracks.hormones = Math.round(3 * multiplier);
+                }
+            }
+            
+            return tracks;
+        }
+        
+        // Функция для получения мультипликатора
+        function getMultiplier(group, macroProgress) {
+            const progress = macroProgress[group] || 100; // процент от цели
+            if (progress < 80) {
+                // Усиление если недобор
+                const multipliers = { protein: 1.5, carb: 1.4, fat: 1.3, veg: 1.4 };
+                return multipliers[group] || 1.0;
+            } else if (progress > 120) {
+                // Штраф если перебор
+                return 0.5;
+            }
+            return 1.0;
+        }
+        
+        // Функция для расчёта общего XP
+        function calculateTotalXP(trackXP) {
+            return Object.values(trackXP).reduce((sum, xp) => sum + xp, 0);
+        }
+        
+        // Функция для получения текста тоста
+        function getToastText(trackXP) {
+            const parts = [];
+            if (trackXP.muscles > 0) parts.push(`+${trackXP.muscles} XP к мышцам`);
+            if (trackXP.energy > 0) parts.push(`+${trackXP.energy} XP к энергии`);
+            if (trackXP.immunity > 0) parts.push(`+${trackXP.immunity} к иммунитету`);
+            if (trackXP.hormones > 0) parts.push(`+${trackXP.hormones} XP к гормонам`);
+            if (trackXP.gut > 0) parts.push(`+${trackXP.gut} XP для ЖКТ`);
+            if (trackXP.skin > 0) parts.push(`+${trackXP.skin} к коже/волосам`);
+            if (trackXP.brain > 0) parts.push(`+${trackXP.brain} к мозгу`);
+            return parts.join(' • ') || '+XP';
+        }
+        
+        // Функция для обновления уровня
+        function updateLevel() {
+            const xpForNextLevel = userLevel * 100;
+            if (userXP >= xpForNextLevel) {
+                userLevel++;
+                userXP -= xpForNextLevel;
+                localStorage.setItem('kairos_level', userLevel.toString());
+                showToast(`🎉 Уровень ${userLevel}!`);
+            }
+            localStorage.setItem('kairos_xp', userXP.toString());
+        }
+        
+        // Функция для обновления streak
+        function updateStreak() {
+            const today = new Date().toDateString();
+            if (lastActiveDate !== today) {
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                if (lastActiveDate === yesterday.toDateString()) {
+                    streak++;
+                } else if (lastActiveDate !== today) {
+                    streak = 1;
+                }
+                lastActiveDate = today;
+                localStorage.setItem('kairos_streak', streak.toString());
+                localStorage.setItem('kairos_lastActiveDate', lastActiveDate);
+            }
+        }
 
+        // Функция для создания опций из FOODS
+        function createOptionsFromFoods(foods, mealType) {
+            const options = foods.map(food => ({
+                foodId: food.id,
+                name: food.label,
+                portion: food.portion,
+                calories: food.kcal,
+                protein: food.p,
+                carbs: food.c,
+                fats: food.f,
+                group: food.group,
+                baseQty: food.baseQty || 1,
+                slowCarb: food.slowCarb || false,
+                fastCarb: food.fastCarb || false
+            }));
+            options.push({ 
+                foodId: 'skip', 
+                name: 'Пропустить', 
+                portion: '', 
+                calories: 0, 
+                protein: 0, 
+                carbs: 0, 
+                fats: 0,
+                group: 'skip'
+            });
+            return options;
+        }
+        
+        // Функция для получения шагов конструктора на основе mealType
+        function getMealSteps(mealType) {
+            const steps = [];
+            
+            if (mealType === 'breakfast') {
+                steps.push({
+                    key: 'protein',
+                    title: 'Выбери источник белка',
+                    options: createOptionsFromFoods(getFoodsByGroupAndMeal('protein', 'breakfast'), 'breakfast')
+                });
+                steps.push({
+                    key: 'carbs',
+                    title: 'Что добавим для энергии?',
+                    options: createOptionsFromFoods(getFoodsByGroupAndMeal('carb', 'breakfast'), 'breakfast')
+                });
+                steps.push({
+                    key: 'fats',
+                    title: 'Полезные жиры для сытости',
+                    options: createOptionsFromFoods(getFoodsByGroupAndMeal('fat', 'breakfast'), 'breakfast')
+                });
+            } else if (mealType === 'lunch' || mealType === 'dinner') {
+                steps.push({
+                    key: 'protein',
+                    title: 'Выбери источник белка',
+                    options: createOptionsFromFoods(getFoodsByGroupAndMeal('protein', mealType), mealType)
+                });
+                steps.push({
+                    key: 'carbs',
+                    title: mealType === 'dinner' ? 'Лёгкий гарнир (по желанию)' : 'Выбери гарнир',
+                    options: createOptionsFromFoods(getFoodsByGroupAndMeal('carb', mealType), mealType)
+                });
+                steps.push({
+                    key: 'fats',
+                    title: 'Источник жиров',
+                    options: createOptionsFromFoods(getFoodsByGroupAndMeal('fat', mealType), mealType)
+                });
+                steps.push({
+                    key: 'veg',
+                    title: mealType === 'dinner' ? 'Много овощей' : 'Добавь овощи',
+                    options: createOptionsFromFoods(getFoodsByGroupAndMeal('veg', mealType), mealType)
+                });
+            } else if (mealType === 'snack') {
+                // Готовые комбо для перекуса
+                const snackFoods = getFoodsByGroupAndMeal('snack', 'snack');
+                steps.push({
+                    key: 'type',
+                    title: 'Выбери тип перекуса',
+                    options: createOptionsFromFoods(snackFoods, 'snack')
+                });
+            }
+            
+            return steps;
+        }
+        
         const mealSteps = {
-            breakfast: [
-                { key: 'protein', title: 'Выбери источник белка', options: [
-                    { name: 'Яйца', portion: '2 шт', calories: 140, protein: 12, carbs: 1, fats: 10 },
-                    { name: 'Творог 5%', portion: '150 г', calories: 165, protein: 25, carbs: 3, fats: 7 },
-                    { name: 'Йогурт греческий', portion: '150 г', calories: 90, protein: 15, carbs: 6, fats: 2 },
-                    { name: 'Пропустить', portion: '', calories: 0, protein: 0, carbs: 0, fats: 0 }
-                ]},
-                { key: 'carbs', title: 'Что добавим для энергии?', options: [
-                    { name: 'Овсянка', portion: '40 г сухой', calories: 150, protein: 5, carbs: 27, fats: 3 },
-                    { name: 'Хлеб цельнозерновой', portion: '2 ломтика', calories: 140, protein: 6, carbs: 24, fats: 2 },
-                    { name: 'Банан', portion: '1 средний', calories: 90, protein: 1, carbs: 23, fats: 0 },
-                    { name: 'Пропустить', portion: '', calories: 0, protein: 0, carbs: 0, fats: 0 }
-                ]},
-                { key: 'fats', title: 'Полезные жиры для сытости', options: [
-                    { name: 'Орехи', portion: '20 г', calories: 120, protein: 4, carbs: 4, fats: 11 },
-                    { name: 'Авокадо', portion: '1/3 шт', calories: 80, protein: 1, carbs: 4, fats: 7 },
-                    { name: 'Пропустить', portion: '', calories: 0, protein: 0, carbs: 0, fats: 0 }
-                ]}
-            ],
-            lunch: [
-                { key: 'protein', title: 'Выбери источник белка', options: [
-                    { name: 'Курица', portion: '120 г', calories: 165, protein: 30, carbs: 0, fats: 5 },
-                    { name: 'Рыба', portion: '120 г', calories: 140, protein: 28, carbs: 0, fats: 3 },
-                    { name: 'Пропустить', portion: '', calories: 0, protein: 0, carbs: 0, fats: 0 }
-                ]},
-                { key: 'carbs', title: 'Выбери гарнир', options: [
-                    { name: 'Гречка', portion: '120 г готовой', calories: 140, protein: 5, carbs: 30, fats: 1 },
-                    { name: 'Рис бурый', portion: '120 г готовой', calories: 135, protein: 3, carbs: 28, fats: 1 },
-                    { name: 'Пропустить', portion: '', calories: 0, protein: 0, carbs: 0, fats: 0 }
-                ]},
-                { key: 'vegetables', title: 'Добавь овощи', options: [
-                    { name: 'Свежий салат', portion: '200 г', calories: 50, protein: 2, carbs: 10, fats: 0 },
-                    { name: 'Пропустить', portion: '', calories: 0, protein: 0, carbs: 0, fats: 0 }
-                ]}
-            ],
-            dinner: [
-                { key: 'protein', title: 'Выбери источник белка', options: [
-                    { name: 'Курица', portion: '120 г', calories: 165, protein: 30, carbs: 0, fats: 5 },
-                    { name: 'Рыба', portion: '120 г', calories: 140, protein: 28, carbs: 0, fats: 3 },
-                    { name: 'Пропустить', portion: '', calories: 0, protein: 0, carbs: 0, fats: 0 }
-                ]},
-                { key: 'carbs', title: 'Лёгкий гарнир', options: [
-                    { name: 'Гречка', portion: '100 г готовой', calories: 115, protein: 4, carbs: 25, fats: 1 },
-                    { name: 'Пропустить', portion: '', calories: 0, protein: 0, carbs: 0, fats: 0 }
-                ]},
-                { key: 'vegetables', title: 'Много овощей', options: [
-                    { name: 'Большой салат', portion: '250 г', calories: 60, protein: 3, carbs: 12, fats: 0 },
-                    { name: 'Пропустить', portion: '', calories: 0, protein: 0, carbs: 0, fats: 0 }
-                ]}
-            ],
-            snack: [
-                { key: 'type', title: 'Выбери тип перекуса', options: [
-                    { name: 'Яблоко + орехи', portion: '1 шт + 15 г', calories: 170, protein: 4, carbs: 24, fats: 8 },
-                    { name: 'Йогурт греческий + ягоды', portion: '150 г + 100 г', calories: 130, protein: 16, carbs: 15, fats: 2 },
-                    { name: 'Пропустить', portion: '', calories: 0, protein: 0, carbs: 0, fats: 0 }
-                ]}
-            ]
+            breakfast: getMealSteps('breakfast'),
+            lunch: getMealSteps('lunch'),
+            dinner: getMealSteps('dinner'),
+            snack: getMealSteps('snack')
         };
 
         function initApp() {
+            // Обновляем streak при запуске
+            updateStreak();
             setupHeroSelection();
             checkOnboardingStatus();
         }
@@ -1144,7 +1576,8 @@
                     calories: userData.target_calories || 1800,
                     protein: userData.protein_max || 90,
                     carbs: Math.round((userData.target_calories || 1800) * 0.45 / 4),
-                    fats: Math.round((userData.target_calories || 1800) * 0.30 / 9)
+                    fats: Math.round((userData.target_calories || 1800) * 0.30 / 9),
+                    fiber: 30 // Примерная норма клетчатки
                 };
                 showApp();
             } else if (userData && !userData.hero) {
@@ -1212,6 +1645,7 @@
                 target_calories: targetCalories,
                 protein_min: proteinMin,
                 protein_max: proteinMax,
+                tracking_mode: trackingMode || 'numbers',
                 hero: '',
                 hero_points: 0,
                 created_at: new Date().toISOString()
@@ -1230,9 +1664,36 @@
             btn.textContent = 'Рассчитать мою норму';
         });
 
-        document.getElementById('continue-to-hero').addEventListener('click', () => {
+        document.getElementById('continue-to-mode').addEventListener('click', () => {
             document.getElementById('onboarding-step2').classList.add('hidden');
-            document.getElementById('hero-selection').classList.remove('hidden');
+            document.getElementById('mode-selection').classList.remove('hidden');
+        });
+        
+        document.getElementById('back-to-results').addEventListener('click', () => {
+            document.getElementById('mode-selection').classList.add('hidden');
+            document.getElementById('onboarding-step2').classList.remove('hidden');
+        });
+        
+        function selectTrackingMode(mode) {
+            trackingMode = mode;
+            localStorage.setItem('kairos_trackingMode', mode);
+            
+            // Выделяем выбранный режим
+            document.querySelectorAll('[id^="mode-"]').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.getElementById(`mode-${mode}`).classList.add('selected');
+            
+            // Показываем кнопку продолжения
+            document.getElementById('continue-to-hero').style.display = 'block';
+            hapticFeedback('medium');
+        }
+        
+        document.getElementById('continue-to-hero').addEventListener('click', () => {
+            if (trackingMode) {
+                document.getElementById('mode-selection').classList.add('hidden');
+                document.getElementById('hero-selection').classList.remove('hidden');
+            }
         });
 
         document.getElementById('back-to-form').addEventListener('click', () => {
@@ -1243,6 +1704,7 @@
         function showApp() {
             document.getElementById('onboarding-step1').classList.add('hidden');
             document.getElementById('onboarding-step2').classList.add('hidden');
+            document.getElementById('mode-selection').classList.add('hidden');
             document.getElementById('hero-selection').classList.add('hidden');
             document.getElementById('app-main').classList.remove('hidden');
             updateDailyTotals();
@@ -1256,19 +1718,75 @@
                 document.getElementById('hero-avatar').textContent = hero.icon;
                 document.getElementById('hero-name').textContent = hero.name;
                 
-                const points = userData.hero_points || 0;
-                document.getElementById('hero-points').textContent = points;
-                document.getElementById('hero-progress-bar').style.width = `${points}%`;
+                // Обновляем XP и уровень
+                const xpForNextLevel = userLevel * 100;
+                const progressPercent = xpForNextLevel > 0 ? (userXP / xpForNextLevel) * 100 : 0;
+                document.getElementById('hero-points').textContent = `${userXP} / ${xpForNextLevel} XP`;
+                document.getElementById('hero-progress-bar').style.width = `${Math.min(progressPercent, 100)}%`;
+                
+                // Обновляем уровень в виджете
+                const levelElement = document.getElementById('hero-level-text');
+                if (levelElement) {
+                    levelElement.textContent = `Уровень ${userLevel}`;
+                }
+                
+                // Обновляем streak
+                const streakElement = document.getElementById('hero-streak');
+                if (streakElement) {
+                    streakElement.textContent = `🔥 Серия: ${streak} дней`;
+                }
+                
+                // Обновляем треки
+                updateTracksDisplay();
             }
+        }
+        
+        function updateTracksDisplay() {
+            const tracksList = document.getElementById('tracks-list');
+            if (!tracksList) return;
+            
+            const tracks = [
+                { key: 'muscles', ...TRACKS.MUSCLES },
+                { key: 'energy', ...TRACKS.ENERGY },
+                { key: 'immunity', ...TRACKS.IMMUNITY },
+                { key: 'hormones', ...TRACKS.HORMONES },
+                { key: 'gut', ...TRACKS.GUT },
+                { key: 'skin', ...TRACKS.SKIN },
+                { key: 'brain', ...TRACKS.BRAIN }
+            ];
+            
+            const totalTracksXP = Object.values(userTracks).reduce((sum, xp) => sum + xp, 0);
+            
+            if (totalTracksXP === 0) {
+                tracksList.innerHTML = '<div style="color: rgba(255, 255, 255, 0.5); font-style: italic;">Добавляй продукты для прокачки</div>';
+                return;
+            }
+            
+            tracksList.innerHTML = tracks.map(track => {
+                const xp = userTracks[track.key] || 0;
+                const percent = totalTracksXP > 0 ? (xp / totalTracksXP) * 100 : 0;
+                return `
+                    <div style="margin-bottom: 6px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="color: ${track.color};">${track.icon} ${track.name}</span>
+                            <span style="color: #ffd700; font-weight: 600;">${xp} XP</span>
+                        </div>
+                        <div style="background: rgba(255, 255, 255, 0.1); border-radius: 4px; height: 4px; margin-top: 2px; overflow: hidden;">
+                            <div style="background: ${track.color}; height: 100%; width: ${percent}%; transition: width 0.3s;"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
 
         function updateDailyTotals() {
-            dailyUsed = { calories: 0, protein: 0, carbs: 0, fats: 0 };
+            dailyUsed = { calories: 0, protein: 0, carbs: 0, fats: 0, fiber: 0 };
             allMeals.forEach(meal => {
                 dailyUsed.calories += meal.calories || 0;
                 dailyUsed.protein += meal.protein_g || 0;
                 dailyUsed.carbs += meal.carbs_g || 0;
                 dailyUsed.fats += meal.fats_g || 0;
+                dailyUsed.fiber += meal.fiber_g || 0;
             });
 
             const remainingCalories = dailyTargets.calories - dailyUsed.calories;
@@ -1326,6 +1844,14 @@
                 document.getElementById(id).classList.add('hidden');
             });
             document.getElementById(sectionId).classList.remove('hidden');
+            
+            // Показываем кнопку "Назад" при переходе в секцию
+            if (tg && sectionId !== 'constructor') {
+                tg.BackButton.show();
+                tg.MainButton.hide();
+            }
+            
+            hapticFeedback('light');
         }
 
         function showMainMenu() {
@@ -1333,6 +1859,12 @@
             ['plate-guide', 'constructor', 'activity', 'problems', 'sleep'].forEach(id => {
                 document.getElementById(id).classList.add('hidden');
             });
+            
+            // Скрываем главную кнопку и кнопку "Назад" в главном меню
+            if (tg) {
+                tg.MainButton.hide();
+                tg.BackButton.hide();
+            }
         }
 
         function startConstructor(mealType) {
@@ -1353,6 +1885,14 @@
             document.getElementById('constructor-title').textContent = mealNames[mealType];
             showConstructorStep();
             showSection('constructor');
+            
+            // Показываем кнопку "Назад" при входе в конструктор
+            if (tg) {
+                tg.BackButton.show();
+                tg.MainButton.hide();
+            }
+            
+            hapticFeedback('light');
         }
 
         function showConstructorStep() {
@@ -1367,10 +1907,23 @@
                 const card = document.createElement('div');
                 card.className = 'option-card';
                 card.dataset.optionName = option.name;
+                card.dataset.foodId = option.foodId || '';
                 card.onclick = () => selectOption(option);
+                
+                // Добавляем подсказку о размере порции
+                let portionHint = '';
+                if (option.group === 'protein') {
+                    portionHint = '<div style="font-size: 11px; color: rgba(255, 255, 255, 0.6); margin-top: 4px;">≈ ладонь</div>';
+                } else if (option.group === 'carb') {
+                    portionHint = '<div style="font-size: 11px; color: rgba(255, 255, 255, 0.6); margin-top: 4px;">≈ кулак</div>';
+                } else if (option.group === 'fat') {
+                    portionHint = '<div style="font-size: 11px; color: rgba(255, 255, 255, 0.6); margin-top: 4px;">≈ 1 порция</div>';
+                }
+                
                 card.innerHTML = `
                     <div class="option-name">${option.name}</div>
                     ${option.portion ? `<div class="option-portion">${option.portion}</div>` : ''}
+                    ${portionHint}
                 `;
                 container.appendChild(card);
             });
@@ -1388,13 +1941,63 @@
 
             document.querySelectorAll('.option-card').forEach(card => {
                 const optionName = card.dataset.optionName;
-                const selectedItem = selectedItems.find(item => item.name === optionName);
+                const selectedItem = selectedItems.find(item => 
+                    item.name === optionName || item.foodId === card.dataset.foodId
+                );
+                
+                // Удаляем старые элементы
+                const oldBadge = card.querySelector('.count-badge');
+                const oldButton = card.querySelector('.double-btn');
+                if (oldBadge) oldBadge.remove();
+                if (oldButton) oldButton.remove();
+                
                 if (selectedItem) {
                     card.classList.add('selected');
+                    card.style.position = 'relative';
+                    
+                    // Показываем счетчик если больше 1
+                    if (selectedItem.count > 1) {
+                        const countBadge = document.createElement('div');
+                        countBadge.className = 'count-badge';
+                        countBadge.textContent = `x${selectedItem.count}`;
+                        countBadge.style.cssText = 'position: absolute; top: 8px; right: 8px; background: #ffd700; color: #1a1a2e; border-radius: 12px; padding: 4px 8px; font-size: 12px; font-weight: 700; z-index: 10;';
+                        card.appendChild(countBadge);
+                    }
+                    
+                    // Добавляем кнопку удвоения если это не "Пропустить"
+                    if (selectedItem.foodId !== 'skip' && selectedItem.name !== 'Пропустить') {
+                        const doubleBtn = document.createElement('button');
+                        doubleBtn.className = 'double-btn';
+                        doubleBtn.textContent = '+ Удвоить';
+                        doubleBtn.style.cssText = 'position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); background: rgba(255, 215, 0, 0.9); color: #1a1a2e; border: 2px solid #ffd700; border-radius: 8px; padding: 4px 12px; font-size: 11px; font-weight: 600; cursor: pointer; z-index: 10;';
+                        doubleBtn.onclick = (e) => {
+                            e.stopPropagation();
+                            doublePortionForOption(selectedItem);
+                        };
+                        card.appendChild(doubleBtn);
+                    }
                 } else {
                     card.classList.remove('selected');
                 }
             });
+        }
+        
+        function doublePortionForOption(option) {
+            const steps = mealSteps[currentMeal.type];
+            const stepKey = steps[currentMeal.step].key;
+            
+            if (!currentMeal.selections[stepKey]) return;
+            
+            const item = currentMeal.selections[stepKey].find(i => 
+                (i.name === option.name && i.foodId === option.foodId) || 
+                (i.foodId && i.foodId === option.foodId)
+            );
+            
+            if (item && item.foodId !== 'skip' && item.name !== 'Пропустить') {
+                item.count = (item.count || 1) + 1;
+                updateOptionCards();
+                hapticFeedback('medium');
+            }
         }
 
         function selectOption(option) {
@@ -1405,21 +2008,47 @@
                 currentMeal.selections[stepKey] = [];
             }
             
-            const existingIndex = currentMeal.selections[stepKey].findIndex(item => item.name === option.name);
+            // Ищем по foodId или name
+            const existingIndex = currentMeal.selections[stepKey].findIndex(item => 
+                (item.foodId && item.foodId === option.foodId) ||
+                (item.name === option.name && (!option.foodId || item.foodId === option.foodId))
+            );
             
             if (existingIndex >= 0) {
+                // Если продукт уже выбран, удаляем его (отмена выбора)
                 currentMeal.selections[stepKey].splice(existingIndex, 1);
                 if (currentMeal.selections[stepKey].length === 0) {
                     delete currentMeal.selections[stepKey];
                 }
+                hapticFeedback('light');
             } else {
-                currentMeal.selections[stepKey].push({ ...option, count: 1 });
+                // Добавляем новый продукт с количеством 1
+                currentMeal.selections[stepKey].push({ 
+                    ...option, 
+                    count: option.baseQty || 1,
+                    qty: option.baseQty || 1
+                });
+                hapticFeedback('medium');
             }
 
             const hasSelections = Object.keys(currentMeal.selections).length > 0 &&
                 Object.values(currentMeal.selections).some(items => items.length > 0);
             
             document.getElementById('next-step-btn').disabled = !hasSelections;
+            
+            // Показываем главную кнопку, если есть выбор
+            if (tg) {
+                if (hasSelections) {
+                    tg.MainButton.setText('Далее');
+                    tg.MainButton.onClick(() => {
+                        nextStep();
+                    });
+                    tg.MainButton.show();
+                } else {
+                    tg.MainButton.hide();
+                }
+            }
+            
             updateOptionCards();
         }
 
@@ -1428,60 +2057,190 @@
             if (currentMeal.step < steps.length - 1) {
                 currentMeal.step++;
                 showConstructorStep();
+                hapticFeedback('light');
             } else {
                 document.getElementById('next-step-btn').style.display = 'none';
                 document.getElementById('save-meal-btn').style.display = 'block';
+                
+                // Показываем главную кнопку для сохранения
+                if (tg) {
+                    tg.MainButton.setText('Сохранить приём пищи');
+                    tg.MainButton.show();
+                    tg.MainButton.onClick(() => {
+                        saveMeal();
+                    });
+                }
             }
         }
 
         function saveMeal() {
             const btn = document.getElementById('save-meal-btn');
-            btn.disabled = true;
-            btn.textContent = 'Сохраняем...';
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Сохраняем...';
+            }
+            
+            if (tg) {
+                tg.MainButton.showProgress();
+            }
 
-            let totalCalories = 0, totalProtein = 0, totalCarbs = 0, totalFats = 0;
+            let totalCalories = 0, totalProtein = 0, totalCarbs = 0, totalFats = 0, totalFiber = 0;
             const proteinItems = currentMeal.selections.protein || [];
             const carbsItems = currentMeal.selections.carbs || currentMeal.selections.type || [];
             const fatsItems = currentMeal.selections.fats || [];
-            const fiberItems = currentMeal.selections.fiber || currentMeal.selections.vegetables || [];
+            const vegItems = currentMeal.selections.veg || currentMeal.selections.fiber || [];
 
-            [...proteinItems, ...carbsItems, ...fatsItems, ...fiberItems].forEach(item => {
-                if (item.name !== 'Пропустить') {
-                    totalCalories += item.calories * (item.count || 1);
-                    totalProtein += item.protein * (item.count || 1);
-                    totalCarbs += item.carbs * (item.count || 1);
-                    totalFats += item.fats * (item.count || 1);
+            // Рассчитываем прогресс по макронутриентам для мультипликаторов (до добавления текущего приёма)
+            const currentMacroProgress = {
+                protein: dailyTargets.protein > 0 ? (dailyUsed.protein / dailyTargets.protein) * 100 : 100,
+                carb: dailyTargets.carbs > 0 ? (dailyUsed.carbs / dailyTargets.carbs) * 100 : 100,
+                fat: dailyTargets.fats > 0 ? (dailyUsed.fats / dailyTargets.fats) * 100 : 100,
+                veg: 100 // Пока упрощённо
+            };
+
+            // Собираем все продукты и рассчитываем КБЖУ и XP
+            const allItems = [...proteinItems, ...carbsItems, ...fatsItems, ...vegItems];
+            let totalTrackXP = { muscles: 0, energy: 0, immunity: 0, hormones: 0, gut: 0, skin: 0, brain: 0 };
+            const mealItems = [];
+
+            allItems.forEach(item => {
+                if (item.foodId === 'skip' || item.name === 'Пропустить') return;
+                
+                const qty = item.count || item.qty || 1;
+                totalCalories += item.calories * qty;
+                totalProtein += item.protein * qty;
+                totalCarbs += item.carbs * qty;
+                totalFats += item.fats * qty;
+                
+                // Клетчатка из овощей (примерно 2-3 г на 100 г овощей)
+                if (item.group === 'veg') {
+                    totalFiber += Math.round((item.carbs || 0) * 0.3 * qty); // Примерная оценка
                 }
+                
+                // Получаем полные данные продукта из FOODS
+                const food = FOODS[item.foodId];
+                if (food) {
+                    // Рассчитываем XP по трекам с учётом текущего прогресса
+                    const trackXP = calculateTrackXP(food, qty, currentMacroProgress);
+                    Object.keys(totalTrackXP).forEach(key => {
+                        totalTrackXP[key] += trackXP[key] || 0;
+                    });
+                }
+                
+                // Сохраняем информацию о продукте
+                const displayName = qty > 1 ? `${item.name} x${qty}` : item.name;
+                mealItems.push({
+                    name: item.name,
+                    foodId: item.foodId,
+                    qty: qty,
+                    displayName: displayName
+                });
             });
+
+            // Обновляем треки пользователя
+            Object.keys(totalTrackXP).forEach(key => {
+                userTracks[key] = (userTracks[key] || 0) + totalTrackXP[key];
+            });
+            localStorage.setItem('kairos_tracks', JSON.stringify(userTracks));
+
+            // Добавляем общий XP
+            const totalXP = calculateTotalXP(totalTrackXP);
+            userXP += totalXP;
+            updateLevel();
+            updateStreak();
+
+            // Проверяем синергии
+            let synergyXP = 0;
+            const hasProtein = proteinItems.length > 0 && proteinItems[0].foodId !== 'skip';
+            const hasCarbs = carbsItems.length > 0 && carbsItems[0].foodId !== 'skip';
+            const hasFats = fatsItems.length > 0 && fatsItems[0].foodId !== 'skip';
+            const hasVeg = vegItems.length > 0 && vegItems[0].foodId !== 'skip';
+            
+            // Сбалансированная тарелка (белок + угли + жиры + овощи)
+            if (hasProtein && hasCarbs && hasFats && hasVeg) {
+                synergyXP = 15;
+                userXP += synergyXP;
+                showToast(`🎯 Сбалансированная тарелка! +${synergyXP} XP`);
+            }
 
             const mealData = {
                 id: Date.now().toString(),
                 meal_type: currentMeal.type,
-                protein: proteinItems.map(i => i.name).filter(n => n !== 'Пропустить').join(', '),
-                carbs: carbsItems.map(i => i.name).filter(n => n !== 'Пропустить').join(', '),
+                items: mealItems,
+                protein: proteinItems.map(i => {
+                    const qty = i.count || i.qty || 1;
+                    return qty > 1 ? `${i.name} x${qty}` : i.name;
+                }).filter(n => n !== 'Пропустить').join(', '),
+                carbs: carbsItems.map(i => {
+                    const qty = i.count || i.qty || 1;
+                    return qty > 1 ? `${i.name} x${qty}` : i.name;
+                }).filter(n => n !== 'Пропустить').join(', '),
+                fats: fatsItems.map(i => {
+                    const qty = i.count || i.qty || 1;
+                    return qty > 1 ? `${i.name} x${qty}` : i.name;
+                }).filter(n => n !== 'Пропустить').join(', '),
+                veg: vegItems.map(i => {
+                    const qty = i.count || i.qty || 1;
+                    return qty > 1 ? `${i.name} x${qty}` : i.name;
+                }).filter(n => n !== 'Пропустить').join(', '),
                 calories: totalCalories,
                 protein_g: totalProtein,
                 carbs_g: totalCarbs,
                 fats_g: totalFats,
-                created_at: new Date().toISOString()
+                fiber_g: totalFiber,
+                trackXP: totalTrackXP,
+                totalXP: totalXP + synergyXP,
+                created_at: new Date().toISOString(),
+                telegram_user_id: telegramUser?.id || null
             };
 
             allMeals.push(mealData);
             localStorage.setItem('kairos_meals', JSON.stringify(allMeals));
+            
+            // Отправляем данные в бота
+            sendDataToBot();
 
-            showToast('✅ Приём пищи сохранён!');
+            hapticFeedback('heavy');
+            
+            // Показываем тост с XP
+            const toastText = getToastText(totalTrackXP);
+            if (toastText) {
+                showToast(toastText);
+            } else {
+                showToast('✅ Приём пищи сохранён!');
+            }
+            
             setTimeout(() => {
                 showMainMenu();
                 updateDailyTotals();
                 updateDailySummary();
-            }, 1500);
+                updateHeroDisplay();
+                
+                if (tg) {
+                    tg.MainButton.hideProgress();
+                    tg.MainButton.hide();
+                }
+            }, 2000);
 
-            btn.disabled = false;
-            btn.textContent = 'Сохранить приём пищи';
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = 'Сохранить приём пищи';
+            }
         }
 
         function cancelConstructor() {
-            showMainMenu();
+            if (tg) {
+                showTelegramConfirm('Отменить создание приёма пищи?', (confirmed) => {
+                    if (confirmed) {
+                        showMainMenu();
+                        hapticFeedback('light');
+                    }
+                });
+            } else {
+                if (confirm('Отменить создание приёма пищи?')) {
+                    showMainMenu();
+                }
+            }
         }
 
         function showToast(message) {
@@ -1500,6 +2259,7 @@
             });
             document.getElementById(`activity-${activityType}`).classList.add('selected');
             document.getElementById('activity-selected-message').style.display = 'block';
+            hapticFeedback('medium');
             showToast('✅ Активность запланирована!');
         }
 
@@ -1511,12 +2271,51 @@
             });
             document.getElementById(`sleep-${hours}`).classList.add('selected');
             document.getElementById('sleep-selected-message').style.display = 'block';
-            showToast('✅ Сон зафиксирован');
+            hapticFeedback('medium');
+            
+            // Начисляем XP за сон (7-8 часов = идеально)
+            if (hours === 7) {
+                const sleepXP = { muscles: 0, energy: 0, immunity: 5, hormones: 10, gut: 0, skin: 0, brain: 2 };
+                Object.keys(sleepXP).forEach(key => {
+                    userTracks[key] = (userTracks[key] || 0) + sleepXP[key];
+                });
+                localStorage.setItem('kairos_tracks', JSON.stringify(userTracks));
+                
+                const totalSleepXP = calculateTotalXP(sleepXP);
+                userXP += totalSleepXP;
+                updateLevel();
+                updateStreak();
+                updateHeroDisplay();
+                
+                showToast('✅ Сон зафиксирован • +10 XP к гормонам • +5 к иммунитету');
+            } else {
+                showToast('✅ Сон зафиксирован');
+            }
+        }
+        
+        function addWater() {
+            hapticFeedback('medium');
+            
+            // Начисляем XP за воду
+            const waterXP = { muscles: 0, energy: 3, immunity: 0, hormones: 0, gut: 0, skin: 0, brain: 1 };
+            Object.keys(waterXP).forEach(key => {
+                userTracks[key] = (userTracks[key] || 0) + waterXP[key];
+            });
+            localStorage.setItem('kairos_tracks', JSON.stringify(userTracks));
+            
+            const totalWaterXP = calculateTotalXP(waterXP);
+            userXP += totalWaterXP;
+            updateLevel();
+            updateStreak();
+            updateHeroDisplay();
+            
+            showToast('💧 +3 XP к энергии • +1 к мозгу');
         }
 
         initApp();
     </script>
 </body>
 </html>
+
 
 
