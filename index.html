@@ -14,9 +14,9 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            background: #F5F7FA;
             min-height: 100vh;
-            color: #fff;
+            color: #2A2A2A;
             position: relative;
             overflow-x: hidden;
         }
@@ -29,8 +29,8 @@
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(138, 43, 226, 0.1) 0%, transparent 50%);
+                radial-gradient(circle at 20% 50%, rgba(109, 168, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(74, 109, 255, 0.05) 0%, transparent 50%);
             pointer-events: none;
             z-index: 0;
         }
@@ -45,27 +45,26 @@
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.05);
+            background: #FFFFFF;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 215, 0, 0.2);
+            border: 1px solid rgba(0, 0, 0, 0.08);
             border-radius: 20px;
             padding: 24px;
             margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
         h1 {
             font-size: 28px;
             font-weight: 700;
-            color: #ffd700;
+            color: #1B2B4A;
             margin: 0 0 12px 0;
             text-align: center;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
         }
 
         .subtitle {
             font-size: 16px;
-            color: rgba(255, 255, 255, 0.7);
+            color: #6B7280;
             text-align: center;
             margin-bottom: 32px;
         }
@@ -78,7 +77,7 @@
             display: block;
             font-size: 14px;
             font-weight: 600;
-            color: #ffd700;
+            color: #1B2B4A;
             margin-bottom: 8px;
         }
 
@@ -87,23 +86,23 @@
             width: 100%;
             padding: 12px 16px;
             font-size: 16px;
-            border: 2px solid rgba(255, 215, 0, 0.3);
+            border: 2px solid rgba(0, 0, 0, 0.12);
             border-radius: 12px;
             transition: all 0.3s;
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
+            background: #FFFFFF;
+            color: #2A2A2A;
         }
 
         input[type="number"]:focus,
         select:focus {
             outline: none;
-            border-color: #ffd700;
-            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+            border-color: #6DA8FF;
+            box-shadow: 0 0 0 3px rgba(109, 168, 255, 0.2);
         }
 
         input[type="number"]::placeholder,
         select option {
-            color: rgba(255, 255, 255, 0.5);
+            color: #6B7280;
         }
 
         .radio-group {
@@ -124,27 +123,27 @@
         .radio-option label {
             display: block;
             padding: 12px 16px;
-            border: 2px solid rgba(255, 215, 0, 0.3);
+            border: 2px solid rgba(0, 0, 0, 0.12);
             border-radius: 12px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
             font-weight: 500;
             margin: 0;
-            background: rgba(255, 255, 255, 0.05);
-            color: #fff;
+            background: #FFFFFF;
+            color: #2A2A2A;
         }
 
         .radio-option input[type="radio"]:checked + label {
-            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-            color: #1a1a2e;
-            border-color: #ffd700;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            background: linear-gradient(180deg, #6DA8FF 0%, #4A6DFF 100%);
+            color: #FFFFFF;
+            border-color: #6DA8FF;
+            box-shadow: 0 4px 12px rgba(109, 168, 255, 0.3);
         }
 
         .radio-option label:hover {
-            border-color: #ffd700;
-            background: rgba(255, 215, 0, 0.1);
+            border-color: #6DA8FF;
+            background: rgba(109, 168, 255, 0.05);
         }
 
         .btn {
@@ -160,37 +159,38 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-            color: #1a1a2e;
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            background: linear-gradient(180deg, #6DA8FF 0%, #4A6DFF 100%);
+            color: #FFFFFF;
+            box-shadow: 0 4px 12px rgba(109, 168, 255, 0.3);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
+            box-shadow: 0 8px 20px rgba(109, 168, 255, 0.4);
         }
 
         .btn-primary:disabled {
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.5);
+            background: rgba(0, 0, 0, 0.12);
+            color: #6B7280;
             cursor: not-allowed;
             transform: none;
         }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffd700;
-            border: 2px solid rgba(255, 215, 0, 0.5);
+            background: #1B2B4A;
+            color: #FFFFFF;
+            border: 2px solid #1B2B4A;
         }
 
         .btn-secondary:hover {
-            background: rgba(255, 215, 0, 0.1);
+            background: #0F1E33;
+            border-color: #0F1E33;
         }
 
         .results {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 215, 0, 0.1) 100%);
-            border: 2px solid rgba(255, 215, 0, 0.3);
-            color: #fff;
+            background: linear-gradient(180deg, rgba(109, 168, 255, 0.1) 0%, rgba(74, 109, 255, 0.1) 100%);
+            border: 2px solid rgba(109, 168, 255, 0.2);
+            color: #2A2A2A;
             padding: 32px;
             border-radius: 16px;
             margin-bottom: 24px;
@@ -199,7 +199,7 @@
         .results h2 {
             font-size: 24px;
             margin: 0 0 16px 0;
-            color: #ffd700;
+            color: #1B2B4A;
         }
 
         .results p {
@@ -216,7 +216,7 @@
         .hero-intro {
             font-size: 18px;
             line-height: 1.8;
-            color: rgba(255, 255, 255, 0.9);
+            color: #2A2A2A;
             margin-bottom: 24px;
         }
 
@@ -228,8 +228,8 @@
         }
 
         .hero-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 3px solid rgba(255, 215, 0, 0.3);
+            background: #FFFFFF;
+            border: 3px solid rgba(0, 0, 0, 0.12);
             border-radius: 16px;
             padding: 20px;
             cursor: pointer;
@@ -246,15 +246,15 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(109, 168, 255, 0.1) 0%, transparent 70%);
             opacity: 0;
             transition: opacity 0.3s;
         }
 
         .hero-card:hover {
-            border-color: #ffd700;
+            border-color: #6DA8FF;
             transform: translateY(-4px);
-            box-shadow: 0 8px 30px rgba(255, 215, 0, 0.4);
+            box-shadow: 0 8px 20px rgba(109, 168, 255, 0.3);
         }
 
         .hero-card:hover::before {
@@ -262,26 +262,26 @@
         }
 
         .hero-card.selected {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.3) 0%, rgba(255, 215, 0, 0.1) 100%);
-            border-color: #ffd700;
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+            background: linear-gradient(180deg, rgba(109, 168, 255, 0.15) 0%, rgba(74, 109, 255, 0.15) 100%);
+            border-color: #6DA8FF;
+            box-shadow: 0 0 20px rgba(109, 168, 255, 0.4);
         }
 
         .hero-icon {
             font-size: 64px;
             margin-bottom: 8px;
-            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+            filter: drop-shadow(0 0 10px rgba(109, 168, 255, 0.3));
         }
 
         .hero-name {
             font-size: 18px;
             font-weight: 600;
-            color: #ffd700;
+            color: #1B2B4A;
         }
 
         .budget-display {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 215, 0, 0.1) 100%);
-            border: 2px solid rgba(255, 215, 0, 0.3);
+            background: linear-gradient(180deg, rgba(109, 168, 255, 0.1) 0%, rgba(74, 109, 255, 0.1) 100%);
+            border: 2px solid rgba(109, 168, 255, 0.2);
             border-radius: 16px;
             padding: 20px;
             text-align: center;
@@ -291,15 +291,14 @@
         .budget-label {
             font-size: 14px;
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.8);
+            color: #6B7280;
             margin-bottom: 8px;
         }
 
         .budget-amount {
             font-size: 36px;
             font-weight: 800;
-            color: #ffd700;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            color: #1B2B4A;
         }
 
         .macros-grid {
@@ -310,8 +309,8 @@
         }
 
         .macro-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 215, 0, 0.2);
+            background: #FFFFFF;
+            border: 1px solid rgba(0, 0, 0, 0.08);
             border-radius: 12px;
             padding: 12px;
             text-align: center;
@@ -319,19 +318,19 @@
 
         .macro-label {
             font-size: 12px;
-            color: rgba(255, 255, 255, 0.6);
+            color: #6B7280;
             margin-bottom: 4px;
         }
 
         .macro-value {
             font-size: 20px;
             font-weight: 700;
-            color: #ffd700;
+            color: #1B2B4A;
         }
 
         .macro-total {
             font-size: 12px;
-            color: rgba(255, 255, 255, 0.5);
+            color: #6B7280;
         }
 
         .main-menu {
@@ -341,8 +340,8 @@
         }
 
         .menu-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 215, 0, 0.2);
+            background: #FFFFFF;
+            border: 1px solid rgba(0, 0, 0, 0.08);
             border-radius: 16px;
             padding: 24px;
             text-align: center;
@@ -352,20 +351,20 @@
 
         .menu-card:hover {
             transform: translateY(-4px);
-            border-color: #ffd700;
-            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+            border-color: #6DA8FF;
+            box-shadow: 0 8px 20px rgba(109, 168, 255, 0.2);
         }
 
         .menu-icon {
             font-size: 48px;
             margin-bottom: 12px;
-            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
+            filter: drop-shadow(0 0 10px rgba(109, 168, 255, 0.2));
         }
 
         .menu-title {
             font-size: 16px;
             font-weight: 600;
-            color: #ffd700;
+            color: #1B2B4A;
         }
 
         .step-header {
@@ -376,14 +375,13 @@
         .step-title {
             font-size: 24px;
             font-weight: 700;
-            color: #ffd700;
+            color: #1B2B4A;
             margin-bottom: 8px;
-            text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
         }
 
         .step-subtitle {
             font-size: 16px;
-            color: rgba(255, 255, 255, 0.7);
+            color: #6B7280;
         }
 
         .options-grid {
@@ -394,8 +392,8 @@
         }
 
         .option-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 3px solid rgba(255, 215, 0, 0.3);
+            background: #FFFFFF;
+            border: 3px solid rgba(0, 0, 0, 0.12);
             border-radius: 12px;
             padding: 16px;
             cursor: pointer;
@@ -404,42 +402,42 @@
         }
 
         .option-card:hover {
-            border-color: #ffd700;
-            background: rgba(255, 215, 0, 0.1);
+            border-color: #6DA8FF;
+            background: rgba(109, 168, 255, 0.05);
         }
 
         .option-card.selected {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.3) 0%, rgba(255, 215, 0, 0.1) 100%);
-            border-color: #ffd700;
-            color: #ffd700;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+            background: linear-gradient(180deg, rgba(109, 168, 255, 0.15) 0%, rgba(74, 109, 255, 0.15) 100%);
+            border-color: #6DA8FF;
+            color: #1B2B4A;
+            box-shadow: 0 0 20px rgba(109, 168, 255, 0.3);
         }
 
         .option-name {
             font-size: 16px;
             font-weight: 600;
             margin-bottom: 4px;
-            color: #fff;
+            color: #2A2A2A;
         }
 
         .option-card.selected .option-name {
-            color: #ffd700;
+            color: #1B2B4A;
         }
 
         .option-portion {
             font-size: 13px;
             opacity: 0.8;
-            color: rgba(255, 255, 255, 0.7);
+            color: #6B7280;
         }
 
         .option-card.selected .option-portion {
             opacity: 1;
-            color: rgba(255, 215, 0, 0.9);
+            color: #1B2B4A;
         }
 
         .info-section {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 215, 0, 0.2);
+            background: #FFFFFF;
+            border: 1px solid rgba(0, 0, 0, 0.08);
             border-radius: 16px;
             padding: 24px;
             margin-bottom: 16px;
@@ -447,20 +445,20 @@
 
         .info-section h3 {
             margin-top: 0;
-            color: #ffd700;
+            color: #1B2B4A;
             font-size: 18px;
         }
 
         .info-section ul {
             line-height: 1.8;
-            color: rgba(255, 255, 255, 0.9);
+            color: #2A2A2A;
             margin: 0;
             padding-left: 20px;
         }
 
         .hero-widget {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 215, 0, 0.2);
+            background: #FFFFFF;
+            border: 1px solid rgba(0, 0, 0, 0.08);
             border-radius: 20px;
             padding: 24px;
             margin-bottom: 16px;
@@ -470,18 +468,18 @@
         .hero-avatar {
             font-size: 80px;
             margin-bottom: 12px;
-            filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5));
+            filter: drop-shadow(0 0 15px rgba(109, 168, 255, 0.3));
         }
 
         .hero-level {
             font-size: 20px;
             font-weight: 700;
-            color: #ffd700;
+            color: #1B2B4A;
             margin-bottom: 8px;
         }
 
         .hero-progress {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.12);
             border-radius: 12px;
             height: 12px;
             overflow: hidden;
@@ -489,15 +487,15 @@
         }
 
         .hero-progress-bar {
-            background: linear-gradient(90deg, #ffd700 0%, #ffed4e 100%);
+            background: linear-gradient(90deg, #6DA8FF 0%, #4A6DFF 100%);
             height: 100%;
             transition: width 0.5s ease;
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            box-shadow: 0 0 10px rgba(109, 168, 255, 0.3);
         }
 
         .daily-summary {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 215, 0, 0.2);
+            background: #FFFFFF;
+            border: 1px solid rgba(0, 0, 0, 0.08);
             border-radius: 20px;
             padding: 24px;
         }
@@ -505,13 +503,13 @@
         .summary-title {
             font-size: 20px;
             font-weight: 700;
-            color: #ffd700;
+            color: #1B2B4A;
             margin-bottom: 16px;
         }
 
         .meal-entry {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 215, 0, 0.2);
+            background: #FFFFFF;
+            border: 1px solid rgba(0, 0, 0, 0.08);
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 12px;
@@ -527,18 +525,18 @@
         .meal-name {
             font-size: 16px;
             font-weight: 600;
-            color: #ffd700;
+            color: #1B2B4A;
         }
 
         .meal-calories {
             font-size: 14px;
             font-weight: 600;
-            color: #ffd700;
+            color: #1B2B4A;
         }
 
         .meal-items {
             font-size: 13px;
-            color: rgba(255, 255, 255, 0.7);
+            color: #6B7280;
             line-height: 1.6;
         }
 
@@ -560,7 +558,7 @@
 
         .empty-cart {
             text-align: center;
-            color: rgba(255, 255, 255, 0.5);
+            color: #6B7280;
             padding: 32px 0;
             font-size: 14px;
         }
@@ -702,9 +700,9 @@
                 <h2>Ваша ориентировочная норма:</h2>
                 <p><strong id="target-calories">1800</strong> ккал и <strong id="protein-range">110–130</strong> г белка в день</p>
             </div>
-            <div class="info-section" style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 215, 0, 0.1) 100%); border-color: rgba(255, 215, 0, 0.4);">
-                <h3 style="color: #ffd700; margin-top: 0;">⚡ Это твой план на день!</h3>
-                <p style="color: rgba(255, 255, 255, 0.9); line-height: 1.8; margin: 0;">
+            <div class="info-section" style="background: linear-gradient(180deg, rgba(109, 168, 255, 0.1) 0%, rgba(74, 109, 255, 0.1) 100%); border-color: rgba(109, 168, 255, 0.3);">
+                <h3 style="color: #1B2B4A; margin-top: 0;">⚡ Это твой план на день!</h3>
+                <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
                     Каждый день — это новая битва за Олимп. Ты получаешь дневной бюджет калорий и собираешь приёмы пищи, как конструктор. 
                     Чем лучше ты распределяешь бюджет и выполняешь задачи — тем сильнее становится твой бог! 🏛️<br><br>
                     <strong>Бонус:</strong> Набирай баллы за здоровые привычки и трать их на вкусности! 🎁
@@ -712,7 +710,7 @@
             </div>
             <div class="info-section">
                 <h3>💰 Что такое дневной бюджет?</h3>
-                <p style="color: rgba(255, 255, 255, 0.9); line-height: 1.8; margin: 0;">
+                <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
                     Представь калории как золотые монеты Олимпа. У тебя есть <strong id="budget-explanation">1800 калорий</strong> на день — это твой бюджет. 
                     Ты можешь "тратить" его на еду, собирая приёмы пищи в конструкторе. Чем лучше ты распределяешь бюджет, тем сильнее становится твой бог! ⚡
                 </p>
@@ -728,7 +726,7 @@
             
             <div class="info-section" style="margin-bottom: 24px;">
                 <h3>📊 Вариант 1: Цифры</h3>
-                <p style="color: rgba(255, 255, 255, 0.9); line-height: 1.6; margin: 0;">
+                <p style="color: #2A2A2A; line-height: 1.6; margin: 0;">
                     Считаем калории и БЖУ точно. Видишь цифры, прогресс-бары, остаток бюджета. 
                     Подходит для тех, кто любит точность и контроль.
                 </p>
@@ -736,7 +734,7 @@
             
             <div class="info-section" style="margin-bottom: 24px;">
                 <h3>🎮 Вариант 2: Интуитивно (баллы)</h3>
-                <p style="color: rgba(255, 255, 255, 0.9); line-height: 1.6; margin: 0;">
+                <p style="color: #2A2A2A; line-height: 1.6; margin: 0;">
                     Без строгого подсчёта калорий. Добавляешь продукты — получаешь XP и бонусы по трекам прокачки. 
                     Фокус на качестве питания и привычках, а не на цифрах.
                 </p>
@@ -870,19 +868,19 @@
             <div class="hero-widget">
                 <div class="hero-avatar" id="hero-avatar">⚡</div>
                 <div class="hero-level" id="hero-name">Зевс</div>
-                <div id="hero-level-text" style="font-size: 16px; color: rgba(255, 255, 255, 0.7); margin-bottom: 8px;">Уровень 1</div>
-                <div id="hero-streak" style="font-size: 14px; color: #ffd700; margin-bottom: 12px;">🔥 Серия: 0 дней</div>
+                <div id="hero-level-text" style="font-size: 16px; color: #6B7280; margin-bottom: 8px;">Уровень 1</div>
+                <div id="hero-streak" style="font-size: 14px; color: #1B2B4A; margin-bottom: 12px;">🔥 Серия: 0 дней</div>
                 <div class="hero-progress">
                     <div class="hero-progress-bar" id="hero-progress-bar" style="width: 0%"></div>
                 </div>
-                <div style="font-size: 16px; font-weight: 700; color: #ffd700; margin-bottom: 16px;">
+                <div style="font-size: 16px; font-weight: 700; color: #1B2B4A; margin-bottom: 16px;">
                     <span id="hero-points">0 / 100 XP</span>
                 </div>
                 <!-- Треки прокачки -->
                 <div id="tracks-display" style="text-align: left; font-size: 12px; line-height: 1.6;">
-                    <div style="color: rgba(255, 255, 255, 0.7); margin-bottom: 8px; font-weight: 600;">Треки прокачки:</div>
+                    <div style="color: #6B7280; margin-bottom: 8px; font-weight: 600;">Треки прокачки:</div>
                     <div id="tracks-list">
-                        <div style="color: rgba(255, 255, 255, 0.5); font-style: italic;">Добавляй продукты для прокачки</div>
+                        <div style="color: #6B7280; font-style: italic;">Добавляй продукты для прокачки</div>
                     </div>
                 </div>
             </div>
@@ -928,7 +926,7 @@
                         <li><strong>Жиры = большой палец</strong><br>
                             Размер большого пальца = 1 ст. ложка масла.</li>
                     </ul>
-                    <p style="color: #ffd700; font-weight: 600; margin-top: 12px;">💡 Твоя рука всегда с тобой — это идеальный инструмент для измерения порций!</p>
+                    <p style="color: #1B2B4A; font-weight: 600; margin-top: 12px;">💡 Твоя рука всегда с тобой — это идеальный инструмент для измерения порций!</p>
                 </div>
                 <div class="info-section">
                     <h3>✅ Почему это работает:</h3>
@@ -998,9 +996,9 @@
                     <div class="step-title">😴 Сон</div>
                     <div class="step-subtitle">Качественный сон = восстановление и энергия</div>
                 </div>
-                <div class="info-section" style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 215, 0, 0.1) 100%); border-color: rgba(255, 215, 0, 0.4);">
-                    <h3 style="color: #ffd700; margin-top: 0;">🎯 Цель: 7-8 часов качественного сна</h3>
-                    <p style="color: rgba(255, 255, 255, 0.9); line-height: 1.8; margin: 0;">
+                <div class="info-section" style="background: linear-gradient(180deg, rgba(109, 168, 255, 0.1) 0%, rgba(74, 109, 255, 0.1) 100%); border-color: rgba(109, 168, 255, 0.3);">
+                    <h3 style="color: #1B2B4A; margin-top: 0;">🎯 Цель: 7-8 часов качественного сна</h3>
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
                         Сон — это не просто отдых. Это время, когда твоё тело восстанавливается, мышцы растут, гормоны приходят в норму, а мозг обрабатывает информацию.
                     </p>
                 </div>
@@ -1035,19 +1033,19 @@
                 </div>
                 <div class="info-section">
                     <h3>🍰 Тяга к сладкому</h3>
-                    <p style="color: rgba(255, 255, 255, 0.9); line-height: 1.6; margin: 0;">
+                    <p style="color: #2A2A2A; line-height: 1.6; margin: 0;">
                         Добавь больше белка в завтрак, пей достаточно воды, замени сладости на фрукты с орехами.
                     </p>
                 </div>
                 <div class="info-section">
                     <h3>☕ Что есть в кафе</h3>
-                    <p style="color: rgba(255, 255, 255, 0.9); line-height: 1.6; margin: 0;">
+                    <p style="color: #2A2A2A; line-height: 1.6; margin: 0;">
                         Выбирай блюда с видимым белком (курица, рыба, яйца), проси овощной гарнир, избегай соусов.
                     </p>
                 </div>
                 <div class="info-section">
                     <h3>🤰 Вздутие живота</h3>
-                    <p style="color: rgba(255, 255, 255, 0.9); line-height: 1.6; margin: 0;">
+                    <p style="color: #2A2A2A; line-height: 1.6; margin: 0;">
                         Пей больше воды, добавь ферментированные продукты, уменьши бобовые и капусту, ешь медленнее.
                     </p>
                 </div>
@@ -1098,8 +1096,8 @@
             
             // Настройка главной кнопки (MainButton)
             tg.MainButton.setText('Сохранить');
-            tg.MainButton.color = '#ffd700';
-            tg.MainButton.textColor = '#1a1a2e';
+            tg.MainButton.color = '#6DA8FF';
+            tg.MainButton.textColor = '#FFFFFF';
             
             // Обработчик клика на главную кнопку будет устанавливаться динамически
             // в функциях nextStep() и selectOption()
@@ -1262,13 +1260,13 @@
         
         // Система треков прокачки (7 направлений)
         const TRACKS = {
-            MUSCLES: { id: 'muscles', name: 'Мышцы/сила', icon: '💪', color: '#ff6b6b' },
-            ENERGY: { id: 'energy', name: 'Энергия/выносливость', icon: '⚡', color: '#ffd93d' },
-            IMMUNITY: { id: 'immunity', name: 'Иммунитет/воспаление', icon: '🛡️', color: '#6bcf7f' },
-            HORMONES: { id: 'hormones', name: 'Гормоны/восстановление', icon: '🔄', color: '#4ecdc4' },
-            GUT: { id: 'gut', name: 'ЖКТ/микробиота', icon: '🌱', color: '#95e1d3' },
-            SKIN: { id: 'skin', name: 'Кожа/волосы', icon: '✨', color: '#f38181' },
-            BRAIN: { id: 'brain', name: 'Мозг/фокус', icon: '🧠', color: '#a8e6cf' }
+            MUSCLES: { id: 'muscles', name: 'Мышцы/сила', icon: '💪', color: '#FF6B6B' },
+            ENERGY: { id: 'energy', name: 'Энергия/выносливость', icon: '⚡', color: '#FFD93D' },
+            IMMUNITY: { id: 'immunity', name: 'Иммунитет/воспаление', icon: '🛡️', color: '#4CAF50' },
+            HORMONES: { id: 'hormones', name: 'Гормоны/восстановление', icon: '🔄', color: '#3DC5D0' },
+            GUT: { id: 'gut', name: 'ЖКТ/микробиота', icon: '🌱', color: '#5CD6A4' },
+            SKIN: { id: 'skin', name: 'Кожа/волосы', icon: '✨', color: '#FF9EC4' },
+            BRAIN: { id: 'brain', name: 'Мозг/фокус', icon: '🧠', color: '#A3E0FF' }
         };
         
         // Треки пользователя
@@ -1758,7 +1756,7 @@
             const totalTracksXP = Object.values(userTracks).reduce((sum, xp) => sum + xp, 0);
             
             if (totalTracksXP === 0) {
-                tracksList.innerHTML = '<div style="color: rgba(255, 255, 255, 0.5); font-style: italic;">Добавляй продукты для прокачки</div>';
+                tracksList.innerHTML = '<div style="color: #6B7280; font-style: italic;">Добавляй продукты для прокачки</div>';
                 return;
             }
             
@@ -1769,9 +1767,9 @@
                     <div style="margin-bottom: 6px;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <span style="color: ${track.color};">${track.icon} ${track.name}</span>
-                            <span style="color: #ffd700; font-weight: 600;">${xp} XP</span>
+                            <span style="color: #1B2B4A; font-weight: 600;">${xp} XP</span>
                         </div>
-                        <div style="background: rgba(255, 255, 255, 0.1); border-radius: 4px; height: 4px; margin-top: 2px; overflow: hidden;">
+                        <div style="background: rgba(0, 0, 0, 0.12); border-radius: 4px; height: 4px; margin-top: 2px; overflow: hidden;">
                             <div style="background: ${track.color}; height: 100%; width: ${percent}%; transition: width 0.3s;"></div>
                         </div>
                     </div>
@@ -1913,11 +1911,11 @@
                 // Добавляем подсказку о размере порции
                 let portionHint = '';
                 if (option.group === 'protein') {
-                    portionHint = '<div style="font-size: 11px; color: rgba(255, 255, 255, 0.6); margin-top: 4px;">≈ ладонь</div>';
+                    portionHint = '<div style="font-size: 11px; color: #6B7280; margin-top: 4px;">≈ ладонь</div>';
                 } else if (option.group === 'carb') {
-                    portionHint = '<div style="font-size: 11px; color: rgba(255, 255, 255, 0.6); margin-top: 4px;">≈ кулак</div>';
+                    portionHint = '<div style="font-size: 11px; color: #6B7280; margin-top: 4px;">≈ кулак</div>';
                 } else if (option.group === 'fat') {
-                    portionHint = '<div style="font-size: 11px; color: rgba(255, 255, 255, 0.6); margin-top: 4px;">≈ 1 порция</div>';
+                    portionHint = '<div style="font-size: 11px; color: #6B7280; margin-top: 4px;">≈ 1 порция</div>';
                 }
                 
                 card.innerHTML = `
@@ -1960,7 +1958,7 @@
                         const countBadge = document.createElement('div');
                         countBadge.className = 'count-badge';
                         countBadge.textContent = `x${selectedItem.count}`;
-                        countBadge.style.cssText = 'position: absolute; top: 8px; right: 8px; background: #ffd700; color: #1a1a2e; border-radius: 12px; padding: 4px 8px; font-size: 12px; font-weight: 700; z-index: 10;';
+                        countBadge.style.cssText = 'position: absolute; top: 8px; right: 8px; background: linear-gradient(180deg, #6DA8FF 0%, #4A6DFF 100%); color: #FFFFFF; border-radius: 12px; padding: 4px 8px; font-size: 12px; font-weight: 700; z-index: 10;';
                         card.appendChild(countBadge);
                     }
                     
@@ -1969,7 +1967,7 @@
                         const doubleBtn = document.createElement('button');
                         doubleBtn.className = 'double-btn';
                         doubleBtn.textContent = '+ Удвоить';
-                        doubleBtn.style.cssText = 'position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); background: rgba(255, 215, 0, 0.9); color: #1a1a2e; border: 2px solid #ffd700; border-radius: 8px; padding: 4px 12px; font-size: 11px; font-weight: 600; cursor: pointer; z-index: 10;';
+                        doubleBtn.style.cssText = 'position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); background: linear-gradient(180deg, #6DA8FF 0%, #4A6DFF 100%); color: #FFFFFF; border: 2px solid #6DA8FF; border-radius: 8px; padding: 4px 12px; font-size: 11px; font-weight: 600; cursor: pointer; z-index: 10;';
                         doubleBtn.onclick = (e) => {
                             e.stopPropagation();
                             doublePortionForOption(selectedItem);
