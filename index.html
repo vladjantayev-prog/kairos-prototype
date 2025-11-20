@@ -1932,6 +1932,17 @@
                     // Сбрасываем дневной прогресс
                     dailyUsed = { calories: 0, protein: 0, carbs: 0, fats: 0, fiber: 0 };
                     
+                    // Восстанавливаем базовые значения калорий и БЖУ из userData
+                    if (userData) {
+                        dailyTargets = {
+                            calories: userData.target_calories || 1800,
+                            protein: userData.protein_max || 90,
+                            carbs: Math.round((userData.target_calories || 1800) * 0.45 / 4),
+                            fats: Math.round((userData.target_calories || 1800) * 0.30 / 9),
+                            fiber: 30
+                        };
+                    }
+                    
                     // Обновляем интерфейс
                     updateDailyTotals();
                     updateDailySummary();
@@ -1965,6 +1976,13 @@
                     selectedHero = null;
                     allMeals = [];
                     dailyUsed = { calories: 0, protein: 0, carbs: 0, fats: 0, fiber: 0 };
+                    dailyTargets = {
+                        calories: 1800,
+                        protein: 90,
+                        carbs: 200,
+                        fats: 60,
+                        fiber: 30
+                    };
                     userTracks = { muscles: 0, energy: 0, immunity: 0, hormones: 0, gut: 0, skin: 0, brain: 0 };
                     userXP = 0;
                     userLevel = 1;
@@ -1972,14 +1990,14 @@
                     lastActiveDate = null;
                     trackingMode = 'numbers';
                     
-                    // Скрываем главное приложение
+                    // Скрываем все секции
                     document.getElementById('app-main').classList.add('hidden');
-                    
-                    // Показываем первый шаг онбординга
-                    document.getElementById('onboarding-step1').classList.remove('hidden');
                     document.getElementById('onboarding-step2').classList.add('hidden');
                     document.getElementById('mode-selection').classList.add('hidden');
                     document.getElementById('hero-selection').classList.add('hidden');
+                    
+                    // Показываем первый шаг онбординга (анкету)
+                    document.getElementById('onboarding-step1').classList.remove('hidden');
                     
                     // Скрываем кнопки Telegram
                     if (tg) {
