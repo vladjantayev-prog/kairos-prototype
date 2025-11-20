@@ -587,12 +587,13 @@
         }
 
         .summary-totals {
-            background: linear-gradient(135deg, rgba(76, 187, 120, 0.3) 0%, rgba(56, 161, 105, 0.3) 100%);
-            border: 1px solid rgba(76, 187, 120, 0.5);
-            color: white;
+            background: linear-gradient(180deg, #6DA8FF 0%, #4A6DFF 100%);
+            border: 1px solid rgba(109, 168, 255, 0.3);
+            color: #FFFFFF;
             border-radius: 12px;
             padding: 16px;
             margin-top: 16px;
+            box-shadow: 0 4px 12px rgba(109, 168, 255, 0.25);
         }
 
         .total-row {
@@ -617,11 +618,11 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            background: linear-gradient(135deg, rgba(76, 187, 120, 0.9) 0%, rgba(56, 161, 105, 0.9) 100%);
-            color: white;
+            background: linear-gradient(180deg, #6DA8FF 0%, #4A6DFF 100%);
+            color: #FFFFFF;
             padding: 16px 24px;
             border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 24px rgba(109, 168, 255, 0.3);
             z-index: 1000;
             animation: toastSlideIn 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -908,6 +909,14 @@
                     <div class="menu-icon">💧</div>
                     <div class="menu-title">Вода 300 мл</div>
                 </div>
+                <div class="menu-card" onclick="resetDailyProgress()">
+                    <div class="menu-icon">🔄</div>
+                    <div class="menu-title">Сбросить день</div>
+                </div>
+                <div class="menu-card" onclick="resetAllData()">
+                    <div class="menu-icon">🏠</div>
+                    <div class="menu-title">Начать сначала</div>
+                </div>
             </main>
 
             <!-- Hero Widget -->
@@ -1029,7 +1038,7 @@
                             <div class="option-portion">Восстановление</div>
                         </div>
                     </div>
-                    <div id="activity-selected-message" style="margin-top: 16px; padding: 12px; background: rgba(76, 187, 120, 0.3); border: 1px solid rgba(76, 187, 120, 0.5); color: white; border-radius: 12px; display: none; text-align: center; font-weight: 600;">
+                    <div id="activity-selected-message" style="margin-top: 16px; padding: 12px; background: linear-gradient(180deg, rgba(109, 168, 255, 0.2) 0%, rgba(74, 109, 255, 0.2) 100%); border: 1px solid rgba(109, 168, 255, 0.3); color: #1B2B4A; border-radius: 12px; display: none; text-align: center; font-weight: 600;">
                         ✅ Отлично! Запланировано на сегодня
                     </div>
                 </div>
@@ -1064,7 +1073,7 @@
                             <div class="option-name">😌 Больше 8 часов</div>
                         </div>
                     </div>
-                    <div id="sleep-selected-message" style="margin-top: 16px; padding: 12px; background: rgba(76, 187, 120, 0.3); border: 1px solid rgba(76, 187, 120, 0.5); color: white; border-radius: 12px; display: none; text-align: center; font-weight: 600;">
+                    <div id="sleep-selected-message" style="margin-top: 16px; padding: 12px; background: linear-gradient(180deg, rgba(109, 168, 255, 0.2) 0%, rgba(74, 109, 255, 0.2) 100%); border: 1px solid rgba(109, 168, 255, 0.3); color: #1B2B4A; border-radius: 12px; display: none; text-align: center; font-weight: 600;">
                         ✅ Отлично! Сон зафиксирован
                     </div>
                 </div>
@@ -1911,6 +1920,81 @@
             }
         }
 
+        // Функция для сброса дневного прогресса (калории и приёмы пищи)
+        function resetDailyProgress() {
+            const message = 'Сбросить все приёмы пищи и калории за сегодня?';
+            const confirmCallback = (confirmed) => {
+                if (confirmed) {
+                    // Очищаем приёмы пищи
+                    allMeals = [];
+                    localStorage.setItem('kairos_meals', JSON.stringify(allMeals));
+                    
+                    // Сбрасываем дневной прогресс
+                    dailyUsed = { calories: 0, protein: 0, carbs: 0, fats: 0, fiber: 0 };
+                    
+                    // Обновляем интерфейс
+                    updateDailyTotals();
+                    updateDailySummary();
+                    
+                    showToast('✅ День сброшен');
+                    hapticFeedback('medium');
+                }
+            };
+            
+            showTelegramConfirm(message, confirmCallback);
+        }
+
+        // Функция для полного сброса и возврата к онбордингу
+        function resetAllData() {
+            const message = 'Начать сначала? Это удалит все данные: калории, приёмы пищи, прогресс, уровень и треки.';
+            const confirmCallback = (confirmed) => {
+                if (confirmed) {
+                    // Очищаем все данные из localStorage
+                    localStorage.removeItem('kairos_userData');
+                    localStorage.removeItem('kairos_meals');
+                    localStorage.removeItem('kairos_tracks');
+                    localStorage.removeItem('kairos_xp');
+                    localStorage.removeItem('kairos_level');
+                    localStorage.removeItem('kairos_streak');
+                    localStorage.removeItem('kairos_lastActiveDate');
+                    localStorage.removeItem('kairos_trackingMode');
+                    localStorage.removeItem('kairos_selectedHero');
+                    
+                    // Сбрасываем все переменные
+                    userData = null;
+                    selectedHero = null;
+                    allMeals = [];
+                    dailyUsed = { calories: 0, protein: 0, carbs: 0, fats: 0, fiber: 0 };
+                    userTracks = { muscles: 0, energy: 0, immunity: 0, hormones: 0, gut: 0, skin: 0, brain: 0 };
+                    userXP = 0;
+                    userLevel = 1;
+                    streak = 0;
+                    lastActiveDate = null;
+                    trackingMode = 'numbers';
+                    
+                    // Скрываем главное приложение
+                    document.getElementById('app-main').classList.add('hidden');
+                    
+                    // Показываем первый шаг онбординга
+                    document.getElementById('onboarding-step1').classList.remove('hidden');
+                    document.getElementById('onboarding-step2').classList.add('hidden');
+                    document.getElementById('mode-selection').classList.add('hidden');
+                    document.getElementById('hero-selection').classList.add('hidden');
+                    
+                    // Скрываем кнопки Telegram
+                    if (tg) {
+                        tg.MainButton.hide();
+                        tg.BackButton.hide();
+                    }
+                    
+                    showToast('🔄 Начинаем сначала');
+                    hapticFeedback('heavy');
+                }
+            };
+            
+            showTelegramConfirm(message, confirmCallback);
+        }
+
         function startConstructor(mealType) {
             currentMeal = {
                 type: mealType,
@@ -1956,21 +2040,24 @@
                 
                 // Добавляем подсказку о размере порции (только если порция не указана конкретно)
                 let portionHint = '';
-                const portion = option.portion || '';
-                // Проверяем, содержит ли порция конкретные единицы измерения (шт, порция, ч.л., ст.л., ¼, /)
+                const portion = String(option.portion || '').trim();
+                
+                // Убираем подсказки для продуктов с конкретными единицами измерения
+                // Если в порции есть: шт, порция, ч.л., ст.л., доли (¼, ½, ⅓), ломтик - не показываем подсказку
                 const hasSpecificPortion = portion && (
-                    portion.includes('шт') || 
-                    portion.includes('порция') || 
-                    portion.includes('ч.л.') || 
-                    portion.includes('ст.л.') || 
-                    portion.includes('¼') || 
-                    portion.includes('½') || 
-                    portion.includes('/') ||
-                    portion.includes('ломтик')
+                    portion.indexOf('шт') !== -1 || 
+                    portion.indexOf('порция') !== -1 || 
+                    portion.indexOf('ч.л.') !== -1 || 
+                    portion.indexOf('ст.л.') !== -1 || 
+                    portion.indexOf('¼') !== -1 || 
+                    portion.indexOf('½') !== -1 || 
+                    portion.indexOf('⅓') !== -1 ||
+                    portion.indexOf('ломтик') !== -1
                 );
                 
-                // Показываем подсказку только если порция указана в граммах или не указана конкретно
-                if (!hasSpecificPortion) {
+                // Показываем подсказку только если порция указана в граммах (без конкретных единиц)
+                // И только для групп protein, carb, fat
+                if (!hasSpecificPortion && portion && (option.group === 'protein' || option.group === 'carb' || option.group === 'fat')) {
                     if (option.group === 'protein') {
                         portionHint = '<div style="font-size: 11px; color: #6B7280; margin-top: 4px;">≈ ладонь</div>';
                     } else if (option.group === 'carb') {
@@ -2289,18 +2376,24 @@
         }
 
         function cancelConstructor() {
-            if (tg) {
-                showTelegramConfirm('Отменить создание приёма пищи?', (confirmed) => {
-                    if (confirmed) {
-                        showMainMenu();
-                        hapticFeedback('light');
-                    }
-                });
-            } else {
-                if (confirm('Отменить создание приёма пищи?')) {
+            const message = 'Отменить создание приёма пищи?';
+            const confirmCallback = (confirmed) => {
+                if (confirmed) {
+                    // Сбрасываем текущий приём пищи
+                    currentMeal = {
+                        type: '',
+                        step: 0,
+                        selections: {},
+                        totals: { calories: 0, protein: 0, carbs: 0, fats: 0 }
+                    };
+                    
+                    // Возвращаемся в главное меню
                     showMainMenu();
+                    hapticFeedback('light');
                 }
-            }
+            };
+            
+            showTelegramConfirm(message, confirmCallback);
         }
 
         function showToast(message) {
