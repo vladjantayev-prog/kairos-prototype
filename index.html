@@ -2495,8 +2495,57 @@
                     localStorage.removeItem('kairos_trackingMode');
                     localStorage.removeItem('kairos_selectedHero');
                     
-                    // Перезагружаем страницу для полного сброса
-                    location.reload();
+                    // Создаём новое пустое состояние
+                    kairosState = createEmptyState();
+                    kairosState.today = createEmptyDay(getTodayDate());
+                    saveKairosState(kairosState);
+                    
+                    // Сбрасываем все переменные
+                    userData = null;
+                    selectedHero = null;
+                    dailyUsed = { calories: 0, protein: 0, carbs: 0, fats: 0, fiber: 0 };
+                    dailyTargets = {
+                        calories: 1800,
+                        protein: 90,
+                        carbs: 200,
+                        fats: 60,
+                        fiber: 30
+                    };
+                    allMeals = [];
+                    userTracks = { muscles: 0, energy: 0, immunity: 0, hormones: 0, gut: 0, skin: 0, brain: 0 };
+                    userXP = 0;
+                    userLevel = 1;
+                    streak = 0;
+                    trackingMode = 'numbers';
+                    
+                    // Скрываем все секции
+                    document.getElementById('app-main').classList.add('hidden');
+                    document.getElementById('onboarding-step2').classList.add('hidden');
+                    document.getElementById('mode-selection').classList.add('hidden');
+                    document.getElementById('hero-selection').classList.add('hidden');
+                    document.getElementById('main-menu').classList.add('hidden');
+                    ['plate-guide', 'constructor', 'activity', 'problems', 'sleep', 'calendar'].forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) el.classList.add('hidden');
+                    });
+                    
+                    // Показываем анкету
+                    document.getElementById('onboarding-step1').classList.remove('hidden');
+                    
+                    // Очищаем форму анкеты
+                    const form = document.getElementById('onboarding-form');
+                    if (form) {
+                        form.reset();
+                    }
+                    
+                    // Скрываем кнопки Telegram
+                    if (tg) {
+                        tg.MainButton.hide();
+                        tg.BackButton.hide();
+                    }
+                    
+                    showToast('🔄 Начинаем сначала');
+                    hapticFeedback('heavy');
                 }
             };
             
