@@ -652,7 +652,7 @@
             }
 
             .main-menu {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
             }
 
             .radio-option {
@@ -1954,14 +1954,30 @@
                 card.dataset.foodId = option.foodId || '';
                 card.onclick = () => selectOption(option);
                 
-                // Добавляем подсказку о размере порции
+                // Добавляем подсказку о размере порции (только если порция не указана конкретно)
                 let portionHint = '';
-                if (option.group === 'protein') {
-                    portionHint = '<div style="font-size: 11px; color: #6B7280; margin-top: 4px;">≈ ладонь</div>';
-                } else if (option.group === 'carb') {
-                    portionHint = '<div style="font-size: 11px; color: #6B7280; margin-top: 4px;">≈ кулак</div>';
-                } else if (option.group === 'fat') {
-                    portionHint = '<div style="font-size: 11px; color: #6B7280; margin-top: 4px;">≈ 1 порция</div>';
+                const portion = option.portion || '';
+                // Проверяем, содержит ли порция конкретные единицы измерения (шт, порция, ч.л., ст.л., ¼, /)
+                const hasSpecificPortion = portion && (
+                    portion.includes('шт') || 
+                    portion.includes('порция') || 
+                    portion.includes('ч.л.') || 
+                    portion.includes('ст.л.') || 
+                    portion.includes('¼') || 
+                    portion.includes('½') || 
+                    portion.includes('/') ||
+                    portion.includes('ломтик')
+                );
+                
+                // Показываем подсказку только если порция указана в граммах или не указана конкретно
+                if (!hasSpecificPortion) {
+                    if (option.group === 'protein') {
+                        portionHint = '<div style="font-size: 11px; color: #6B7280; margin-top: 4px;">≈ ладонь</div>';
+                    } else if (option.group === 'carb') {
+                        portionHint = '<div style="font-size: 11px; color: #6B7280; margin-top: 4px;">≈ кулак</div>';
+                    } else if (option.group === 'fat') {
+                        portionHint = '<div style="font-size: 11px; color: #6B7280; margin-top: 4px;">≈ 1 порция</div>';
+                    }
                 }
                 
                 card.innerHTML = `
