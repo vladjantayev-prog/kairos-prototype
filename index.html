@@ -532,6 +532,45 @@
             box-shadow: 0 0 12px rgba(130, 196, 255, 0.4);
         }
 
+        #health-orb {
+            width: 160px;
+            height: 160px;
+            margin: 0 auto 20px auto;
+            border-radius: 50%;
+            background: radial-gradient(circle at 50% 40%, #82C4FF, #1A4C7C);
+            box-shadow:
+                0 0 30px rgba(130, 196, 255, 0.6),
+                inset 0 0 40px rgba(255, 255, 255, 0.25);
+            animation: orbPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes orbPulse {
+            0% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.06); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.9; }
+        }
+
+        #health-orb.state-normal {
+            background: radial-gradient(circle at 50% 40%, #82C4FF, #1A4C7C);
+            box-shadow:
+                0 0 30px rgba(130, 196, 255, 0.6),
+                inset 0 0 40px rgba(255, 255, 255, 0.25);
+        }
+
+        #health-orb.state-good {
+            background: radial-gradient(circle at 50% 40%, #6EE7B7, #3BB48C);
+            box-shadow:
+                0 0 30px rgba(110, 231, 183, 0.6),
+                inset 0 0 40px rgba(255, 255, 255, 0.25);
+        }
+
+        #health-orb.state-perfect {
+            background: radial-gradient(circle at 50% 40%, #FFE797, #FFB84C);
+            box-shadow:
+                0 0 30px rgba(255, 231, 151, 0.6),
+                inset 0 0 40px rgba(255, 255, 255, 0.25);
+        }
+
         .daily-summary {
             background: #FFFFFF;
             border: 1px solid rgba(0, 0, 0, 0.06);
@@ -915,6 +954,9 @@
                     <div class="menu-title">Календарь</div>
                 </div>
             </main>
+
+            <!-- Health Orb -->
+            <div id="health-orb"></div>
 
             <!-- Hero Widget -->
             <div class="hero-widget">
