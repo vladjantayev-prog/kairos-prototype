@@ -917,6 +917,10 @@
                     <div class="menu-icon">🏠</div>
                     <div class="menu-title">Начать сначала</div>
                 </div>
+                <div class="menu-card" onclick="showSection('calendar')">
+                    <div class="menu-icon">📅</div>
+                    <div class="menu-title">Календарь</div>
+                </div>
             </main>
 
             <!-- Hero Widget -->
@@ -1106,6 +1110,22 @@
                 </div>
                 <button class="btn btn-secondary" onclick="showMainMenu()">← Назад в меню</button>
             </section>
+
+            <!-- Calendar Section -->
+            <section id="calendar" class="card hidden">
+                <div class="step-header">
+                    <div class="step-title">📅 Календарь</div>
+                    <div class="step-subtitle">Просмотр истории дней</div>
+                </div>
+                <div id="calendar-container" style="margin-bottom: 24px;"></div>
+                <div id="calendar-day-details" style="display: none;">
+                    <div class="info-section blue-accent">
+                        <h3 id="calendar-day-title" style="margin-top: 0;">Результаты дня</h3>
+                        <div id="calendar-day-content"></div>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" onclick="showMainMenu()">← Назад в меню</button>
+            </section>
         </div>
     </div>
 
@@ -1285,33 +1305,134 @@
             hera: { icon: '👑', name: 'Гера' }
         };
 
-        let userData = JSON.parse(localStorage.getItem('kairos_userData') || 'null');
+        // ========== НОВАЯ СИСТЕМА УПРАВЛЕНИЯ СОСТОЯНИЕМ ==========
+        
+        // Получить сегодняшнюю дату в формате YYYY-MM-DD
+        function getTodayDate() {
+            return new Date().toISOString().slice(0, 10);
+        }
+
+        // Создать пустое состояние дня
+        function createEmptyDay(date) {
+            return {
+                date: date,
+                kcalUsed: 0,
+                pUsed: 0,
+                cUsed: 0,
+                fUsed: 0,
+                fiber: 0,
+                xp: 0,
+                xpMax: 100,
+                level: 1,
+                tracks: {
+                    muscles: 0,
+                    energy: 0,
+                    immune: 0,
+                    hormones: 0,
+                    gut: 0,
+                    skin: 0,
+                    brain: 0
+                },
+                meals: []
+            };
+        }
+
+        // Загрузить состояние из localStorage
+        function loadKairosState() {
+            const stored = localStorage.getItem('kairos_state');
+            if (stored) {
+                try {
+                    return JSON.parse(stored);
+                } catch (e) {
+                    console.error('Ошибка парсинга kairos_state:', e);
+                    return createEmptyState();
+                }
+            }
+            return createEmptyState();
+        }
+
+        // Создать пустое состояние
+        function createEmptyState() {
+            return {
+                profile: null,
+                streak: {
+                    currentStreak: 0,
+                    lastCompletedDate: null
+                },
+                today: null,
+                history: {}
+            };
+        }
+
+        // Сохранить состояние в localStorage
+        function saveKairosState(state) {
+            localStorage.setItem('kairos_state', JSON.stringify(state));
+        }
+
+        // Проверить и обработать новый день
+        function checkNewDay(state) {
+            const todayStr = getTodayDate();
+            
+            if (!state.today) {
+                // Создаём первый день
+                state.today = createEmptyDay(todayStr);
+                return state;
+            }
+
+            if (state.today.date !== todayStr) {
+                // Сохраняем старый день в историю
+                const oldDate = state.today.date;
+                if (!state.history[oldDate]) {
+                    state.history[oldDate] = JSON.parse(JSON.stringify(state.today));
+                }
+                
+                // Создаём новый день
+                state.today = createEmptyDay(todayStr);
+                
+                // Обновляем streak
+                updateStreak(state, oldDate);
+            }
+            
+            return state;
+        }
+
+        // Обновить streak
+        function updateStreak(state, lastDate) {
+            const todayStr = getTodayDate();
+            const yesterday = new Date(todayStr);
+            yesterday.setDate(yesterday.getDate() - 1);
+            const yesterdayStr = yesterday.toISOString().slice(0, 10);
+            
+            if (lastDate === yesterdayStr) {
+                // Продолжаем серию
+                state.streak.currentStreak += 1;
+                state.streak.lastCompletedDate = lastDate;
+            } else if (lastDate !== todayStr) {
+                // Серия прервана
+                state.streak.currentStreak = 1;
+                state.streak.lastCompletedDate = lastDate;
+            }
+        }
+
+        // Инициализация состояния приложения
+        let kairosState = loadKairosState();
+        kairosState = checkNewDay(kairosState);
+        saveKairosState(kairosState);
+
+        // ========== СОВМЕСТИМОСТЬ СО СТАРЫМ КОДОМ ==========
+        // Временные переменные для обратной совместимости
+        let userData = kairosState.profile ? {
+            gender: kairosState.profile.sex,
+            age: kairosState.profile.age,
+            height: kairosState.profile.height,
+            weight: kairosState.profile.weight,
+            activity: kairosState.profile.activity,
+            goal: kairosState.profile.goal,
+            target_calories: kairosState.profile.target_calories,
+            protein_max: kairosState.profile.protein_max,
+            hero: kairosState.profile.hero
+        } : null;
         let selectedHero = null;
-        
-        let dailyUsed = {
-            calories: 0,
-            protein: 0,
-            carbs: 0,
-            fats: 0,
-            fiber: 0
-        };
-        
-        let dailyTargets = {
-            calories: 1800,
-            protein: 90,
-            carbs: 200,
-            fats: 60,
-            fiber: 30 // Примерная норма клетчатки
-        };
-
-        let currentMeal = {
-            type: '',
-            step: 0,
-            selections: {},
-            totals: { calories: 0, protein: 0, carbs: 0, fats: 0 }
-        };
-
-        let allMeals = JSON.parse(localStorage.getItem('kairos_meals') || '[]');
         
         // Система треков прокачки (7 направлений)
         const TRACKS = {
@@ -1323,20 +1444,96 @@
             SKIN: { id: 'skin', name: 'Кожа/волосы', icon: '✨', color: '#FF9EC4' },
             BRAIN: { id: 'brain', name: 'Мозг/фокус', icon: '🧠', color: '#A3E0FF' }
         };
+
+        // Геттеры для обратной совместимости (читают из kairosState.today)
+        function getDailyUsed() {
+            if (!kairosState.today) return { calories: 0, protein: 0, carbs: 0, fats: 0, fiber: 0 };
+            return {
+                calories: kairosState.today.kcalUsed,
+                protein: kairosState.today.pUsed,
+                carbs: kairosState.today.cUsed,
+                fats: kairosState.today.fUsed,
+                fiber: kairosState.today.fiber
+            };
+        }
+
+        function getAllMeals() {
+            return kairosState.today ? kairosState.today.meals : [];
+        }
+
+        function getUserTracks() {
+            if (!kairosState.today) return { muscles: 0, energy: 0, immunity: 0, hormones: 0, gut: 0, skin: 0, brain: 0 };
+            return {
+                muscles: kairosState.today.tracks.muscles,
+                energy: kairosState.today.tracks.energy,
+                immunity: kairosState.today.tracks.immune,
+                hormones: kairosState.today.tracks.hormones,
+                gut: kairosState.today.tracks.gut,
+                skin: kairosState.today.tracks.skin,
+                brain: kairosState.today.tracks.brain
+            };
+        }
+
+        function getUserXP() {
+            return kairosState.today ? kairosState.today.xp : 0;
+        }
+
+        function getUserLevel() {
+            return kairosState.today ? kairosState.today.level : 1;
+        }
+
+        function getStreak() {
+            return kairosState.streak ? kairosState.streak.currentStreak : 0;
+        }
+
+        function getTrackingMode() {
+            return kairosState.profile ? kairosState.profile.mode : 'numbers';
+        }
+
+        // Временные переменные для обратной совместимости (будут обновляться через функции)
+        let dailyUsed = getDailyUsed();
+        let allMeals = getAllMeals();
+        let userTracks = getUserTracks();
+        let userXP = getUserXP();
+        let userLevel = getUserLevel();
+        let streak = getStreak();
+        let trackingMode = getTrackingMode();
         
-        // Треки пользователя
-        let userTracks = JSON.parse(localStorage.getItem('kairos_tracks') || JSON.stringify({
-            muscles: 0, energy: 0, immunity: 0, hormones: 0, gut: 0, skin: 0, brain: 0
-        }));
-        
-        // Общий XP и уровень
-        let userXP = parseInt(localStorage.getItem('kairos_xp') || '0');
-        let userLevel = parseInt(localStorage.getItem('kairos_level') || '1');
-        let streak = parseInt(localStorage.getItem('kairos_streak') || '0');
-        let lastActiveDate = localStorage.getItem('kairos_lastActiveDate') || null;
-        
-        // Режим учёта: 'numbers' или 'intuitive'
-        let trackingMode = localStorage.getItem('kairos_trackingMode') || 'numbers';
+        let dailyTargets = {
+            calories: 1800,
+            protein: 90,
+            carbs: 200,
+            fats: 60,
+            fiber: 30
+        };
+
+        let currentMeal = {
+            type: '',
+            step: 0,
+            selections: {},
+            totals: { calories: 0, protein: 0, carbs: 0, fats: 0 }
+        };
+
+        // Функция для синхронизации today с историей
+        function syncTodayToHistory() {
+            if (kairosState.today) {
+                kairosState.history[kairosState.today.date] = JSON.parse(JSON.stringify(kairosState.today));
+            }
+        }
+
+        // Функция для сохранения состояния (вызывается после каждого изменения)
+        function saveState() {
+            syncTodayToHistory();
+            saveKairosState(kairosState);
+            // Обновляем временные переменные
+            dailyUsed = getDailyUsed();
+            allMeals = getAllMeals();
+            userTracks = getUserTracks();
+            userXP = getUserXP();
+            userLevel = getUserLevel();
+            streak = getStreak();
+            trackingMode = getTrackingMode();
+        }
         
         // База данных продуктов
         const FOODS = {
@@ -1479,31 +1676,36 @@
         
         // Функция для обновления уровня
         function updateLevel() {
-            const xpForNextLevel = userLevel * 100;
-            if (userXP >= xpForNextLevel) {
-                userLevel++;
-                userXP -= xpForNextLevel;
-                localStorage.setItem('kairos_level', userLevel.toString());
-                showToast(`🎉 Уровень ${userLevel}!`);
+            if (!kairosState.today) return;
+            
+            const xpForNextLevel = kairosState.today.level * 100;
+            if (kairosState.today.xp >= xpForNextLevel) {
+                kairosState.today.level++;
+                kairosState.today.xp -= xpForNextLevel;
+                saveState();
+                showToast(`🎉 Уровень ${kairosState.today.level}!`);
+            } else {
+                saveState();
             }
-            localStorage.setItem('kairos_xp', userXP.toString());
         }
         
-        // Функция для обновления streak
+        // Функция для обновления streak (вызывается при добавлении еды/активности)
         function updateStreak() {
-            const today = new Date().toDateString();
-            if (lastActiveDate !== today) {
-                const yesterday = new Date();
+            const todayStr = getTodayDate();
+            const yesterday = new Date(todayStr);
                 yesterday.setDate(yesterday.getDate() - 1);
-                if (lastActiveDate === yesterday.toDateString()) {
-                    streak++;
-                } else if (lastActiveDate !== today) {
-                    streak = 1;
-                }
-                lastActiveDate = today;
-                localStorage.setItem('kairos_streak', streak.toString());
-                localStorage.setItem('kairos_lastActiveDate', lastActiveDate);
+            const yesterdayStr = yesterday.toISOString().slice(0, 10);
+            
+            if (kairosState.streak.lastCompletedDate === yesterdayStr) {
+                // Продолжаем серию
+                kairosState.streak.currentStreak += 1;
+            } else if (kairosState.streak.lastCompletedDate !== todayStr) {
+                // Новая серия
+                kairosState.streak.currentStreak = 1;
             }
+            
+            kairosState.streak.lastCompletedDate = todayStr;
+            saveState();
         }
 
         // Функция для создания опций из FOODS
@@ -1596,8 +1798,10 @@
         };
 
         function initApp() {
-            // Обновляем streak при запуске
+            // Обновляем streak при запуске (если есть активность сегодня)
+            if (kairosState.today && kairosState.today.meals.length > 0) {
             updateStreak();
+            }
             setupHeroSelection();
             checkOnboardingStatus();
         }
@@ -1614,27 +1818,35 @@
             });
 
             document.getElementById('start-journey-btn').addEventListener('click', () => {
-                if (userData && selectedHero) {
+                if (kairosState.profile && selectedHero) {
+                    kairosState.profile.hero = selectedHero;
+                    saveState();
+                    // Для обратной совместимости
+                    if (userData) {
                     userData.hero = selectedHero;
                     userData.hero_points = 0;
-                    localStorage.setItem('kairos_userData', JSON.stringify(userData));
+                    }
                     showApp();
                 }
             });
         }
 
         function checkOnboardingStatus() {
-            if (userData && userData.hero) {
+            if (kairosState.profile) {
+                // Устанавливаем dailyTargets из профиля
                 dailyTargets = {
-                    calories: userData.target_calories || 1800,
-                    protein: userData.protein_max || 90,
-                    carbs: Math.round((userData.target_calories || 1800) * 0.45 / 4),
-                    fats: Math.round((userData.target_calories || 1800) * 0.30 / 9),
-                    fiber: 30 // Примерная норма клетчатки
+                    calories: kairosState.profile.target_calories || 1800,
+                    protein: kairosState.profile.protein_max || 90,
+                    carbs: Math.round((kairosState.profile.target_calories || 1800) * 0.45 / 4),
+                    fats: Math.round((kairosState.profile.target_calories || 1800) * 0.30 / 9),
+                    fiber: 30
                 };
+                
+                if (kairosState.profile.hero) {
                 showApp();
-            } else if (userData && !userData.hero) {
+                } else {
                 document.getElementById('hero-selection').classList.remove('hidden');
+                }
             } else {
                 document.getElementById('onboarding-step1').classList.remove('hidden');
             }
@@ -1689,6 +1901,30 @@
             const proteinMin = Math.round(weight * 1.6);
             const proteinMax = Math.round(weight * 2.0);
 
+            // Сохраняем профиль в kairosState
+            kairosState.profile = {
+                sex: gender,
+                age: age,
+                height: height,
+                weight: weight,
+                activity: currentActivity,
+                goal: goal,
+                target_calories: targetCalories,
+                protein_min: proteinMin,
+                protein_max: proteinMax,
+                mode: trackingMode || 'numbers',
+                hero: '',
+                created_at: new Date().toISOString()
+            };
+            
+            // Создаём первый день, если его нет
+            if (!kairosState.today) {
+                kairosState.today = createEmptyDay(getTodayDate());
+            }
+            
+            saveState();
+            
+            // Для обратной совместимости
             userData = {
                 id: Date.now().toString(),
                 gender, age, height, weight, goal,
@@ -1703,8 +1939,6 @@
                 hero_points: 0,
                 created_at: new Date().toISOString()
             };
-
-            localStorage.setItem('kairos_userData', JSON.stringify(userData));
 
             document.getElementById('target-calories').textContent = targetCalories;
             document.getElementById('protein-range').textContent = `${proteinMin}–${proteinMax}`;
@@ -1729,7 +1963,10 @@
         
         function selectTrackingMode(mode) {
             trackingMode = mode;
-            localStorage.setItem('kairos_trackingMode', mode);
+            if (kairosState.profile) {
+                kairosState.profile.mode = mode;
+                saveState();
+            }
             
             // Выделяем выбранный режим
             document.querySelectorAll('[id^="mode-"]').forEach(card => {
@@ -1766,27 +2003,37 @@
         }
 
         function updateHeroDisplay() {
-            if (userData && userData.hero) {
-                const hero = heroData[userData.hero];
-                document.getElementById('hero-avatar').textContent = hero.icon;
-                document.getElementById('hero-name').textContent = hero.name;
+            if (kairosState.profile && kairosState.profile.hero) {
+                const hero = heroData[kairosState.profile.hero];
+                const avatarEl = document.getElementById('hero-avatar');
+                const nameEl = document.getElementById('hero-name');
+                if (avatarEl) avatarEl.textContent = hero.icon;
+                if (nameEl) nameEl.textContent = hero.name;
                 
-                // Обновляем XP и уровень
-                const xpForNextLevel = userLevel * 100;
-                const progressPercent = xpForNextLevel > 0 ? (userXP / xpForNextLevel) * 100 : 0;
-                document.getElementById('hero-points').textContent = `${userXP} / ${xpForNextLevel} XP`;
-                document.getElementById('hero-progress-bar').style.width = `${Math.min(progressPercent, 100)}%`;
+                // Обновляем XP и уровень из today
+                if (kairosState.today) {
+                    const xpForNextLevel = kairosState.today.level * 100;
+                    const progressPercent = xpForNextLevel > 0 ? (kairosState.today.xp / xpForNextLevel) * 100 : 0;
+                    const pointsEl = document.getElementById('hero-points');
+                    if (pointsEl) {
+                        pointsEl.textContent = `${kairosState.today.xp} / ${xpForNextLevel} XP`;
+                    }
+                    const progressBarEl = document.getElementById('hero-progress-bar');
+                    if (progressBarEl) {
+                        progressBarEl.style.width = `${Math.min(progressPercent, 100)}%`;
+                    }
                 
                 // Обновляем уровень в виджете
                 const levelElement = document.getElementById('hero-level-text');
                 if (levelElement) {
-                    levelElement.textContent = `Уровень ${userLevel}`;
+                        levelElement.textContent = `Уровень ${kairosState.today.level}`;
+                    }
                 }
                 
                 // Обновляем streak
-                const streakElement = document.getElementById('hero-streak');
-                if (streakElement) {
-                    streakElement.textContent = `🔥 Серия: ${streak} дней`;
+                const streakEl = document.getElementById('hero-streak');
+                if (streakEl && kairosState.streak) {
+                    streakEl.textContent = `🔥 Серия: ${kairosState.streak.currentStreak} дней`;
                 }
                 
                 // Обновляем треки
@@ -1798,17 +2045,23 @@
             const tracksList = document.getElementById('tracks-list');
             if (!tracksList) return;
             
+            if (!kairosState.today) {
+                tracksList.innerHTML = '<div style="color: #6B7280; font-style: italic;">Добавляй продукты для прокачки</div>';
+                return;
+            }
+            
             const tracks = [
-                { key: 'muscles', ...TRACKS.MUSCLES },
-                { key: 'energy', ...TRACKS.ENERGY },
-                { key: 'immunity', ...TRACKS.IMMUNITY },
-                { key: 'hormones', ...TRACKS.HORMONES },
-                { key: 'gut', ...TRACKS.GUT },
-                { key: 'skin', ...TRACKS.SKIN },
-                { key: 'brain', ...TRACKS.BRAIN }
+                { key: 'muscles', trackKey: 'muscles', ...TRACKS.MUSCLES },
+                { key: 'energy', trackKey: 'energy', ...TRACKS.ENERGY },
+                { key: 'immunity', trackKey: 'immune', ...TRACKS.IMMUNITY },
+                { key: 'hormones', trackKey: 'hormones', ...TRACKS.HORMONES },
+                { key: 'gut', trackKey: 'gut', ...TRACKS.GUT },
+                { key: 'skin', trackKey: 'skin', ...TRACKS.SKIN },
+                { key: 'brain', trackKey: 'brain', ...TRACKS.BRAIN }
             ];
             
-            const totalTracksXP = Object.values(userTracks).reduce((sum, xp) => sum + xp, 0);
+            const todayTracks = kairosState.today.tracks;
+            const totalTracksXP = Object.values(todayTracks).reduce((sum, xp) => sum + xp, 0);
             
             if (totalTracksXP === 0) {
                 tracksList.innerHTML = '<div style="color: #6B7280; font-style: italic;">Добавляй продукты для прокачки</div>';
@@ -1816,7 +2069,7 @@
             }
             
             tracksList.innerHTML = tracks.map(track => {
-                const xp = userTracks[track.key] || 0;
+                const xp = todayTracks[track.trackKey] || 0;
                 const percent = totalTracksXP > 0 ? (xp / totalTracksXP) * 100 : 0;
                 return `
                     <div style="margin-bottom: 6px;">
@@ -1833,23 +2086,39 @@
         }
 
         function updateDailyTotals() {
-            dailyUsed = { calories: 0, protein: 0, carbs: 0, fats: 0, fiber: 0 };
-            allMeals.forEach(meal => {
-                dailyUsed.calories += meal.calories || 0;
-                dailyUsed.protein += meal.protein_g || 0;
-                dailyUsed.carbs += meal.carbs_g || 0;
-                dailyUsed.fats += meal.fats_g || 0;
-                dailyUsed.fiber += meal.fiber_g || 0;
-            });
+            // Обновляем переменные из kairosState
+            dailyUsed = getDailyUsed();
+            allMeals = getAllMeals();
 
             const remainingCalories = dailyTargets.calories - dailyUsed.calories;
-            document.getElementById('remaining-calories').textContent = Math.round(remainingCalories);
-            document.getElementById('used-protein').textContent = Math.round(dailyUsed.protein);
-            document.getElementById('used-carbs').textContent = Math.round(dailyUsed.carbs);
-            document.getElementById('used-fats').textContent = Math.round(dailyUsed.fats);
-            document.getElementById('total-protein').textContent = dailyTargets.protein;
-            document.getElementById('total-carbs').textContent = dailyTargets.carbs;
-            document.getElementById('total-fats').textContent = dailyTargets.fats;
+            const remainingEl = document.getElementById('remaining-calories');
+            if (remainingEl) {
+                remainingEl.textContent = Math.round(remainingCalories);
+            }
+            const usedProteinEl = document.getElementById('used-protein');
+            if (usedProteinEl) {
+                usedProteinEl.textContent = Math.round(dailyUsed.protein);
+            }
+            const usedCarbsEl = document.getElementById('used-carbs');
+            if (usedCarbsEl) {
+                usedCarbsEl.textContent = Math.round(dailyUsed.carbs);
+            }
+            const usedFatsEl = document.getElementById('used-fats');
+            if (usedFatsEl) {
+                usedFatsEl.textContent = Math.round(dailyUsed.fats);
+            }
+            const totalProteinEl = document.getElementById('total-protein');
+            if (totalProteinEl) {
+                totalProteinEl.textContent = dailyTargets.protein;
+            }
+            const totalCarbsEl = document.getElementById('total-carbs');
+            if (totalCarbsEl) {
+                totalCarbsEl.textContent = dailyTargets.carbs;
+            }
+            const totalFatsEl = document.getElementById('total-fats');
+            if (totalFatsEl) {
+                totalFatsEl.textContent = dailyTargets.fats;
+            }
         }
 
         function updateDailySummary() {
@@ -1891,6 +2160,229 @@
             document.getElementById('summary-totals').style.display = 'block';
         }
 
+        // ========== КАЛЕНДАРЬ ==========
+        
+        function renderCalendar() {
+            const container = document.getElementById('calendar-container');
+            if (!container) return;
+            
+            const today = new Date();
+            const currentMonth = today.getMonth();
+            const currentYear = today.getFullYear();
+            
+            // Первый день месяца
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            const lastDay = new Date(currentYear, currentMonth + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startingDayOfWeek = firstDay.getDay();
+            
+            // Названия месяцев
+            const monthNames = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
+                              'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+            const dayNames = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+            
+            let html = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <h3 style="color: #1B2B4A; margin: 0;">${monthNames[currentMonth]} ${currentYear}</h3>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-bottom: 16px;">
+            `;
+            
+            // Заголовки дней недели
+            dayNames.forEach(day => {
+                html += `<div style="text-align: center; font-weight: 600; color: #6B7280; font-size: 12px; padding: 8px;">${day}</div>`;
+            });
+            
+            // Пустые ячейки до первого дня месяца
+            for (let i = 0; i < startingDayOfWeek; i++) {
+                html += `<div style="aspect-ratio: 1; border-radius: 8px;"></div>`;
+            }
+            
+            // Дни месяца
+            const todayStr = getTodayDate();
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const isToday = dateStr === todayStr;
+                const hasData = kairosState.history[dateStr] || (isToday && kairosState.today);
+                
+                let dayData = null;
+                if (isToday && kairosState.today) {
+                    dayData = kairosState.today;
+                } else if (kairosState.history[dateStr]) {
+                    dayData = kairosState.history[dateStr];
+                }
+                
+                // Вычисляем процент выполнения (по калориям)
+                let completionPercent = 0;
+                if (dayData && kairosState.profile) {
+                    const target = kairosState.profile.target_calories || 1800;
+                    completionPercent = Math.min((dayData.kcalUsed / target) * 100, 100);
+                }
+                
+                const bgColor = hasData ? 
+                    `linear-gradient(180deg, rgba(109, 168, 255, ${0.3 + completionPercent / 200}) 0%, rgba(74, 109, 255, ${0.2 + completionPercent / 200}) 100%)` :
+                    'transparent';
+                const borderColor = isToday ? '#6DA8FF' : (hasData ? 'rgba(109, 168, 255, 0.3)' : 'rgba(0, 0, 0, 0.1)');
+                const borderWidth = isToday ? '2px' : '1px';
+                
+                html += `
+                    <div 
+                        onclick="showDayDetails('${dateStr}')"
+                        style="
+                            aspect-ratio: 1;
+                            border: ${borderWidth} solid ${borderColor};
+                            border-radius: 8px;
+                            background: ${bgColor};
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: center;
+                            cursor: pointer;
+                            transition: all 0.2s;
+                            padding: 4px;
+                        "
+                        onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(109, 168, 255, 0.3)'"
+                        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'"
+                    >
+                        <div style="font-weight: ${isToday ? '700' : '500'}; color: ${isToday ? '#1B2B4A' : '#2A2A2A'}; font-size: 14px;">
+                            ${day}
+                        </div>
+                        ${hasData ? `<div style="width: 4px; height: 4px; background: #6DA8FF; border-radius: 50%; margin-top: 2px;"></div>` : ''}
+                    </div>
+                `;
+            }
+            
+            html += '</div>';
+            container.innerHTML = html;
+        }
+        
+        function showDayDetails(dateStr) {
+            const detailsContainer = document.getElementById('calendar-day-details');
+            const titleEl = document.getElementById('calendar-day-title');
+            const contentEl = document.getElementById('calendar-day-content');
+            
+            if (!detailsContainer || !titleEl || !contentEl) return;
+            
+            // Получаем данные дня
+            let dayData = null;
+            const todayStr = getTodayDate();
+            if (dateStr === todayStr && kairosState.today) {
+                dayData = kairosState.today;
+            } else if (kairosState.history[dateStr]) {
+                dayData = kairosState.history[dateStr];
+            }
+            
+            if (!dayData) {
+                contentEl.innerHTML = '<p style="color: #6B7280;">Нет данных за этот день</p>';
+                detailsContainer.style.display = 'none';
+                return;
+            }
+            
+            // Форматируем дату
+            const date = new Date(dateStr + 'T00:00:00');
+            const dateFormatted = date.toLocaleDateString('ru-RU', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            titleEl.textContent = `Результаты дня: ${dateFormatted}`;
+            
+            // Получаем цели из профиля
+            const targetCalories = kairosState.profile ? kairosState.profile.target_calories || 1800 : 1800;
+            const targetProtein = kairosState.profile ? kairosState.profile.protein_max || 90 : 90;
+            const targetCarbs = Math.round(targetCalories * 0.45 / 4);
+            const targetFats = Math.round(targetCalories * 0.30 / 9);
+            
+            // Формируем контент
+            let content = `
+                <div style="margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: #2A2A2A;">Калории:</span>
+                        <strong style="color: #1B2B4A;">${Math.round(dayData.kcalUsed)} / ${targetCalories} ккал</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: #2A2A2A;">Белки:</span>
+                        <strong style="color: #1B2B4A;">${Math.round(dayData.pUsed)} / ${targetProtein} г</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: #2A2A2A;">Углеводы:</span>
+                        <strong style="color: #1B2B4A;">${Math.round(dayData.cUsed)} / ${targetCarbs} г</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+                        <span style="color: #2A2A2A;">Жиры:</span>
+                        <strong style="color: #1B2B4A;">${Math.round(dayData.fUsed)} / ${targetFats} г</strong>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 16px;">
+                    <div style="font-weight: 600; color: #1B2B4A; margin-bottom: 8px;">XP и уровень:</div>
+                    <div style="color: #2A2A2A;">${dayData.xp} XP / Уровень ${dayData.level}</div>
+                </div>
+                
+                <div style="margin-bottom: 16px;">
+                    <div style="font-weight: 600; color: #1B2B4A; margin-bottom: 8px;">Треки прокачки:</div>
+            `;
+            
+            // Треки
+            const tracks = [
+                { key: 'muscles', name: 'Мышцы/сила', icon: '💪', color: '#FF6B6B' },
+                { key: 'energy', name: 'Энергия', icon: '⚡', color: '#FFD93D' },
+                { key: 'immune', name: 'Иммунитет', icon: '🛡️', color: '#4CAF50' },
+                { key: 'hormones', name: 'Гормоны', icon: '🔄', color: '#3DC5D0' },
+                { key: 'gut', name: 'ЖКТ', icon: '🌱', color: '#5CD6A4' },
+                { key: 'skin', name: 'Кожа/волосы', icon: '✨', color: '#FF9EC4' },
+                { key: 'brain', name: 'Мозг/фокус', icon: '🧠', color: '#A3E0FF' }
+            ];
+            
+            tracks.forEach(track => {
+                const xp = dayData.tracks[track.key] || 0;
+                if (xp > 0) {
+                    content += `
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 14px;">
+                            <span style="color: ${track.color};">${track.icon} ${track.name}</span>
+                            <span style="color: #1B2B4A;">${xp} XP</span>
+                        </div>
+                    `;
+                }
+            });
+            
+            content += '</div>';
+            
+            // Приёмы пищи
+            if (dayData.meals && dayData.meals.length > 0) {
+                content += `
+                    <div>
+                        <div style="font-weight: 600; color: #1B2B4A; margin-bottom: 8px;">Приёмы пищи:</div>
+                `;
+                
+                const mealNames = {
+                    breakfast: '🌅 Завтрак',
+                    lunch: '☀️ Обед',
+                    dinner: '🌙 Ужин',
+                    snack: '🍎 Перекус'
+                };
+                
+                dayData.meals.forEach(meal => {
+                    content += `
+                        <div style="margin-bottom: 12px; padding: 12px; background: rgba(109, 168, 255, 0.05); border-radius: 8px;">
+                            <div style="font-weight: 600; color: #1B2B4A; margin-bottom: 4px;">${mealNames[meal.meal_type] || meal.meal_type}</div>
+                            <div style="font-size: 13px; color: #6B7280;">${Math.round(meal.calories)} ккал</div>
+                        </div>
+                    `;
+                });
+                
+                content += '</div>';
+            }
+            
+            contentEl.innerHTML = content;
+            detailsContainer.style.display = 'block';
+            
+            // Прокручиваем к деталям
+            detailsContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
         function showSection(sectionId) {
             document.getElementById('main-menu').classList.add('hidden');
             ['plate-guide', 'constructor', 'activity', 'problems', 'sleep'].forEach(id => {
@@ -1922,30 +2414,32 @@
 
         // Функция для сброса дневного прогресса (калории и приёмы пищи)
         function resetDailyProgress() {
-            const message = 'Сбросить все приёмы пищи и калории за сегодня?';
+            const message = 'Сбросить все данные за сегодня (калории, БЖУ, треки и список приёмов пищи)? Профиль и история прошлых дней сохранятся.';
             const confirmCallback = (confirmed) => {
                 if (confirmed) {
-                    // Очищаем приёмы пищи
-                    allMeals = [];
-                    localStorage.setItem('kairos_meals', JSON.stringify(allMeals));
+                    const todayStr = getTodayDate();
                     
-                    // Сбрасываем дневной прогресс
-                    dailyUsed = { calories: 0, protein: 0, carbs: 0, fats: 0, fiber: 0 };
+                    // Создаём новый пустой день с сохранением даты
+                    kairosState.today = createEmptyDay(todayStr);
                     
-                    // Восстанавливаем базовые значения калорий и БЖУ из userData
-                    if (userData) {
+                    // Восстанавливаем базовые значения калорий и БЖУ из профиля
+                    if (kairosState.profile) {
                         dailyTargets = {
-                            calories: userData.target_calories || 1800,
-                            protein: userData.protein_max || 90,
-                            carbs: Math.round((userData.target_calories || 1800) * 0.45 / 4),
-                            fats: Math.round((userData.target_calories || 1800) * 0.30 / 9),
+                            calories: kairosState.profile.target_calories || 1800,
+                            protein: kairosState.profile.protein_max || 90,
+                            carbs: Math.round((kairosState.profile.target_calories || 1800) * 0.45 / 4),
+                            fats: Math.round((kairosState.profile.target_calories || 1800) * 0.30 / 9),
                             fiber: 30
                         };
                     }
                     
+                    // Сохраняем состояние
+                    saveState();
+                    
                     // Обновляем интерфейс
                     updateDailyTotals();
                     updateDailySummary();
+                    updateHeroDisplay();
                     
                     showToast('✅ День сброшен');
                     hapticFeedback('medium');
@@ -1957,10 +2451,11 @@
 
         // Функция для полного сброса и возврата к онбордингу
         function resetAllData() {
-            const message = 'Начать сначала? Это удалит все данные: калории, приёмы пищи, прогресс, уровень и треки.';
+            const message = 'Начать всё сначала? Мы удалим профиль, историю и текущий день. Всё придётся настроить заново.';
             const confirmCallback = (confirmed) => {
                 if (confirmed) {
-                    // Очищаем все данные из localStorage
+                    // Удаляем все старые ключи из localStorage
+                    localStorage.removeItem('kairos_state');
                     localStorage.removeItem('kairos_userData');
                     localStorage.removeItem('kairos_meals');
                     localStorage.removeItem('kairos_tracks');
@@ -1971,42 +2466,8 @@
                     localStorage.removeItem('kairos_trackingMode');
                     localStorage.removeItem('kairos_selectedHero');
                     
-                    // Сбрасываем все переменные
-                    userData = null;
-                    selectedHero = null;
-                    allMeals = [];
-                    dailyUsed = { calories: 0, protein: 0, carbs: 0, fats: 0, fiber: 0 };
-                    dailyTargets = {
-                        calories: 1800,
-                        protein: 90,
-                        carbs: 200,
-                        fats: 60,
-                        fiber: 30
-                    };
-                    userTracks = { muscles: 0, energy: 0, immunity: 0, hormones: 0, gut: 0, skin: 0, brain: 0 };
-                    userXP = 0;
-                    userLevel = 1;
-                    streak = 0;
-                    lastActiveDate = null;
-                    trackingMode = 'numbers';
-                    
-                    // Скрываем все секции
-                    document.getElementById('app-main').classList.add('hidden');
-                    document.getElementById('onboarding-step2').classList.add('hidden');
-                    document.getElementById('mode-selection').classList.add('hidden');
-                    document.getElementById('hero-selection').classList.add('hidden');
-                    
-                    // Показываем первый шаг онбординга (анкету)
-                    document.getElementById('onboarding-step1').classList.remove('hidden');
-                    
-                    // Скрываем кнопки Telegram
-                    if (tg) {
-                        tg.MainButton.hide();
-                        tg.BackButton.hide();
-                    }
-                    
-                    showToast('🔄 Начинаем сначала');
-                    hapticFeedback('heavy');
+                    // Перезагружаем страницу для полного сброса
+                    location.reload();
                 }
             };
             
@@ -2076,11 +2537,11 @@
                 // Показываем подсказку только если порция указана в граммах (без конкретных единиц)
                 // И только для групп protein, carb, fat
                 if (!hasSpecificPortion && portion && (option.group === 'protein' || option.group === 'carb' || option.group === 'fat')) {
-                    if (option.group === 'protein') {
+                if (option.group === 'protein') {
                         portionHint = '<div style="font-size: 11px; color: #6B7280; margin-top: 4px;">≈ ладонь</div>';
-                    } else if (option.group === 'carb') {
+                } else if (option.group === 'carb') {
                         portionHint = '<div style="font-size: 11px; color: #6B7280; margin-top: 4px;">≈ кулак</div>';
-                    } else if (option.group === 'fat') {
+                } else if (option.group === 'fat') {
                         portionHint = '<div style="font-size: 11px; color: #6B7280; margin-top: 4px;">≈ 1 порция</div>';
                     }
                 }
@@ -2302,15 +2763,19 @@
                 });
             });
 
-            // Обновляем треки пользователя
+            // Обновляем треки пользователя в kairosState
+            if (!kairosState.today) {
+                kairosState.today = createEmptyDay(getTodayDate());
+            }
+            
             Object.keys(totalTrackXP).forEach(key => {
-                userTracks[key] = (userTracks[key] || 0) + totalTrackXP[key];
+                const trackKey = key === 'immunity' ? 'immune' : key;
+                kairosState.today.tracks[trackKey] = (kairosState.today.tracks[trackKey] || 0) + totalTrackXP[key];
             });
-            localStorage.setItem('kairos_tracks', JSON.stringify(userTracks));
 
             // Добавляем общий XP
             const totalXP = calculateTotalXP(totalTrackXP);
-            userXP += totalXP;
+            kairosState.today.xp += totalXP;
             updateLevel();
             updateStreak();
 
@@ -2324,7 +2789,7 @@
             // Сбалансированная тарелка (белок + угли + жиры + овощи)
             if (hasProtein && hasCarbs && hasFats && hasVeg) {
                 synergyXP = 15;
-                userXP += synergyXP;
+                kairosState.today.xp += synergyXP;
                 showToast(`🎯 Сбалансированная тарелка! +${synergyXP} XP`);
             }
 
@@ -2359,8 +2824,21 @@
                 telegram_user_id: telegramUser?.id || null
             };
 
-            allMeals.push(mealData);
-            localStorage.setItem('kairos_meals', JSON.stringify(allMeals));
+            // Сохраняем приём пищи в kairosState.today
+            if (!kairosState.today) {
+                kairosState.today = createEmptyDay(getTodayDate());
+            }
+            kairosState.today.meals.push(mealData);
+            
+            // Обновляем КБЖУ в today
+            kairosState.today.kcalUsed += totalCalories;
+            kairosState.today.pUsed += totalProtein;
+            kairosState.today.cUsed += totalCarbs;
+            kairosState.today.fUsed += totalFats;
+            kairosState.today.fiber += totalFiber;
+            
+            // Сохраняем состояние
+            saveState();
             
             // Отправляем данные в бота
             sendDataToBot();
@@ -2396,7 +2874,7 @@
         function cancelConstructor() {
             const message = 'Отменить создание приёма пищи?';
             const confirmCallback = (confirmed) => {
-                if (confirmed) {
+                    if (confirmed) {
                     // Сбрасываем текущий приём пищи
                     currentMeal = {
                         type: '',
@@ -2406,9 +2884,9 @@
                     };
                     
                     // Возвращаемся в главное меню
-                    showMainMenu();
-                    hapticFeedback('light');
-                }
+                        showMainMenu();
+                        hapticFeedback('light');
+                    }
             };
             
             showTelegramConfirm(message, confirmCallback);
@@ -2446,14 +2924,19 @@
             
             // Начисляем XP за сон (7-8 часов = идеально)
             if (hours === 7) {
-                const sleepXP = { muscles: 0, energy: 0, immunity: 5, hormones: 10, gut: 0, skin: 0, brain: 2 };
-                Object.keys(sleepXP).forEach(key => {
-                    userTracks[key] = (userTracks[key] || 0) + sleepXP[key];
-                });
-                localStorage.setItem('kairos_tracks', JSON.stringify(userTracks));
+                if (!kairosState.today) {
+                    kairosState.today = createEmptyDay(getTodayDate());
+                }
                 
-                const totalSleepXP = calculateTotalXP(sleepXP);
-                userXP += totalSleepXP;
+                const sleepXP = { muscles: 0, energy: 0, immune: 5, hormones: 10, gut: 0, skin: 0, brain: 2 };
+                Object.keys(sleepXP).forEach(key => {
+                    kairosState.today.tracks[key] = (kairosState.today.tracks[key] || 0) + sleepXP[key];
+                });
+                
+                const totalSleepXP = calculateTotalXP({ muscles: 0, energy: 0, immunity: 5, hormones: 10, gut: 0, skin: 0, brain: 2 });
+                kairosState.today.xp += totalSleepXP;
+                
+                saveState();
                 updateLevel();
                 updateStreak();
                 updateHeroDisplay();
@@ -2467,15 +2950,20 @@
         function addWater() {
             hapticFeedback('medium');
             
-            // Начисляем XP за воду
-            const waterXP = { muscles: 0, energy: 3, immunity: 0, hormones: 0, gut: 0, skin: 0, brain: 1 };
-            Object.keys(waterXP).forEach(key => {
-                userTracks[key] = (userTracks[key] || 0) + waterXP[key];
-            });
-            localStorage.setItem('kairos_tracks', JSON.stringify(userTracks));
+            if (!kairosState.today) {
+                kairosState.today = createEmptyDay(getTodayDate());
+            }
             
-            const totalWaterXP = calculateTotalXP(waterXP);
-            userXP += totalWaterXP;
+            // Начисляем XP за воду
+            const waterXP = { muscles: 0, energy: 3, immune: 0, hormones: 0, gut: 0, skin: 0, brain: 1 };
+            Object.keys(waterXP).forEach(key => {
+                kairosState.today.tracks[key] = (kairosState.today.tracks[key] || 0) + waterXP[key];
+            });
+            
+            const totalWaterXP = calculateTotalXP({ muscles: 0, energy: 3, immunity: 0, hormones: 0, gut: 0, skin: 0, brain: 1 });
+            kairosState.today.xp += totalWaterXP;
+            
+            saveState();
             updateLevel();
             updateStreak();
             updateHeroDisplay();
@@ -2487,6 +2975,5 @@
     </script>
 </body>
 </html>
-
 
 
