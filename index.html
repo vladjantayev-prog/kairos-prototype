@@ -29,8 +29,8 @@
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(circle at 20% 50%, rgba(130, 196, 255, 0.04) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(74, 107, 200, 0.03) 0%, transparent 50%);
+                radial-gradient(circle at 20% 50%, rgba(130, 196, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(199, 212, 255, 0.02) 0%, transparent 50%);
             pointer-events: none;
             z-index: 0;
         }
@@ -48,10 +48,10 @@
             background: #FFFFFF;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(0, 0, 0, 0.06);
-            border-radius: 20px;
+            border-radius: 22px;
             padding: 24px;
             margin-bottom: 20px;
-            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.07);
         }
 
         .card.blue-card {
@@ -180,6 +180,13 @@
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
+        }
+
+        .btn-primary:active,
+        .btn:active,
+        .double-btn:active {
+            transform: translateY(1px);
+            opacity: 0.9;
         }
 
         .btn-secondary {
@@ -333,6 +340,23 @@
             text-align: center;
         }
 
+        .macro-progress {
+            margin-top: 8px;
+            width: 100%;
+            height: 4px;
+            border-radius: 999px;
+            background: rgba(130, 196, 255, 0.15);
+            overflow: hidden;
+        }
+
+        .macro-progress-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #82C4FF, #4A6BC8);
+            transition: width 0.25s ease-out;
+        }
+
         .macro-label {
             font-size: 12px;
             color: #6B7280;
@@ -358,8 +382,8 @@
 
         .menu-card {
             background: #FFFFFF;
-            border: 1px solid rgba(0, 0, 0, 0.06);
-            border-radius: 18px;
+            border: 1px solid rgba(15, 23, 42, 0.04);
+            border-radius: 20px;
             padding: 24px 20px;
             text-align: center;
             cursor: pointer;
@@ -372,7 +396,7 @@
         .menu-card:hover {
             transform: translateY(-1px);
             background: rgba(130, 196, 255, 0.04);
-            border-color: rgba(130, 196, 255, 0.5);
+            border-color: rgba(130, 196, 255, 0.4);
             box-shadow: 0 6px 14px rgba(0, 0, 0, 0.04);
         }
 
@@ -382,11 +406,11 @@
             justify-content: center;
             width: 56px;
             height: 56px;
-            background: linear-gradient(135deg, #82C4FF, #4A6BC8);
+            background: linear-gradient(135deg, rgba(130, 196, 255, 0.9), rgba(74, 107, 200, 0.9));
             border-radius: 50%;
             margin: 0 auto 12px;
             font-size: 28px;
-            box-shadow: 0 4px 10px rgba(130, 196, 255, 0.25);
+            box-shadow: 0 4px 12px rgba(130, 196, 255, 0.2);
         }
 
         .menu-title {
@@ -426,7 +450,7 @@
             padding: 16px;
             margin: 0;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
             text-align: center;
             min-height: auto;
         }
@@ -438,9 +462,10 @@
 
         .option-card.selected {
             background: linear-gradient(135deg, #82C4FF, #4A6BC8);
-            border: 2px solid transparent;
+            border-color: transparent;
             color: #FFFFFF;
-            box-shadow: 0 6px 18px rgba(130, 196, 255, 0.3);
+            box-shadow: 0 10px 24px rgba(130, 196, 255, 0.4);
+            transform: translateY(-1px);
             padding: 16px;
             margin: 0;
             min-height: auto;
@@ -471,10 +496,10 @@
         .info-section {
             background: #FFFFFF;
             border: 1px solid rgba(0, 0, 0, 0.06);
-            border-radius: 20px;
+            border-radius: 22px;
             padding: 24px;
             margin-bottom: 16px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.07);
         }
 
         .info-section.blue-accent {
@@ -497,22 +522,22 @@
 
 
         #health-orb {
-            width: 180px;
-            height: 180px;
-            margin: 24px auto 20px auto;
+            width: 190px;
+            max-width: 60vw;
+            aspect-ratio: 1 / 1;
+            margin: 28px auto 24px auto;
             border-radius: 50%;
             position: relative;
-            /* премиальный пастельный градиент */
+            /* glassmorphism градиент */
             background:
-                radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.95) 0, rgba(255, 255, 255, 0) 55%),
-                radial-gradient(circle at 70% 30%, rgba(200, 220, 255, 0.6) 0, rgba(200, 220, 255, 0) 60%),
-                radial-gradient(circle at 30% 70%, rgba(230, 240, 255, 0.5) 0, rgba(230, 240, 255, 0) 60%),
-                radial-gradient(circle at 70% 80%, rgba(240, 230, 255, 0.55) 0, rgba(240, 230, 255, 0) 60%);
+                radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.9) 0, rgba(255, 255, 255, 0) 55%),
+                radial-gradient(circle at 70% 30%, rgba(130, 196, 255, 0.85) 0, rgba(130, 196, 255, 0) 60%),
+                radial-gradient(circle at 30% 75%, rgba(163, 221, 255, 0.7) 0, rgba(163, 221, 255, 0) 60%),
+                radial-gradient(circle at 75% 80%, rgba(199, 212, 255, 0.8) 0, rgba(199, 212, 255, 0) 60%);
             box-shadow:
-                0 0 25px rgba(130, 196, 255, 0.35),
-                0 0 55px rgba(130, 196, 255, 0.25),
-                inset 0 0 30px rgba(255, 255, 255, 0.4),
-                inset 0 -20px 40px rgba(74, 107, 200, 0.2);
+                0 0 40px rgba(130, 196, 255, 0.55),
+                0 0 80px rgba(130, 196, 255, 0.35),
+                inset 0 0 32px rgba(255, 255, 255, 0.55);
             animation: orbPulse 4s ease-in-out infinite;
         }
 
@@ -544,7 +569,7 @@
         @keyframes orbPulse {
             0% {
                 transform: scale(1);
-                opacity: 0.95;
+                opacity: 0.98;
             }
             50% {
                 transform: scale(1.03);
@@ -552,35 +577,35 @@
             }
             100% {
                 transform: scale(1);
-                opacity: 0.95;
+                opacity: 0.98;
             }
         }
 
-        /* 0–60% от цели — базовый холодный голубой пастельный */
+        /* 0–60% от цели — базовый холодный голубой/сине-фиолетовый */
         #health-orb.state-normal {
             background:
-                radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.95) 0, rgba(255, 255, 255, 0) 55%),
-                radial-gradient(circle at 70% 30%, rgba(200, 220, 255, 0.65) 0, rgba(200, 220, 255, 0) 60%),
-                radial-gradient(circle at 30% 70%, rgba(230, 240, 255, 0.55) 0, rgba(230, 240, 255, 0) 60%),
-                radial-gradient(circle at 70% 80%, rgba(240, 230, 255, 0.6) 0, rgba(240, 230, 255, 0) 60%);
+                radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.9) 0, rgba(255, 255, 255, 0) 55%),
+                radial-gradient(circle at 70% 30%, rgba(130, 196, 255, 0.85) 0, rgba(130, 196, 255, 0) 60%),
+                radial-gradient(circle at 30% 75%, rgba(163, 221, 255, 0.7) 0, rgba(163, 221, 255, 0) 60%),
+                radial-gradient(circle at 75% 80%, rgba(199, 212, 255, 0.8) 0, rgba(199, 212, 255, 0) 60%);
         }
 
-        /* 60–100% — «good», мягкий зеленоватый акцент */
+        /* 60–100% — «good», бирюза и мягкие зелёные блики */
         #health-orb.state-good {
             background:
-                radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.95) 0, rgba(255, 255, 255, 0) 55%),
-                radial-gradient(circle at 70% 30%, rgba(200, 240, 220, 0.65) 0, rgba(200, 240, 220, 0) 60%),
-                radial-gradient(circle at 30% 70%, rgba(200, 220, 255, 0.55) 0, rgba(200, 220, 255, 0) 60%),
-                radial-gradient(circle at 70% 80%, rgba(230, 245, 255, 0.6) 0, rgba(230, 245, 255, 0) 60%);
+                radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.9) 0, rgba(255, 255, 255, 0) 55%),
+                radial-gradient(circle at 70% 30%, rgba(163, 240, 230, 0.75) 0, rgba(163, 240, 230, 0) 60%),
+                radial-gradient(circle at 30% 75%, rgba(130, 196, 255, 0.7) 0, rgba(130, 196, 255, 0) 60%),
+                radial-gradient(circle at 75% 80%, rgba(199, 240, 255, 0.8) 0, rgba(199, 240, 255, 0) 60%);
         }
 
-        /* 95–110% — «perfect», лёгкий тёплый золотистый/розовый подсвет */
+        /* 95–110% — «perfect», лёгкое тёплое сияние (персиково-золотое) */
         #health-orb.state-perfect {
             background:
                 radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.95) 0, rgba(255, 255, 255, 0) 55%),
-                radial-gradient(circle at 70% 30%, rgba(255, 240, 210, 0.7) 0, rgba(255, 240, 210, 0) 60%),
-                radial-gradient(circle at 30% 70%, rgba(200, 220, 255, 0.5) 0, rgba(200, 220, 255, 0) 60%),
-                radial-gradient(circle at 70% 80%, rgba(255, 230, 240, 0.6) 0, rgba(255, 230, 240, 0) 60%);
+                radial-gradient(circle at 70% 30%, rgba(255, 235, 200, 0.75) 0, rgba(255, 235, 200, 0) 60%),
+                radial-gradient(circle at 30% 75%, rgba(130, 196, 255, 0.65) 0, rgba(130, 196, 255, 0) 60%),
+                radial-gradient(circle at 75% 80%, rgba(199, 212, 255, 0.75) 0, rgba(199, 212, 255, 0) 60%);
         }
 
         .daily-summary {
@@ -864,16 +889,25 @@
                         <div class="macro-label">Белки</div>
                         <div class="macro-value"><span id="used-protein">0</span></div>
                         <div class="macro-total">из <span id="total-protein">90</span> г</div>
+                        <div class="macro-progress">
+                            <div class="macro-progress-fill macro-progress-fill--protein"></div>
+                        </div>
                     </div>
                     <div class="macro-card">
                         <div class="macro-label">Углеводы</div>
                         <div class="macro-value"><span id="used-carbs">0</span></div>
                         <div class="macro-total">из <span id="total-carbs">200</span> г</div>
+                        <div class="macro-progress">
+                            <div class="macro-progress-fill macro-progress-fill--carbs"></div>
+                        </div>
                     </div>
                     <div class="macro-card">
                         <div class="macro-label">Жиры</div>
                         <div class="macro-value"><span id="used-fats">0</span></div>
                         <div class="macro-total">из <span id="total-fats">60</span> г</div>
+                        <div class="macro-progress">
+                            <div class="macro-progress-fill macro-progress-fill--fats"></div>
+                        </div>
                     </div>
                 </div>
             </header>
@@ -1441,7 +1475,7 @@
         const TRACKS = {
             MUSCLES: { id: 'muscles', name: 'Мышцы/сила', icon: '💪', color: '#FF6B6B' },
             ENERGY: { id: 'energy', name: 'Энергия/выносливость', icon: '⚡', color: '#FFD93D' },
-            IMMUNITY: { id: 'immunity', name: 'Иммунитет/воспаление', icon: '🛡️', color: '#4CAF50' },
+            IMMUNITY: { id: 'immunity', name: 'Иммунитет/защита', icon: '🛡️', color: '#4CAF50' },
             HORMONES: { id: 'hormones', name: 'Гормоны/восстановление', icon: '🔄', color: '#3DC5D0' },
             GUT: { id: 'gut', name: 'ЖКТ/микробиота', icon: '🌱', color: '#5CD6A4' },
             SKIN: { id: 'skin', name: 'Кожа/волосы', icon: '✨', color: '#FF9EC4' },
@@ -2011,8 +2045,8 @@
                 const streak = kairosState.streak.currentStreak || 0;
                 progressSubtitle.textContent = `Уровень ${level} • Серия: ${streak} дней`;
             }
-            // Обновляем треки
-            updateTracksDisplay();
+                // Обновляем треки
+                updateTracksDisplay();
         }
         
         function updateTracksDisplay() {
@@ -2092,6 +2126,23 @@
             const totalFatsEl = document.getElementById('total-fats');
             if (totalFatsEl) {
                 totalFatsEl.textContent = dailyTargets.fats;
+            }
+            
+            // Обновляем прогресс-бары БЖУ
+            const proteinProgress = document.querySelector('.macro-progress-fill--protein');
+            if (proteinProgress && dailyTargets.protein > 0) {
+                const proteinPercent = Math.min(100, (dailyUsed.protein / dailyTargets.protein) * 100);
+                proteinProgress.style.width = proteinPercent + '%';
+            }
+            const carbsProgress = document.querySelector('.macro-progress-fill--carbs');
+            if (carbsProgress && dailyTargets.carbs > 0) {
+                const carbsPercent = Math.min(100, (dailyUsed.carbs / dailyTargets.carbs) * 100);
+                carbsProgress.style.width = carbsPercent + '%';
+            }
+            const fatsProgress = document.querySelector('.macro-progress-fill--fats');
+            if (fatsProgress && dailyTargets.fats > 0) {
+                const fatsPercent = Math.min(100, (dailyUsed.fats / dailyTargets.fats) * 100);
+                fatsProgress.style.width = fatsPercent + '%';
             }
             
             // Обновляем состояние орба
