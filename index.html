@@ -51,7 +51,7 @@
             border-radius: 20px;
             padding: 24px;
             margin-bottom: 20px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05);
         }
 
         .card.blue-card {
@@ -372,7 +372,8 @@
         .menu-card:hover {
             transform: translateY(-1px);
             background: rgba(130, 196, 255, 0.04);
-            border-color: rgba(130, 196, 255, 0.7);
+            border-color: rgba(130, 196, 255, 0.5);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.04);
         }
 
         .menu-icon {
@@ -423,9 +424,11 @@
             border: 2px solid rgba(130, 196, 255, 0.3);
             border-radius: 18px;
             padding: 16px;
+            margin: 0;
             cursor: pointer;
             transition: all 0.2s ease;
             text-align: center;
+            min-height: auto;
         }
 
         .option-card:hover {
@@ -435,9 +438,12 @@
 
         .option-card.selected {
             background: linear-gradient(135deg, #82C4FF, #4A6BC8);
-            border-color: transparent;
+            border: 2px solid transparent;
             color: #FFFFFF;
-            box-shadow: 0 10px 24px rgba(130, 196, 255, 0.4);
+            box-shadow: 0 6px 18px rgba(130, 196, 255, 0.3);
+            padding: 16px;
+            margin: 0;
+            min-height: auto;
         }
 
         .option-name {
@@ -468,6 +474,7 @@
             border-radius: 20px;
             padding: 24px;
             margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
         }
 
         .info-section.blue-accent {
@@ -490,22 +497,22 @@
 
 
         #health-orb {
-            width: 160px;
-            height: 160px;
-            margin: 20px auto 24px auto;
+            width: 180px;
+            height: 180px;
+            margin: 24px auto 20px auto;
             border-radius: 50%;
             position: relative;
-            /* базовый «мыльный» градиент */
+            /* премиальный пастельный градиент */
             background:
-                radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.9) 0, rgba(255, 255, 255, 0) 55%),
-                radial-gradient(circle at 70% 30%, rgba(130, 196, 255, 0.85) 0, rgba(130, 196, 255, 0) 60%),
-                radial-gradient(circle at 30% 70%, rgba(210, 255, 210, 0.8) 0, rgba(210, 255, 210, 0) 60%),
-                radial-gradient(circle at 70% 80%, rgba(210, 190, 255, 0.85) 0, rgba(210, 190, 255, 0) 60%);
+                radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.95) 0, rgba(255, 255, 255, 0) 55%),
+                radial-gradient(circle at 70% 30%, rgba(200, 220, 255, 0.6) 0, rgba(200, 220, 255, 0) 60%),
+                radial-gradient(circle at 30% 70%, rgba(230, 240, 255, 0.5) 0, rgba(230, 240, 255, 0) 60%),
+                radial-gradient(circle at 70% 80%, rgba(240, 230, 255, 0.55) 0, rgba(240, 230, 255, 0) 60%);
             box-shadow:
-                0 0 32px rgba(130, 196, 255, 0.64),
-                0 0 72px rgba(130, 196, 255, 0.4),
-                inset 0 0 32px rgba(255, 255, 255, 0.48),
-                inset 0 -20px 48px rgba(74, 107, 200, 0.28);
+                0 0 25px rgba(130, 196, 255, 0.35),
+                0 0 55px rgba(130, 196, 255, 0.25),
+                inset 0 0 30px rgba(255, 255, 255, 0.4),
+                inset 0 -20px 40px rgba(74, 107, 200, 0.2);
             animation: orbPulse 4s ease-in-out infinite;
         }
 
@@ -528,10 +535,10 @@
             position: absolute;
             inset: 6px;
             border-radius: 50%;
-            border: 1px solid rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.6);
             box-shadow:
-                0 0 25px rgba(255, 255, 255, 0.8),
-                0 0 40px rgba(130, 196, 255, 0.7);
+                0 0 20px rgba(255, 255, 255, 0.5),
+                0 0 30px rgba(130, 196, 255, 0.4);
         }
 
         @keyframes orbPulse {
@@ -540,7 +547,7 @@
                 opacity: 0.95;
             }
             50% {
-                transform: scale(1.06);
+                transform: scale(1.03);
                 opacity: 1;
             }
             100% {
@@ -549,31 +556,31 @@
             }
         }
 
-        /* 0–60% от цели — базовый холодный голубой */
+        /* 0–60% от цели — базовый холодный голубой пастельный */
         #health-orb.state-normal {
             background:
-                radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.9) 0, rgba(255, 255, 255, 0) 55%),
-                radial-gradient(circle at 70% 30%, rgba(130, 196, 255, 0.9) 0, rgba(130, 196, 255, 0) 60%),
-                radial-gradient(circle at 30% 70%, rgba(200, 230, 255, 0.8) 0, rgba(200, 230, 255, 0) 60%),
-                radial-gradient(circle at 70% 80%, rgba(210, 190, 255, 0.8) 0, rgba(210, 190, 255, 0) 60%);
+                radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.95) 0, rgba(255, 255, 255, 0) 55%),
+                radial-gradient(circle at 70% 30%, rgba(200, 220, 255, 0.65) 0, rgba(200, 220, 255, 0) 60%),
+                radial-gradient(circle at 30% 70%, rgba(230, 240, 255, 0.55) 0, rgba(230, 240, 255, 0) 60%),
+                radial-gradient(circle at 70% 80%, rgba(240, 230, 255, 0.6) 0, rgba(240, 230, 255, 0) 60%);
         }
 
-        /* 60–100% — «good», больше зелени, ощущение здоровья */
+        /* 60–100% — «good», мягкий зеленоватый акцент */
         #health-orb.state-good {
             background:
-                radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.9) 0, rgba(255, 255, 255, 0) 55%),
-                radial-gradient(circle at 70% 30%, rgba(130, 255, 210, 0.9) 0, rgba(130, 255, 210, 0) 60%),
-                radial-gradient(circle at 30% 70%, rgba(130, 196, 255, 0.8) 0, rgba(130, 196, 255, 0) 60%),
-                radial-gradient(circle at 70% 80%, rgba(210, 240, 255, 0.9) 0, rgba(210, 240, 255, 0) 60%);
+                radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.95) 0, rgba(255, 255, 255, 0) 55%),
+                radial-gradient(circle at 70% 30%, rgba(200, 240, 220, 0.65) 0, rgba(200, 240, 220, 0) 60%),
+                radial-gradient(circle at 30% 70%, rgba(200, 220, 255, 0.55) 0, rgba(200, 220, 255, 0) 60%),
+                radial-gradient(circle at 70% 80%, rgba(230, 245, 255, 0.6) 0, rgba(230, 245, 255, 0) 60%);
         }
 
-        /* 95–110% — «perfect», тёплое золотистое сияние */
+        /* 95–110% — «perfect», лёгкий тёплый золотистый/розовый подсвет */
         #health-orb.state-perfect {
             background:
                 radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.95) 0, rgba(255, 255, 255, 0) 55%),
-                radial-gradient(circle at 70% 30%, rgba(255, 230, 180, 0.95) 0, rgba(255, 230, 180, 0) 60%),
-                radial-gradient(circle at 30% 70%, rgba(130, 196, 255, 0.7) 0, rgba(130, 196, 255, 0) 60%),
-                radial-gradient(circle at 70% 80%, rgba(255, 200, 230, 0.8) 0, rgba(255, 200, 230, 0) 60%);
+                radial-gradient(circle at 70% 30%, rgba(255, 240, 210, 0.7) 0, rgba(255, 240, 210, 0) 60%),
+                radial-gradient(circle at 30% 70%, rgba(200, 220, 255, 0.5) 0, rgba(200, 220, 255, 0) 60%),
+                radial-gradient(circle at 70% 80%, rgba(255, 230, 240, 0.6) 0, rgba(255, 230, 240, 0) 60%);
         }
 
         .daily-summary {
@@ -874,6 +881,20 @@
             <!-- Health Orb -->
             <div id="health-orb" class="state-normal"></div>
 
+            <!-- Progress Widget -->
+            <section id="progress-widget" class="card">
+                <div style="text-align: center; margin-bottom: 16px;">
+                    <div style="font-size: 18px; font-weight: 700; color: #1B2B4A; margin-bottom: 4px;">Прогресс здоровья</div>
+                    <div style="font-size: 14px; color: #6B7280;" id="progress-subtitle">Уровень 1 • Серия: 0 дней</div>
+                </div>
+                <div style="margin-top: 16px;">
+                    <div style="font-size: 14px; font-weight: 600; color: #1B2B4A; margin-bottom: 12px;">Треки прокачки:</div>
+                    <div id="tracks-list">
+                        <div style="color: #6B7280; font-style: italic; font-size: 13px;">Добавляй продукты для прокачки</div>
+                    </div>
+                </div>
+            </section>
+
             <!-- Main Menu -->
             <main id="main-menu" class="main-menu">
                 <div class="menu-card" onclick="showSection('plate-guide')">
@@ -923,7 +944,7 @@
                 <div class="menu-card" onclick="showSection('calendar')">
                     <div class="menu-icon">📅</div>
                     <div class="menu-title">Календарь</div>
-                </div>
+                    </div>
             </main>
 
             <!-- Daily Summary -->
@@ -1983,8 +2004,15 @@
         }
 
         function updateHeroDisplay() {
-            // Функция оставлена для совместимости, но больше не используется
-            // Орб теперь является основным визуальным элементом
+            // Обновляем подзаголовок прогресса
+            const progressSubtitle = document.getElementById('progress-subtitle');
+            if (progressSubtitle && kairosState.today && kairosState.streak) {
+                const level = kairosState.today.level || 1;
+                const streak = kairosState.streak.currentStreak || 0;
+                progressSubtitle.textContent = `Уровень ${level} • Серия: ${streak} дней`;
+            }
+            // Обновляем треки
+            updateTracksDisplay();
         }
         
         function updateTracksDisplay() {
@@ -2018,13 +2046,13 @@
                 const xp = todayTracks[track.trackKey] || 0;
                 const percent = totalTracksXP > 0 ? (xp / totalTracksXP) * 100 : 0;
                 return `
-                    <div style="margin-bottom: 6px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="color: ${track.color};">${track.icon} ${track.name}</span>
-                            <span style="color: #1B2B4A; font-weight: 600;">${xp} XP</span>
+                    <div style="margin-bottom: 10px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <span style="color: ${track.color}; font-size: 14px; font-weight: 500;">${track.icon} ${track.name}</span>
+                            <span style="color: #1B2B4A; font-weight: 600; font-size: 13px;">${xp} XP</span>
                         </div>
-                        <div style="background: rgba(0, 0, 0, 0.12); border-radius: 4px; height: 4px; margin-top: 2px; overflow: hidden;">
-                            <div style="background: ${track.color}; height: 100%; width: ${percent}%; transition: width 0.3s;"></div>
+                        <div style="background: rgba(0, 0, 0, 0.06); border-radius: 999px; height: 6px; overflow: hidden;">
+                            <div style="background: linear-gradient(90deg, ${track.color}, ${track.color}dd); height: 100%; width: ${percent}%; transition: width 0.3s; border-radius: 999px;"></div>
                         </div>
                     </div>
                 `;
