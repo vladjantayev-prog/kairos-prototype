@@ -16,7 +16,7 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: #F5F7FA;
             min-height: 100vh;
-            color: #2A2A2A;
+            color: #1B2B4A;
             position: relative;
             overflow-x: hidden;
         }
@@ -29,8 +29,8 @@
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(circle at 20% 50%, rgba(109, 168, 255, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(74, 109, 255, 0.05) 0%, transparent 50%);
+                radial-gradient(circle at 20% 50%, rgba(130, 196, 255, 0.04) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(26, 76, 124, 0.03) 0%, transparent 50%);
             pointer-events: none;
             z-index: 0;
         }
@@ -47,16 +47,16 @@
         .card {
             background: #FFFFFF;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.06);
             border-radius: 20px;
             padding: 24px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
         }
 
         .card.blue-card {
-            background: linear-gradient(180deg, rgba(109, 168, 255, 0.05) 0%, rgba(74, 109, 255, 0.05) 100%);
-            border: 1px solid rgba(109, 168, 255, 0.2);
+            background: linear-gradient(135deg, rgba(130, 196, 255, 0.08) 0%, rgba(26, 76, 124, 0.08) 100%);
+            border: 1px solid rgba(130, 196, 255, 0.3);
         }
 
         h1 {
@@ -91,18 +91,18 @@
             width: 100%;
             padding: 12px 16px;
             font-size: 16px;
-            border: 2px solid rgba(109, 168, 255, 0.2);
-            border-radius: 12px;
-            transition: all 0.3s;
-            background: linear-gradient(180deg, rgba(109, 168, 255, 0.03) 0%, rgba(74, 109, 255, 0.03) 100%);
-            color: #2A2A2A;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 18px;
+            transition: all 0.2s ease;
+            background: #FFFFFF;
+            color: #1B2B4A;
         }
 
         input[type="number"]:focus,
         select:focus {
             outline: none;
-            border-color: #6DA8FF;
-            box-shadow: 0 0 0 3px rgba(109, 168, 255, 0.2);
+            border-color: #82C4FF;
+            box-shadow: 0 0 0 3px rgba(130, 196, 255, 0.15);
         }
 
         input[type="number"]::placeholder,
@@ -128,78 +128,78 @@
         .radio-option label {
             display: block;
             padding: 12px 16px;
-            border: 2px solid rgba(109, 168, 255, 0.2);
-            border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 18px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s ease;
             font-weight: 500;
             margin: 0;
-            background: linear-gradient(180deg, rgba(109, 168, 255, 0.05) 0%, rgba(74, 109, 255, 0.05) 100%);
-            color: #2A2A2A;
+            background: #FFFFFF;
+            color: #1B2B4A;
         }
 
         .radio-option input[type="radio"]:checked + label {
-            background: linear-gradient(180deg, #6DA8FF 0%, #4A6DFF 100%);
+            background: linear-gradient(135deg, #82C4FF, #1A4C7C);
             color: #FFFFFF;
-            border-color: #6DA8FF;
-            box-shadow: 0 4px 12px rgba(109, 168, 255, 0.3);
+            border-color: transparent;
+            box-shadow: 0 8px 18px rgba(130, 196, 255, 0.4);
         }
 
         .radio-option label:hover {
-            border-color: #6DA8FF;
-            background: rgba(109, 168, 255, 0.05);
+            border-color: #82C4FF;
+            background: rgba(130, 196, 255, 0.08);
         }
 
         .btn {
             width: 100%;
-            padding: 16px;
-            font-size: 18px;
+            padding: 14px 16px;
+            font-size: 16px;
             font-weight: 600;
             border: none;
-            border-radius: 12px;
+            border-radius: 18px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s ease;
             margin-top: 8px;
         }
 
         .btn-primary {
-            background: linear-gradient(180deg, #6DA8FF 0%, #4A6DFF 100%);
+            background: linear-gradient(135deg, #82C4FF, #1A4C7C);
             color: #FFFFFF;
-            box-shadow: 0 4px 12px rgba(109, 168, 255, 0.3);
+            box-shadow: 0 8px 18px rgba(130, 196, 255, 0.4);
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(109, 168, 255, 0.4);
+            transform: translateY(-1px);
+            box-shadow: 0 12px 24px rgba(130, 196, 255, 0.5);
         }
 
         .btn-primary:disabled {
-            background: rgba(0, 0, 0, 0.12);
+            background: rgba(0, 0, 0, 0.08);
             color: #6B7280;
             cursor: not-allowed;
             transform: none;
+            box-shadow: none;
         }
 
         .btn-secondary {
-            background: #1B2B4A;
-            color: #FFFFFF;
-            border: 2px solid #1B2B4A;
+            background: #FFFFFF;
+            color: #1A4C7C;
+            border: 2px solid #1A4C7C;
         }
 
         .btn-secondary:hover {
-            background: #0F1E33;
-            border-color: #0F1E33;
+            background: rgba(130, 196, 255, 0.08);
         }
 
         .results {
-            background: linear-gradient(180deg, #6DA8FF 0%, #4A6DFF 100%);
-            border: 2px solid rgba(109, 168, 255, 0.3);
+            background: linear-gradient(135deg, #82C4FF, #1A4C7C);
+            border: none;
             color: #FFFFFF;
-            padding: 32px;
-            border-radius: 16px;
+            padding: 24px;
+            border-radius: 20px;
             margin-bottom: 24px;
-            box-shadow: 0 4px 16px rgba(109, 168, 255, 0.25);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
         }
 
         .results h2 {
@@ -222,7 +222,7 @@
         .hero-intro {
             font-size: 18px;
             line-height: 1.8;
-            color: #2A2A2A;
+            color: #1B2B4A;
             margin-bottom: 24px;
         }
 
@@ -234,15 +234,16 @@
         }
 
         .hero-card {
-            background: linear-gradient(180deg, rgba(109, 168, 255, 0.05) 0%, rgba(74, 109, 255, 0.05) 100%);
-            border: 3px solid rgba(109, 168, 255, 0.2);
-            border-radius: 16px;
+            background: #FFFFFF;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 20px;
             padding: 20px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s ease;
             text-align: center;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
         }
 
         .hero-card::before {
@@ -252,15 +253,15 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(109, 168, 255, 0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(130, 196, 255, 0.08) 0%, transparent 70%);
             opacity: 0;
-            transition: opacity 0.3s;
+            transition: opacity 0.2s ease;
         }
 
         .hero-card:hover {
-            border-color: #6DA8FF;
-            transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(109, 168, 255, 0.3);
+            border-color: #82C4FF;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
         }
 
         .hero-card:hover::before {
@@ -268,9 +269,9 @@
         }
 
         .hero-card.selected {
-            background: linear-gradient(180deg, rgba(109, 168, 255, 0.15) 0%, rgba(74, 109, 255, 0.15) 100%);
-            border-color: #6DA8FF;
-            box-shadow: 0 0 20px rgba(109, 168, 255, 0.4);
+            background: linear-gradient(135deg, rgba(130, 196, 255, 0.12) 0%, rgba(26, 76, 124, 0.12) 100%);
+            border-color: #82C4FF;
+            box-shadow: 0 8px 24px rgba(130, 196, 255, 0.3);
         }
 
         .hero-icon {
@@ -281,9 +282,9 @@
             justify-content: center;
             width: 80px;
             height: 80px;
-            background: linear-gradient(180deg, #6DA8FF 0%, #4A6DFF 100%);
+            background: linear-gradient(135deg, #82C4FF, #1A4C7C);
             border-radius: 50%;
-            box-shadow: 0 4px 12px rgba(109, 168, 255, 0.3);
+            box-shadow: 0 4px 16px rgba(130, 196, 255, 0.3);
         }
 
         .hero-name {
@@ -293,13 +294,13 @@
         }
 
         .budget-display {
-            background: linear-gradient(180deg, #6DA8FF 0%, #4A6DFF 100%);
-            border: 2px solid rgba(109, 168, 255, 0.3);
-            border-radius: 16px;
-            padding: 20px;
+            background: linear-gradient(135deg, #82C4FF, #1A4C7C);
+            border: none;
+            border-radius: 20px;
+            padding: 18px 20px;
             text-align: center;
             margin-bottom: 16px;
-            box-shadow: 0 4px 12px rgba(109, 168, 255, 0.25);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
         }
 
         .budget-label {
@@ -311,9 +312,10 @@
         }
 
         .budget-amount {
-            font-size: 36px;
+            font-size: 28px;
             font-weight: 800;
             color: #FFFFFF;
+            line-height: 1.2;
         }
 
         .macros-grid {
@@ -324,9 +326,9 @@
         }
 
         .macro-card {
-            background: linear-gradient(180deg, rgba(109, 168, 255, 0.08) 0%, rgba(74, 109, 255, 0.08) 100%);
-            border: 1px solid rgba(109, 168, 255, 0.2);
-            border-radius: 12px;
+            background: #FFFFFF;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 18px;
             padding: 12px;
             text-align: center;
         }
@@ -356,30 +358,21 @@
 
         .menu-card {
             background: #FFFFFF;
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            border-radius: 16px;
-            padding: 24px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 20px;
+            padding: 20px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s ease;
             position: relative;
             overflow: hidden;
-        }
-
-        .menu-card:nth-child(odd) {
-            background: linear-gradient(180deg, rgba(109, 168, 255, 0.08) 0%, rgba(74, 109, 255, 0.08) 100%);
-            border-color: rgba(109, 168, 255, 0.2);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         }
 
         .menu-card:hover {
-            transform: translateY(-4px);
-            border-color: #6DA8FF;
-            box-shadow: 0 8px 20px rgba(109, 168, 255, 0.2);
-        }
-
-        .menu-card:nth-child(odd):hover {
-            background: linear-gradient(180deg, rgba(109, 168, 255, 0.15) 0%, rgba(74, 109, 255, 0.15) 100%);
-            box-shadow: 0 8px 25px rgba(109, 168, 255, 0.3);
+            transform: translateY(-2px);
+            border-color: #82C4FF;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
         }
 
         .menu-icon {
@@ -388,11 +381,11 @@
             justify-content: center;
             width: 64px;
             height: 64px;
-            background: linear-gradient(180deg, #6DA8FF 0%, #4A6DFF 100%);
+            background: linear-gradient(135deg, #82C4FF, #1A4C7C);
             border-radius: 50%;
             margin: 0 auto 12px;
             font-size: 32px;
-            box-shadow: 0 4px 12px rgba(109, 168, 255, 0.25);
+            box-shadow: 0 4px 16px rgba(130, 196, 255, 0.3);
         }
 
         .menu-title {
@@ -426,36 +419,36 @@
         }
 
         .option-card {
-            background: linear-gradient(180deg, rgba(109, 168, 255, 0.05) 0%, rgba(74, 109, 255, 0.05) 100%);
-            border: 3px solid rgba(109, 168, 255, 0.2);
-            border-radius: 12px;
+            background: #FFFFFF;
+            border: 2px solid rgba(130, 196, 255, 0.3);
+            border-radius: 18px;
             padding: 16px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s ease;
             text-align: center;
         }
 
         .option-card:hover {
-            border-color: #6DA8FF;
-            background: rgba(109, 168, 255, 0.05);
+            border-color: #82C4FF;
+            background: rgba(130, 196, 255, 0.06);
         }
 
         .option-card.selected {
-            background: linear-gradient(180deg, rgba(109, 168, 255, 0.15) 0%, rgba(74, 109, 255, 0.15) 100%);
-            border-color: #6DA8FF;
-            color: #1B2B4A;
-            box-shadow: 0 0 20px rgba(109, 168, 255, 0.3);
+            background: linear-gradient(135deg, #82C4FF, #1A4C7C);
+            border-color: transparent;
+            color: #FFFFFF;
+            box-shadow: 0 10px 24px rgba(130, 196, 255, 0.4);
         }
 
         .option-name {
             font-size: 16px;
             font-weight: 600;
             margin-bottom: 4px;
-            color: #2A2A2A;
+            color: #1B2B4A;
         }
 
         .option-card.selected .option-name {
-            color: #1B2B4A;
+            color: #FFFFFF;
         }
 
         .option-portion {
@@ -466,20 +459,20 @@
 
         .option-card.selected .option-portion {
             opacity: 1;
-            color: #1B2B4A;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .info-section {
             background: #FFFFFF;
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            border-radius: 16px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 20px;
             padding: 24px;
             margin-bottom: 16px;
         }
 
         .info-section.blue-accent {
-            background: linear-gradient(180deg, rgba(109, 168, 255, 0.08) 0%, rgba(74, 109, 255, 0.08) 100%);
-            border: 1px solid rgba(109, 168, 255, 0.2);
+            background: linear-gradient(135deg, rgba(130, 196, 255, 0.08) 0%, rgba(26, 76, 124, 0.08) 100%);
+            border: 1px solid rgba(130, 196, 255, 0.3);
         }
 
         .info-section h3 {
@@ -490,14 +483,14 @@
 
         .info-section ul {
             line-height: 1.8;
-            color: #2A2A2A;
+            color: #1B2B4A;
             margin: 0;
             padding-left: 20px;
         }
 
         .hero-widget {
-            background: linear-gradient(180deg, rgba(109, 168, 255, 0.1) 0%, rgba(74, 109, 255, 0.1) 100%);
-            border: 2px solid rgba(109, 168, 255, 0.2);
+            background: linear-gradient(135deg, rgba(130, 196, 255, 0.12) 0%, rgba(26, 76, 124, 0.12) 100%);
+            border: 1px solid rgba(130, 196, 255, 0.3);
             border-radius: 20px;
             padding: 24px;
             margin-bottom: 16px;
@@ -512,9 +505,9 @@
             justify-content: center;
             width: 100px;
             height: 100px;
-            background: linear-gradient(180deg, #6DA8FF 0%, #4A6DFF 100%);
+            background: linear-gradient(135deg, #82C4FF, #1A4C7C);
             border-radius: 50%;
-            box-shadow: 0 4px 16px rgba(109, 168, 255, 0.3);
+            box-shadow: 0 4px 20px rgba(130, 196, 255, 0.3);
         }
 
         .hero-level {
@@ -525,23 +518,23 @@
         }
 
         .hero-progress {
-            background: rgba(0, 0, 0, 0.12);
-            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.20);
+            border-radius: 18px;
             height: 12px;
             overflow: hidden;
             margin-bottom: 8px;
         }
 
         .hero-progress-bar {
-            background: linear-gradient(90deg, #6DA8FF 0%, #4A6DFF 100%);
+            background: linear-gradient(135deg, #82C4FF, #1A4C7C);
             height: 100%;
             transition: width 0.5s ease;
-            box-shadow: 0 0 10px rgba(109, 168, 255, 0.3);
+            box-shadow: 0 0 12px rgba(130, 196, 255, 0.4);
         }
 
         .daily-summary {
-            background: linear-gradient(180deg, rgba(109, 168, 255, 0.08) 0%, rgba(74, 109, 255, 0.08) 100%);
-            border: 1px solid rgba(109, 168, 255, 0.2);
+            background: #FFFFFF;
+            border: 1px solid rgba(0, 0, 0, 0.06);
             border-radius: 20px;
             padding: 24px;
         }
@@ -554,9 +547,9 @@
         }
 
         .meal-entry {
-            background: #FFFFFF;
-            border: 1px solid rgba(109, 168, 255, 0.15);
-            border-radius: 12px;
+            background: #F5F7FA;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 18px;
             padding: 16px;
             margin-bottom: 12px;
         }
@@ -587,13 +580,13 @@
         }
 
         .summary-totals {
-            background: linear-gradient(180deg, #6DA8FF 0%, #4A6DFF 100%);
-            border: 1px solid rgba(109, 168, 255, 0.3);
+            background: linear-gradient(135deg, #82C4FF, #1A4C7C);
+            border: none;
             color: #FFFFFF;
-            border-radius: 12px;
-            padding: 16px;
+            border-radius: 20px;
+            padding: 20px;
             margin-top: 16px;
-            box-shadow: 0 4px 12px rgba(109, 168, 255, 0.25);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
         }
 
         .total-row {
@@ -618,11 +611,11 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            background: linear-gradient(180deg, #6DA8FF 0%, #4A6DFF 100%);
+            background: linear-gradient(135deg, #82C4FF, #1A4C7C);
             color: #FFFFFF;
             padding: 16px 24px;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(109, 168, 255, 0.3);
+            border-radius: 18px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
             z-index: 1000;
             animation: toastSlideIn 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -747,7 +740,7 @@
                 <h2>Ваша ориентировочная норма:</h2>
                 <p><strong id="target-calories">1800</strong> ккал и <strong id="protein-range">110–130</strong> г белка в день</p>
             </div>
-            <div class="info-section" style="background: linear-gradient(180deg, rgba(109, 168, 255, 0.1) 0%, rgba(74, 109, 255, 0.1) 100%); border-color: rgba(109, 168, 255, 0.3);">
+            <div class="info-section" style="background: linear-gradient(135deg, rgba(130, 196, 255, 0.1) 0%, rgba(26, 76, 124, 0.1) 100%); border-color: rgba(130, 196, 255, 0.3);">
                 <h3 style="color: #1B2B4A; margin-top: 0;">⚡ Это твой план на день!</h3>
                 <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
                     Каждый день — это новая битва за Олимп. Ты получаешь дневной бюджет калорий и собираешь приёмы пищи, как конструктор. 
@@ -1042,7 +1035,7 @@
                             <div class="option-portion">Восстановление</div>
                         </div>
                     </div>
-                    <div id="activity-selected-message" style="margin-top: 16px; padding: 12px; background: linear-gradient(180deg, rgba(109, 168, 255, 0.2) 0%, rgba(74, 109, 255, 0.2) 100%); border: 1px solid rgba(109, 168, 255, 0.3); color: #1B2B4A; border-radius: 12px; display: none; text-align: center; font-weight: 600;">
+                    <div id="activity-selected-message" style="margin-top: 16px; padding: 12px; background: linear-gradient(135deg, rgba(130, 196, 255, 0.2) 0%, rgba(26, 76, 124, 0.2) 100%); border: 1px solid rgba(130, 196, 255, 0.3); color: #1B2B4A; border-radius: 18px; display: none; text-align: center; font-weight: 600;">
                         ✅ Отлично! Запланировано на сегодня
                     </div>
                 </div>
@@ -1055,7 +1048,7 @@
                     <div class="step-title">😴 Сон</div>
                     <div class="step-subtitle">Качественный сон = восстановление и энергия</div>
                 </div>
-                <div class="info-section" style="background: linear-gradient(180deg, rgba(109, 168, 255, 0.1) 0%, rgba(74, 109, 255, 0.1) 100%); border-color: rgba(109, 168, 255, 0.3);">
+                <div class="info-section" style="background: linear-gradient(135deg, rgba(130, 196, 255, 0.1) 0%, rgba(26, 76, 124, 0.1) 100%); border-color: rgba(130, 196, 255, 0.3);">
                     <h3 style="color: #1B2B4A; margin-top: 0;">🎯 Цель: 7-8 часов качественного сна</h3>
                     <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
                         Сон — это не просто отдых. Это время, когда твоё тело восстанавливается, мышцы растут, гормоны приходят в норму, а мозг обрабатывает информацию.
@@ -1077,7 +1070,7 @@
                             <div class="option-name">😌 Больше 8 часов</div>
                         </div>
                     </div>
-                    <div id="sleep-selected-message" style="margin-top: 16px; padding: 12px; background: linear-gradient(180deg, rgba(109, 168, 255, 0.2) 0%, rgba(74, 109, 255, 0.2) 100%); border: 1px solid rgba(109, 168, 255, 0.3); color: #1B2B4A; border-radius: 12px; display: none; text-align: center; font-weight: 600;">
+                    <div id="sleep-selected-message" style="margin-top: 16px; padding: 12px; background: linear-gradient(135deg, rgba(130, 196, 255, 0.2) 0%, rgba(26, 76, 124, 0.2) 100%); border: 1px solid rgba(130, 196, 255, 0.3); color: #1B2B4A; border-radius: 18px; display: none; text-align: center; font-weight: 600;">
                         ✅ Отлично! Сон зафиксирован
                     </div>
                 </div>
@@ -2224,7 +2217,7 @@
             
             // Пустые ячейки до первого дня месяца
             for (let i = 0; i < startingDayOfWeek; i++) {
-                html += `<div style="aspect-ratio: 1; border-radius: 8px;"></div>`;
+                html += `<div style="aspect-ratio: 1; border-radius: 18px;"></div>`;
             }
             
             // Дни месяца
@@ -2249,9 +2242,9 @@
                 }
                 
                 const bgColor = hasData ? 
-                    `linear-gradient(180deg, rgba(109, 168, 255, ${0.3 + completionPercent / 200}) 0%, rgba(74, 109, 255, ${0.2 + completionPercent / 200}) 100%)` :
+                    `linear-gradient(135deg, rgba(130, 196, 255, ${0.3 + completionPercent / 200}) 0%, rgba(26, 76, 124, ${0.2 + completionPercent / 200}) 100%)` :
                     'transparent';
-                const borderColor = isToday ? '#6DA8FF' : (hasData ? 'rgba(109, 168, 255, 0.3)' : 'rgba(0, 0, 0, 0.1)');
+                const borderColor = isToday ? '#82C4FF' : (hasData ? 'rgba(130, 196, 255, 0.3)' : 'rgba(0, 0, 0, 0.1)');
                 const borderWidth = isToday ? '2px' : '1px';
                 
                 html += `
@@ -2260,7 +2253,7 @@
                         style="
                             aspect-ratio: 1;
                             border: ${borderWidth} solid ${borderColor};
-                            border-radius: 8px;
+                            border-radius: 18px;
                             background: ${bgColor};
                             display: flex;
                             flex-direction: column;
@@ -2270,13 +2263,13 @@
                             transition: all 0.2s;
                             padding: 4px;
                         "
-                        onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(109, 168, 255, 0.3)'"
+                        onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(130, 196, 255, 0.3)'"
                         onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'"
                     >
                         <div style="font-weight: ${isToday ? '700' : '500'}; color: ${isToday ? '#1B2B4A' : '#2A2A2A'}; font-size: 14px;">
                             ${day}
                         </div>
-                        ${hasData ? `<div style="width: 4px; height: 4px; background: #6DA8FF; border-radius: 50%; margin-top: 2px;"></div>` : ''}
+                        ${hasData ? `<div style="width: 4px; height: 4px; background: #82C4FF; border-radius: 50%; margin-top: 2px;"></div>` : ''}
                     </div>
                 `;
             }
@@ -2395,7 +2388,7 @@
                 
                 dayData.meals.forEach(meal => {
                     content += `
-                        <div style="margin-bottom: 12px; padding: 12px; background: rgba(109, 168, 255, 0.05); border-radius: 8px;">
+                        <div style="margin-bottom: 12px; padding: 12px; background: rgba(130, 196, 255, 0.05); border-radius: 18px;">
                             <div style="font-weight: 600; color: #1B2B4A; margin-bottom: 4px;">${mealNames[meal.meal_type] || meal.meal_type}</div>
                             <div style="font-size: 13px; color: #6B7280;">${Math.round(meal.calories)} ккал</div>
                         </div>
@@ -2664,7 +2657,7 @@
                         const countBadge = document.createElement('div');
                         countBadge.className = 'count-badge';
                         countBadge.textContent = `x${selectedItem.count}`;
-                        countBadge.style.cssText = 'position: absolute; top: 8px; right: 8px; background: linear-gradient(180deg, #6DA8FF 0%, #4A6DFF 100%); color: #FFFFFF; border-radius: 12px; padding: 4px 8px; font-size: 12px; font-weight: 700; z-index: 10;';
+                        countBadge.style.cssText = 'position: absolute; top: 8px; right: 8px; background: linear-gradient(135deg, #82C4FF, #1A4C7C); color: #FFFFFF; border-radius: 18px; padding: 4px 8px; font-size: 12px; font-weight: 700; z-index: 10;';
                         card.appendChild(countBadge);
                     }
                     
@@ -2673,7 +2666,7 @@
                         const doubleBtn = document.createElement('button');
                         doubleBtn.className = 'double-btn';
                         doubleBtn.textContent = '+ Удвоить';
-                        doubleBtn.style.cssText = 'position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); background: linear-gradient(180deg, #6DA8FF 0%, #4A6DFF 100%); color: #FFFFFF; border: 2px solid #6DA8FF; border-radius: 8px; padding: 4px 12px; font-size: 11px; font-weight: 600; cursor: pointer; z-index: 10;';
+                        doubleBtn.style.cssText = 'position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #82C4FF, #1A4C7C); color: #FFFFFF; border: 2px solid #82C4FF; border-radius: 18px; padding: 4px 12px; font-size: 11px; font-weight: 600; cursor: pointer; z-index: 10;';
                         doubleBtn.onclick = (e) => {
                             e.stopPropagation();
                             doublePortionForOption(selectedItem);
