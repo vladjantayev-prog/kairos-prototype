@@ -1832,6 +1832,13 @@
         }
 
         function checkOnboardingStatus() {
+            // Скрываем все секции сначала
+            document.getElementById('onboarding-step1').classList.add('hidden');
+            document.getElementById('onboarding-step2').classList.add('hidden');
+            document.getElementById('mode-selection').classList.add('hidden');
+            document.getElementById('hero-selection').classList.add('hidden');
+            document.getElementById('app-main').classList.add('hidden');
+            
             if (kairosState.profile) {
                 // Устанавливаем dailyTargets из профиля
                 dailyTargets = {
@@ -1843,11 +1850,12 @@
                 };
                 
                 if (kairosState.profile.hero) {
-                showApp();
+                    showApp();
                 } else {
-                document.getElementById('hero-selection').classList.remove('hidden');
+                    document.getElementById('hero-selection').classList.remove('hidden');
                 }
             } else {
+                // Нет профиля - показываем анкету
                 document.getElementById('onboarding-step1').classList.remove('hidden');
             }
         }
@@ -1921,6 +1929,15 @@
             if (!kairosState.today) {
                 kairosState.today = createEmptyDay(getTodayDate());
             }
+            
+            // Устанавливаем dailyTargets из рассчитанных значений
+            dailyTargets = {
+                calories: targetCalories,
+                protein: proteinMax,
+                carbs: Math.round(targetCalories * 0.45 / 4),
+                fats: Math.round(targetCalories * 0.30 / 9),
+                fiber: 30
+            };
             
             saveState();
             
@@ -1997,6 +2014,18 @@
             document.getElementById('mode-selection').classList.add('hidden');
             document.getElementById('hero-selection').classList.add('hidden');
             document.getElementById('app-main').classList.remove('hidden');
+            
+            // Устанавливаем dailyTargets из профиля
+            if (kairosState.profile) {
+                dailyTargets = {
+                    calories: kairosState.profile.target_calories || 1800,
+                    protein: kairosState.profile.protein_max || 90,
+                    carbs: Math.round((kairosState.profile.target_calories || 1800) * 0.45 / 4),
+                    fats: Math.round((kairosState.profile.target_calories || 1800) * 0.30 / 9),
+                    fiber: 30
+                };
+            }
+            
             updateDailyTotals();
             updateHeroDisplay();
             updateDailySummary();
