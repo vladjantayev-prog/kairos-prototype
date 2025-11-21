@@ -534,62 +534,74 @@
             width: 190px;
             max-width: 60vw;
             aspect-ratio: 1 / 1;
-            margin: 20px auto 16px auto;
+            margin: 0 auto 24px auto;
             border-radius: 50%;
             position: relative;
-            /* glassmorphism градиент */
+            /* Живой переливающийся градиент */
             background:
-                radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.9) 0, rgba(255, 255, 255, 0) 55%),
-                radial-gradient(circle at 70% 30%, rgba(130, 196, 255, 0.85) 0, rgba(130, 196, 255, 0) 60%),
-                radial-gradient(circle at 30% 75%, rgba(163, 221, 255, 0.7) 0, rgba(163, 221, 255, 0) 60%),
-                radial-gradient(circle at 75% 80%, rgba(199, 212, 255, 0.8) 0, rgba(199, 212, 255, 0) 60%);
+                radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0) 50%),
+                radial-gradient(circle at 75% 30%, rgba(255, 200, 220, 0.7) 0%, rgba(255, 200, 220, 0) 60%),
+                radial-gradient(circle at 30% 70%, rgba(130, 196, 255, 0.8) 0%, rgba(130, 196, 255, 0) 65%),
+                radial-gradient(circle at 70% 75%, rgba(200, 220, 255, 0.75) 0%, rgba(200, 220, 255, 0) 60%),
+                radial-gradient(circle at 50% 50%, rgba(255, 240, 250, 0.6) 0%, rgba(255, 240, 250, 0) 70%);
             box-shadow:
-                0 0 40px rgba(130, 196, 255, 0.55),
-                0 0 80px rgba(130, 196, 255, 0.35),
-                inset 0 0 32px rgba(255, 255, 255, 0.55);
-            animation: orbPulse 4s ease-in-out infinite;
+                0 0 50px rgba(255, 200, 220, 0.6),
+                0 0 100px rgba(130, 196, 255, 0.5),
+                0 0 150px rgba(200, 220, 255, 0.3),
+                inset 0 0 40px rgba(255, 255, 255, 0.7),
+                inset 0 -30px 60px rgba(130, 196, 255, 0.4);
+            animation: orbPulse 3s ease-in-out infinite, orbShimmer 6s ease-in-out infinite;
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 1;
+            filter: brightness(1.05);
         }
 
-        /* блик */
+        /* Яркий блик */
         #health-orb::before {
             content: '';
             position: absolute;
-            top: 12%;
-            left: 18%;
-            width: 40%;
-            height: 28%;
+            top: 15%;
+            left: 20%;
+            width: 45%;
+            height: 35%;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.9), transparent 70%);
-            filter: blur(6px);
+            background: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.8) 30%, transparent 70%);
+            filter: blur(8px);
             z-index: 2;
+            animation: orbGlow 4s ease-in-out infinite;
         }
 
-        /* лёгкая кайма */
+        /* Переливающаяся кайма */
         #health-orb::after {
             content: '';
             position: absolute;
-            inset: 6px;
+            inset: 4px;
             border-radius: 50%;
-            border: 1px solid rgba(255, 255, 255, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.8);
             box-shadow:
-                0 0 20px rgba(255, 255, 255, 0.5),
-                0 0 30px rgba(130, 196, 255, 0.4);
+                0 0 30px rgba(255, 255, 255, 0.8),
+                0 0 50px rgba(255, 200, 220, 0.6),
+                0 0 70px rgba(130, 196, 255, 0.5),
+                inset 0 0 20px rgba(255, 255, 255, 0.6);
             z-index: 1;
+            animation: orbBorderGlow 5s ease-in-out infinite;
         }
 
-        /* Глаза орба */
+        /* Глаза орба - более живые */
         .orb-eye {
             position: absolute;
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             background: #1B2B4A;
             border-radius: 50%;
             z-index: 3;
             top: 40%;
+            box-shadow: 
+                0 0 8px rgba(27, 43, 74, 0.6),
+                inset 0 2px 4px rgba(255, 255, 255, 0.3);
+            animation: orbEyeBlink 4s ease-in-out infinite;
         }
 
         .orb-eye.left {
@@ -598,6 +610,15 @@
 
         .orb-eye.right {
             right: 38%;
+        }
+
+        @keyframes orbEyeBlink {
+            0%, 90%, 100% {
+                transform: scaleY(1);
+            }
+            92%, 98% {
+                transform: scaleY(0.1);
+            }
         }
 
         /* Рот орба */
@@ -667,7 +688,7 @@
                 opacity: 0.98;
             }
             50% {
-                transform: scale(1.03);
+                transform: scale(1.04);
                 opacity: 1;
             }
             100% {
@@ -676,31 +697,79 @@
             }
         }
 
-        /* 0–60% от цели — базовый холодный голубой/сине-фиолетовый */
+        @keyframes orbShimmer {
+            0%, 100% {
+                filter: brightness(1.05) hue-rotate(0deg);
+            }
+            25% {
+                filter: brightness(1.1) hue-rotate(5deg);
+            }
+            50% {
+                filter: brightness(1.08) hue-rotate(-3deg);
+            }
+            75% {
+                filter: brightness(1.12) hue-rotate(3deg);
+            }
+        }
+
+        @keyframes orbGlow {
+            0%, 100% {
+                opacity: 0.9;
+                transform: translate(0, 0) scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: translate(2px, -2px) scale(1.1);
+            }
+        }
+
+        @keyframes orbBorderGlow {
+            0%, 100% {
+                opacity: 0.8;
+                box-shadow:
+                    0 0 30px rgba(255, 255, 255, 0.8),
+                    0 0 50px rgba(255, 200, 220, 0.6),
+                    0 0 70px rgba(130, 196, 255, 0.5),
+                    inset 0 0 20px rgba(255, 255, 255, 0.6);
+            }
+            50% {
+                opacity: 1;
+                box-shadow:
+                    0 0 40px rgba(255, 255, 255, 1),
+                    0 0 60px rgba(255, 200, 220, 0.8),
+                    0 0 90px rgba(130, 196, 255, 0.7),
+                    inset 0 0 25px rgba(255, 255, 255, 0.8);
+            }
+        }
+
+        /* 0–60% от цели — базовый холодный голубой/сине-фиолетовый с розовым */
         #health-orb.state-normal {
             background:
-                radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.9) 0, rgba(255, 255, 255, 0) 55%),
-                radial-gradient(circle at 70% 30%, rgba(130, 196, 255, 0.85) 0, rgba(130, 196, 255, 0) 60%),
-                radial-gradient(circle at 30% 75%, rgba(163, 221, 255, 0.7) 0, rgba(163, 221, 255, 0) 60%),
-                radial-gradient(circle at 75% 80%, rgba(199, 212, 255, 0.8) 0, rgba(199, 212, 255, 0) 60%);
+                radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0) 50%),
+                radial-gradient(circle at 75% 30%, rgba(255, 200, 220, 0.7) 0%, rgba(255, 200, 220, 0) 60%),
+                radial-gradient(circle at 30% 70%, rgba(130, 196, 255, 0.8) 0%, rgba(130, 196, 255, 0) 65%),
+                radial-gradient(circle at 70% 75%, rgba(200, 220, 255, 0.75) 0%, rgba(200, 220, 255, 0) 60%),
+                radial-gradient(circle at 50% 50%, rgba(255, 240, 250, 0.6) 0%, rgba(255, 240, 250, 0) 70%);
         }
 
         /* 60–100% — «good», бирюза и мягкие зелёные блики */
         #health-orb.state-good {
             background:
-                radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.9) 0, rgba(255, 255, 255, 0) 55%),
-                radial-gradient(circle at 70% 30%, rgba(163, 240, 230, 0.75) 0, rgba(163, 240, 230, 0) 60%),
-                radial-gradient(circle at 30% 75%, rgba(130, 196, 255, 0.7) 0, rgba(130, 196, 255, 0) 60%),
-                radial-gradient(circle at 75% 80%, rgba(199, 240, 255, 0.8) 0, rgba(199, 240, 255, 0) 60%);
+                radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0) 50%),
+                radial-gradient(circle at 75% 30%, rgba(200, 250, 240, 0.75) 0%, rgba(200, 250, 240, 0) 60%),
+                radial-gradient(circle at 30% 70%, rgba(163, 240, 230, 0.8) 0%, rgba(163, 240, 230, 0) 65%),
+                radial-gradient(circle at 70% 75%, rgba(130, 196, 255, 0.7) 0%, rgba(130, 196, 255, 0) 60%),
+                radial-gradient(circle at 50% 50%, rgba(220, 255, 250, 0.65) 0%, rgba(220, 255, 250, 0) 70%);
         }
 
         /* 95–110% — «perfect», лёгкое тёплое сияние (персиково-золотое) */
         #health-orb.state-perfect {
             background:
-                radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.95) 0, rgba(255, 255, 255, 0) 55%),
-                radial-gradient(circle at 70% 30%, rgba(255, 235, 200, 0.75) 0, rgba(255, 235, 200, 0) 60%),
-                radial-gradient(circle at 30% 75%, rgba(130, 196, 255, 0.65) 0, rgba(130, 196, 255, 0) 60%),
-                radial-gradient(circle at 75% 80%, rgba(199, 212, 255, 0.75) 0, rgba(199, 212, 255, 0) 60%);
+                radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0) 50%),
+                radial-gradient(circle at 75% 30%, rgba(255, 230, 200, 0.8) 0%, rgba(255, 230, 200, 0) 60%),
+                radial-gradient(circle at 30% 70%, rgba(255, 200, 220, 0.75) 0%, rgba(255, 200, 220, 0) 65%),
+                radial-gradient(circle at 70% 75%, rgba(130, 196, 255, 0.7) 0%, rgba(130, 196, 255, 0) 60%),
+                radial-gradient(circle at 50% 50%, rgba(255, 245, 230, 0.7) 0%, rgba(255, 245, 230, 0) 70%);
         }
 
         .daily-summary {
@@ -970,6 +1039,14 @@
 
         <!-- Main App -->
         <div id="app-main" class="hidden">
+            <div class="container">
+            <!-- Health Orb -->
+            <div id="health-orb" class="state-normal emotion-neutral">
+                <div class="orb-eye left"></div>
+                <div class="orb-eye right"></div>
+                <div class="orb-mouth"></div>
+            </div>
+
             <!-- Main App Header -->
             <header id="app-header" class="card">
                 <h1>Конструктор питания</h1>
@@ -1006,13 +1083,6 @@
                     </div>
                 </div>
             </header>
-
-            <!-- Health Orb -->
-            <div id="health-orb" class="state-normal emotion-neutral">
-                <div class="orb-eye left"></div>
-                <div class="orb-eye right"></div>
-                <div class="orb-mouth"></div>
-            </div>
 
             <!-- Progress Widget -->
             <section id="progress-widget" class="card">
