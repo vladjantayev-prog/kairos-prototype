@@ -534,7 +534,7 @@
             width: 190px;
             max-width: 60vw;
             aspect-ratio: 1 / 1;
-            margin: 28px auto 24px auto;
+            margin: 20px auto 16px auto;
             border-radius: 50%;
             position: relative;
             /* glassmorphism градиент */
@@ -548,6 +548,10 @@
                 0 0 80px rgba(130, 196, 255, 0.35),
                 inset 0 0 32px rgba(255, 255, 255, 0.55);
             animation: orbPulse 4s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
         }
 
         /* блик */
@@ -561,6 +565,7 @@
             border-radius: 50%;
             background: radial-gradient(circle, rgba(255, 255, 255, 0.9), transparent 70%);
             filter: blur(6px);
+            z-index: 2;
         }
 
         /* лёгкая кайма */
@@ -573,6 +578,69 @@
             box-shadow:
                 0 0 20px rgba(255, 255, 255, 0.5),
                 0 0 30px rgba(130, 196, 255, 0.4);
+            z-index: 1;
+        }
+
+        /* Глаза орба */
+        .orb-eye {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #1B2B4A;
+            border-radius: 50%;
+            z-index: 3;
+            top: 40%;
+        }
+
+        .orb-eye.left {
+            left: 38%;
+        }
+
+        .orb-eye.right {
+            right: 38%;
+        }
+
+        /* Рот орба */
+        .orb-mouth {
+            position: absolute;
+            width: 32px;
+            height: 16px;
+            border: 3px solid #1B2B4A;
+            border-top: none;
+            border-radius: 0 0 32px 32px;
+            bottom: 35%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            transition: all 0.3s ease;
+        }
+
+        /* Эмоции орба */
+        #health-orb.emotion-happy .orb-mouth {
+            width: 36px;
+            height: 18px;
+            border: 3px solid #1B2B4A;
+            border-top: none;
+            border-radius: 0 0 36px 36px;
+            transform: translateX(-50%) translateY(-1px);
+        }
+
+        #health-orb.emotion-neutral .orb-mouth {
+            width: 28px;
+            height: 2px;
+            border: none;
+            border-top: 2px solid #1B2B4A;
+            border-radius: 0;
+            transform: translateX(-50%);
+        }
+
+        #health-orb.emotion-sad .orb-mouth {
+            width: 36px;
+            height: 18px;
+            border: 3px solid #1B2B4A;
+            border-bottom: none;
+            border-radius: 36px 36px 0 0;
+            transform: translateX(-50%) translateY(1px);
         }
 
         @keyframes orbPulse {
@@ -922,7 +990,11 @@
             </header>
 
             <!-- Health Orb -->
-            <div id="health-orb" class="state-normal"></div>
+            <div id="health-orb" class="state-normal emotion-neutral">
+                <div class="orb-eye left"></div>
+                <div class="orb-eye right"></div>
+                <div class="orb-mouth"></div>
+            </div>
 
             <!-- Progress Widget -->
             <section id="progress-widget" class="card">
@@ -2152,15 +2224,16 @@
                 // Если орба нет или нет данных, ставим нормальное состояние
                 if (orb) {
                     orb.classList.remove('state-normal', 'state-good', 'state-perfect');
-                    orb.classList.add('state-normal');
+                    orb.classList.remove('emotion-happy', 'emotion-neutral', 'emotion-sad');
+                    orb.classList.add('state-normal', 'emotion-neutral');
                 }
                 return;
             }
             
             const progress = dailyUsed.calories / dailyTargets.calories;
             
+            // Обновляем цветовое состояние
             orb.classList.remove('state-normal', 'state-good', 'state-perfect');
-            
             if (progress < 0.6) {
                 orb.classList.add('state-normal');
             } else if (progress < 0.95) {
@@ -2170,6 +2243,25 @@
             } else {
                 // если сильно ушли в перебор — возвращаем к нормальному холодному
                 orb.classList.add('state-normal');
+            }
+            
+            // Обновляем эмоции
+            orb.classList.remove('emotion-happy', 'emotion-neutral', 'emotion-sad');
+            if (progress < 0.4) {
+                // Меньше 40% - грустный
+                orb.classList.add('emotion-sad');
+            } else if (progress < 0.7) {
+                // 40-70% - нейтральный
+                orb.classList.add('emotion-neutral');
+            } else if (progress <= 1.0) {
+                // 70-100% - счастливый
+                orb.classList.add('emotion-happy');
+            } else if (progress <= 1.1) {
+                // 100-110% - все еще счастливый (немного перебрали, но ок)
+                orb.classList.add('emotion-happy');
+            } else {
+                // Больше 110% - нейтральный (слишком много)
+                orb.classList.add('emotion-neutral');
             }
         }
 
@@ -3075,6 +3167,5 @@
         initApp();
     </script>
 </body>
-</html>
 </html>
 
