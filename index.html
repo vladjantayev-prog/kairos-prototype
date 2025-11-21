@@ -616,13 +616,22 @@
         }
 
         /* Эмоции орба */
-        #health-orb.emotion-happy .orb-mouth {
-            width: 36px;
-            height: 18px;
+        #health-orb.emotion-smile .orb-mouth {
+            width: 32px;
+            height: 14px;
             border: 3px solid #1B2B4A;
             border-top: none;
-            border-radius: 0 0 36px 36px;
+            border-radius: 0 0 32px 32px;
             transform: translateX(-50%) translateY(-1px);
+        }
+
+        #health-orb.emotion-big-smile .orb-mouth {
+            width: 40px;
+            height: 20px;
+            border: 3px solid #1B2B4A;
+            border-top: none;
+            border-radius: 0 0 40px 40px;
+            transform: translateX(-50%) translateY(-2px);
         }
 
         #health-orb.emotion-neutral .orb-mouth {
@@ -641,6 +650,15 @@
             border-bottom: none;
             border-radius: 36px 36px 0 0;
             transform: translateX(-50%) translateY(1px);
+        }
+
+        /* Желтоватый цвет при проблемах */
+        #health-orb.state-warning {
+            background:
+                radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.9) 0, rgba(255, 255, 255, 0) 55%),
+                radial-gradient(circle at 70% 30%, rgba(255, 235, 200, 0.8) 0, rgba(255, 235, 200, 0) 60%),
+                radial-gradient(circle at 30% 75%, rgba(255, 220, 180, 0.7) 0, rgba(255, 220, 180, 0) 60%),
+                radial-gradient(circle at 75% 80%, rgba(255, 240, 200, 0.75) 0, rgba(255, 240, 200, 0) 60%);
         }
 
         @keyframes orbPulse {
@@ -2223,44 +2241,64 @@
             if (!orb || !dailyTargets || !dailyTargets.calories) {
                 // Если орба нет или нет данных, ставим нормальное состояние
                 if (orb) {
-                    orb.classList.remove('state-normal', 'state-good', 'state-perfect');
-                    orb.classList.remove('emotion-happy', 'emotion-neutral', 'emotion-sad');
+                    orb.classList.remove('state-normal', 'state-good', 'state-perfect', 'state-warning');
+                    orb.classList.remove('emotion-smile', 'emotion-big-smile', 'emotion-neutral', 'emotion-sad');
                     orb.classList.add('state-normal', 'emotion-neutral');
                 }
                 return;
             }
             
             const progress = dailyUsed.calories / dailyTargets.calories;
+            const proteinProgress = dailyTargets.protein > 0 ? dailyUsed.protein / dailyTargets.protein : 0;
+            
+            // Проверяем данные дня
+            const breakfast = allMeals.find(m => m.meal_type === 'breakfast');
+            const hasGoodBreakfast = breakfast && breakfast.calories > 0 && breakfast.protein > 0;
+            const sleepHours = kairosState.today?.sleepHours || 0;
+            const hasActivity = kairosState.today?.activityType && kairosState.today.activityType !== 'rest';
+            const hasGoodSleep = sleepHours >= 7 && sleepHours <= 9;
+            
+            // Проверяем нарушения
+            const overate = progress > 1.15; // Переел больше чем на 15%
+            const underProtein = proteinProgress < 0.7; // Недобрал белков (меньше 70%)
+            const allBad = !hasGoodBreakfast && (!hasGoodSleep || sleepHours === 0) && !hasActivity;
             
             // Обновляем цветовое состояние
-            orb.classList.remove('state-normal', 'state-good', 'state-perfect');
-            if (progress < 0.6) {
+            orb.classList.remove('state-normal', 'state-good', 'state-perfect', 'state-warning');
+            
+            if (overate || underProtein || allBad) {
+                // Проблемы - желтоватый цвет
+                orb.classList.add('state-warning');
+            } else if (progress >= 0.95 && progress <= 1.05) {
+                // Выполнен план - зеленоватый
+                orb.classList.add('state-good');
+            } else if (progress < 0.6) {
                 orb.classList.add('state-normal');
             } else if (progress < 0.95) {
                 orb.classList.add('state-good');
             } else if (progress <= 1.1) {
                 orb.classList.add('state-perfect');
             } else {
-                // если сильно ушли в перебор — возвращаем к нормальному холодному
                 orb.classList.add('state-normal');
             }
             
             // Обновляем эмоции
-            orb.classList.remove('emotion-happy', 'emotion-neutral', 'emotion-sad');
-            if (progress < 0.4) {
-                // Меньше 40% - грустный
+            orb.classList.remove('emotion-smile', 'emotion-big-smile', 'emotion-neutral', 'emotion-sad');
+            
+            if (overate || underProtein || allBad) {
+                // Грусть при проблемах
                 orb.classList.add('emotion-sad');
-            } else if (progress < 0.7) {
-                // 40-70% - нейтральный
-                orb.classList.add('emotion-neutral');
-            } else if (progress <= 1.0) {
-                // 70-100% - счастливый
-                orb.classList.add('emotion-happy');
-            } else if (progress <= 1.1) {
-                // 100-110% - все еще счастливый (немного перебрали, но ок)
-                orb.classList.add('emotion-happy');
+            } else if (progress >= 0.95 && progress <= 1.05 && hasGoodBreakfast && hasGoodSleep) {
+                // Выполнен план дня - широкая улыбка
+                orb.classList.add('emotion-big-smile');
+            } else if (hasActivity && hasGoodBreakfast && hasGoodSleep) {
+                // Есть активность + хороший завтрак + сон - широкая улыбка
+                orb.classList.add('emotion-big-smile');
+            } else if (hasGoodBreakfast && hasGoodSleep) {
+                // Хороший завтрак и сон - легкая улыбка
+                orb.classList.add('emotion-smile');
             } else {
-                // Больше 110% - нейтральный (слишком много)
+                // Нейтрально в начале дня или если нет данных
                 orb.classList.add('emotion-neutral');
             }
         }
@@ -3101,8 +3139,17 @@
             });
             document.getElementById(`activity-${activityType}`).classList.add('selected');
             document.getElementById('activity-selected-message').style.display = 'block';
+            
+            // Сохраняем активность в kairosState
+            if (!kairosState.today) {
+                kairosState.today = createEmptyDay(getTodayDate());
+            }
+            kairosState.today.activityType = activityType;
+            saveState();
+            
             hapticFeedback('medium');
             showToast('✅ Активность запланирована!');
+            updateHealthOrbState();
         }
 
         function selectSleepHours(hours) {
@@ -3113,13 +3160,18 @@
             });
             document.getElementById(`sleep-${hours}`).classList.add('selected');
             document.getElementById('sleep-selected-message').style.display = 'block';
+            
+            // Сохраняем сон в kairosState
+            if (!kairosState.today) {
+                kairosState.today = createEmptyDay(getTodayDate());
+            }
+            kairosState.today.sleepHours = hours;
+            saveState();
+            
             hapticFeedback('medium');
             
             // Начисляем XP за сон (7-8 часов = идеально)
             if (hours === 7) {
-                if (!kairosState.today) {
-                    kairosState.today = createEmptyDay(getTodayDate());
-                }
                 
                 const sleepXP = { muscles: 0, energy: 0, immune: 5, hormones: 10, gut: 0, skin: 0, brain: 2 };
                 Object.keys(sleepXP).forEach(key => {
@@ -3138,6 +3190,7 @@
             } else {
                 showToast('✅ Сон зафиксирован');
             }
+            updateHealthOrbState();
         }
         
         function addWater() {
