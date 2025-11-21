@@ -376,47 +376,56 @@
 
         .main-menu {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
+            grid-template-columns: 1fr;
+            gap: 12px;
         }
 
         .menu-card {
             background: #FFFFFF;
-            border: 1px solid rgba(15, 23, 42, 0.04);
-            border-radius: 20px;
-            padding: 24px 20px;
-            text-align: center;
+            border: 1px solid rgba(15, 23, 42, 0.06);
+            border-radius: 18px;
+            padding: 20px 16px;
+            text-align: left;
             cursor: pointer;
             transition: all 0.2s ease;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .menu-card::after {
+            content: '→';
+            font-size: 18px;
+            color: #82C4FF;
+            font-weight: 300;
+            opacity: 0.6;
+            transition: all 0.2s ease;
         }
 
         .menu-card:hover {
-            transform: translateY(-1px);
-            background: rgba(130, 196, 255, 0.04);
-            border-color: rgba(130, 196, 255, 0.4);
-            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.04);
+            transform: translateY(-2px);
+            background: rgba(130, 196, 255, 0.05);
+            border-color: rgba(130, 196, 255, 0.3);
+            box-shadow: 0 4px 12px rgba(130, 196, 255, 0.15);
+        }
+
+        .menu-card:hover::after {
+            opacity: 1;
+            transform: translateX(2px);
         }
 
         .menu-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 56px;
-            height: 56px;
-            background: linear-gradient(135deg, rgba(130, 196, 255, 0.9), rgba(74, 107, 200, 0.9));
-            border-radius: 50%;
-            margin: 0 auto 12px;
-            font-size: 28px;
-            box-shadow: 0 4px 12px rgba(130, 196, 255, 0.2);
+            display: none;
         }
 
         .menu-title {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
             color: #1B2B4A;
+            line-height: 1.4;
         }
 
         .step-header {
@@ -723,7 +732,7 @@
             }
 
             .main-menu {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: 1fr;
             }
 
             .radio-option {
@@ -932,51 +941,39 @@
             <!-- Main Menu -->
             <main id="main-menu" class="main-menu">
                 <div class="menu-card" onclick="showSection('plate-guide')">
-                    <div class="menu-icon">🍽️</div>
                     <div class="menu-title">Как собирать тарелку</div>
                 </div>
                 <div class="menu-card" onclick="startConstructor('breakfast')">
-                    <div class="menu-icon">🌅</div>
                     <div class="menu-title">Завтрак</div>
                 </div>
                 <div class="menu-card" onclick="startConstructor('lunch')">
-                    <div class="menu-icon">☀️</div>
                     <div class="menu-title">Обед</div>
                 </div>
                 <div class="menu-card" onclick="startConstructor('dinner')">
-                    <div class="menu-icon">🌙</div>
                     <div class="menu-title">Ужин</div>
                 </div>
                 <div class="menu-card" onclick="startConstructor('snack')">
-                    <div class="menu-icon">🍎</div>
                     <div class="menu-title">Перекус</div>
                 </div>
                 <div class="menu-card" onclick="showSection('activity')">
-                    <div class="menu-icon">🏃‍♂️</div>
                     <div class="menu-title">Активность</div>
                 </div>
                 <div class="menu-card" onclick="showSection('problems')">
-                    <div class="menu-icon">💡</div>
                     <div class="menu-title">Частые проблемы</div>
                 </div>
                 <div class="menu-card" onclick="showSection('sleep')">
-                    <div class="menu-icon">😴</div>
                     <div class="menu-title">Сон</div>
                 </div>
                 <div class="menu-card" onclick="addWater()">
-                    <div class="menu-icon">💧</div>
                     <div class="menu-title">Вода 300 мл</div>
                 </div>
                 <div class="menu-card" onclick="resetDailyProgress()">
-                    <div class="menu-icon">🔄</div>
                     <div class="menu-title">Сбросить день</div>
                 </div>
                 <div class="menu-card" onclick="resetAllData()">
-                    <div class="menu-icon">🏠</div>
                     <div class="menu-title">Начать сначала</div>
                 </div>
                 <div class="menu-card" onclick="showSection('calendar')">
-                    <div class="menu-icon">📅</div>
                     <div class="menu-title">Календарь</div>
                     </div>
             </main>
@@ -3078,5 +3075,6 @@
         initApp();
     </script>
 </body>
+</html>
 </html>
 
