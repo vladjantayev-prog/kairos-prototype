@@ -2300,6 +2300,17 @@
             const hasGoodSleep = sleepHours >= 7 && sleepHours <= 9;
             const hasWater = kairosState.today?.water || 0;
             
+            // Проверяем, начат ли план (есть ли активность по КБЖУ или достижениям)
+            const hasAnyProgress = progress > 0.05 || hasGoodBreakfast || hasActivity || hasWater > 0 || sleepHours > 0;
+            
+            // БАЗОВАЯ ЭМОЦИЯ CALM - когда план еще не начат
+            if (!hasAnyProgress) {
+                orb.classList.remove('state-calm', 'state-energy', 'state-fatigue', 'state-stress');
+                orb.classList.remove('emotion-calm', 'emotion-satisfied', 'emotion-focus', 'emotion-sleepy', 'emotion-overloaded');
+                orb.classList.add('state-calm', 'emotion-calm');
+                return;
+            }
+            
             // Проверяем нарушения
             const overate = progress > 1.15; // Переел больше чем на 15%
             const underProtein = proteinProgress < 0.7; // Недобрал белков (меньше 70%)
@@ -2340,7 +2351,7 @@
                 // Satisfied - после еды, воды, активности, легкая улыбка
                 orb.classList.add('emotion-satisfied');
             } else {
-                // Calm - базовое состояние покоя
+                // Calm - если нет явных достижений, но есть минимальный прогресс
                 orb.classList.add('emotion-calm');
             }
         }
