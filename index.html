@@ -600,11 +600,15 @@
             right: 38%;
         }
 
-        /* Calm - базовые глаза */
+        /* Calm - закрытые глаза (полумесяцы вверх) */
         #health-orb.emotion-calm .orb-eye {
-            width: 10px;
-            height: 10px;
-            background: rgba(27, 43, 74, 0.6);
+            width: 16px;
+            height: 8px;
+            background: transparent;
+            border: 3px solid rgba(27, 43, 74, 0.7);
+            border-bottom: none;
+            border-radius: 16px 16px 0 0;
+            top: 38%;
         }
 
         /* Satisfied - слегка округленные */
@@ -652,12 +656,40 @@
             border-radius: 0;
         }
 
-        /* Calm - слегка округленная спокойная линия */
+        /* Calm - улыбка (изогнутая вверх) */
         #health-orb.emotion-calm .orb-mouth {
-            width: 26px;
-            height: 2px;
-            border-top: 2px solid rgba(27, 43, 74, 0.5);
-            border-radius: 2px;
+            width: 32px;
+            height: 12px;
+            border: 3px solid rgba(27, 43, 74, 0.6);
+            border-top: none;
+            border-radius: 0 0 32px 32px;
+            transform: translateX(-50%) translateY(-1px);
+        }
+
+        /* Румянец на щеках для Calm */
+        .orb-blush {
+            position: absolute;
+            width: 24px;
+            height: 16px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 200, 220, 0.5), transparent 75%);
+            filter: blur(5px);
+            z-index: 2;
+            top: 48%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .orb-blush.left {
+            left: 28%;
+        }
+
+        .orb-blush.right {
+            right: 28%;
+        }
+
+        #health-orb.emotion-calm .orb-blush {
+            opacity: 1;
         }
 
         /* Satisfied - легкая улыбка */
@@ -982,6 +1014,8 @@
                 <div class="orb-eye left"></div>
                 <div class="orb-eye right"></div>
                 <div class="orb-mouth"></div>
+                <div class="orb-blush left"></div>
+                <div class="orb-blush right"></div>
             </div>
 
             <!-- Main App Header -->
