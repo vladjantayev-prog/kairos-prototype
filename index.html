@@ -1035,7 +1035,7 @@
                         <div class="macro-label">Белки</div>
                         <div class="macro-value"><span id="used-protein">0</span></div>
                         <div class="macro-total">из <span id="total-protein">90</span> г</div>
-                        <div class="macro-portions" id="protein-portions" style="font-size: 12px; color: #6B7280; margin-top: 4px;">≈ 0 из 4 ладоней</div>
+                        <div class="macro-portions" id="protein-portions" style="font-size: 12px; color: #6B7280; margin-top: 4px;">≈ 0 ладоней из 4 ладоней</div>
                         <div class="macro-progress">
                             <div class="macro-progress-fill macro-progress-fill--protein"></div>
                         </div>
@@ -1044,7 +1044,7 @@
                         <div class="macro-label">Углеводы</div>
                         <div class="macro-value"><span id="used-carbs">0</span></div>
                         <div class="macro-total">из <span id="total-carbs">200</span> г</div>
-                        <div class="macro-portions" id="carbs-portions" style="font-size: 12px; color: #6B7280; margin-top: 4px;">≈ 0 из 3 кулаков</div>
+                        <div class="macro-portions" id="carbs-portions" style="font-size: 12px; color: #6B7280; margin-top: 4px;">≈ 0 кулаков из 3 кулаков</div>
                         <div class="macro-progress">
                             <div class="macro-progress-fill macro-progress-fill--carbs"></div>
                         </div>
@@ -1151,11 +1151,20 @@
                     <p id="plate-guide-text" style="color: #2A2A2A; line-height: 1.8; margin: 0;">
                         Мы уже посчитали твой дневной бюджет калорий и БЖУ.<br>
                         Чтобы тебе не пришлось считать граммы каждый раз, мы перевели их в порции «на глаз»:<br><br>
-                        • <strong>Белок</strong> — <span id="guide-protein-palms">4</span> ладони в день<br>
-                        • <strong>Углеводы</strong> — <span id="guide-carb-fists">3</span> кулака в день<br>
-                        • <strong>Овощи</strong> — <span id="guide-veg-palms">6</span> ладоней в день<br><br>
+                        • <strong>Белок</strong> — <span id="guide-protein-palms">4</span> <span id="guide-protein-palms-word">ладоней</span> в день<br>
+                        • <strong>Углеводы</strong> — <span id="guide-carb-fists">3</span> <span id="guide-carb-fists-word">кулака</span> в день<br>
+                        • <strong>Овощи</strong> — <span id="guide-veg-palms">6</span> <span id="guide-veg-palms-word">ладоней</span> в день<br><br>
                         1 ладонь белка ≈ 20–30 г белка<br>
                         1 кулак гарнира ≈ 25–30 г углеводов
+                    </p>
+                </div>
+                <div class="info-section">
+                    <h3>🍽️ Правило тарелки (Гарвардская тарелка):</h3>
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                        <strong>½ тарелки</strong> — овощи (сырые или приготовленные)<br>
+                        <strong>¼ тарелки</strong> — белок<br>
+                        <strong>¼ тарелки</strong> — углеводы (гарнир)<br>
+                        <strong>+ 1 источник</strong> — полезные жиры (масло, орехи, авокадо)
                     </p>
                 </div>
                 <div class="info-section">
@@ -1172,6 +1181,8 @@
                     <h3 style="color: #1B2B4A; margin-top: 0;">✋ Научно обоснованный метод</h3>
                     <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
                         Метод визуальных порций (ладонь/кулак) используется диетологами по всему миру и признан эффективным способом контроля питания без весов. 
+                        Наши внутренние расчёты показывают, что порции рук примерно на 95% так же точны, как и тщательное взвешивание, измерение и отслеживание пищи. 
+                        Со существенно меньшими усилиями и временем.<br><br>
                         Твоя рука пропорциональна твоему телу — это идеальный инструмент для измерения порций! 🖐️
                     </p>
                 </div>
@@ -2053,6 +2064,26 @@
             return Math.round(dailyCalories);
         }
 
+        // Функция для правильного склонения "ладонь"
+        function getPalmWord(count) {
+            const num = Math.abs(count) % 100;
+            const num1 = num % 10;
+            if (num > 10 && num < 20) return 'ладоней';
+            if (num1 > 1 && num1 < 5) return 'ладони';
+            if (num1 === 1) return 'ладонь';
+            return 'ладоней';
+        }
+
+        // Функция для правильного склонения "кулак"
+        function getFistWord(count) {
+            const num = Math.abs(count) % 100;
+            const num1 = num % 10;
+            if (num > 10 && num < 20) return 'кулаков';
+            if (num1 > 1 && num1 < 5) return 'кулака';
+            if (num1 === 1) return 'кулак';
+            return 'кулаков';
+        }
+
         // Функция для получения текста порции белка
         function getProteinPortionLabel(gramsProtein, sex) {
             const proteinPerPalm = sex === 'female' 
@@ -2061,11 +2092,13 @@
             const palms = gramsProtein / proteinPerPalm;
             
             if (palms < 0.3) return 'менее ½ ладони белка';
-            if (palms < 0.7) return '½ ладони белка';
+            if (palms < 0.7) {
+                const rounded = Math.round(palms * 2) / 2;
+                return `½ ${getPalmWord(0.5)} белка`;
+            }
             if (palms < 1.3) return '1 ладонь белка';
-            if (palms < 1.7) return '1.5 ладони белка';
-            if (palms < 2.3) return '2 ладони белка';
-            return `${Math.round(palms * 2) / 2} ладони белка`;
+            const rounded = Math.round(palms * 2) / 2;
+            return `${rounded} ${getPalmWord(rounded)} белка`;
         }
 
         // Функция для получения текста порции углеводов
@@ -2073,11 +2106,13 @@
             const fists = gramsCarbs / PORTION_CONSTANTS.CARBS_PER_FIST;
             
             if (fists < 0.3) return 'менее ½ кулака';
-            if (fists < 0.7) return '½ кулака';
+            if (fists < 0.7) {
+                const rounded = Math.round(fists * 2) / 2;
+                return `½ ${getFistWord(0.5)}`;
+            }
             if (fists < 1.3) return '1 кулак';
-            if (fists < 1.7) return '1.5 кулака';
-            if (fists < 2.3) return '2 кулака';
-            return `${Math.round(fists * 2) / 2} кулака`;
+            const rounded = Math.round(fists * 2) / 2;
+            return `${rounded} ${getFistWord(rounded)}`;
         }
 
         // Обработчик формы онбординга
@@ -2377,14 +2412,14 @@
             const targetProteinPalms = dailyTargets.proteinPalms || Math.round(dailyTargets.protein / proteinPerPalm);
             const proteinPortionsEl = document.getElementById('protein-portions');
             if (proteinPortionsEl) {
-                proteinPortionsEl.textContent = `≈ ${usedProteinPalms} из ${targetProteinPalms} ладоней`;
+                proteinPortionsEl.textContent = `≈ ${usedProteinPalms} ${getPalmWord(usedProteinPalms)} из ${targetProteinPalms} ${getPalmWord(targetProteinPalms)}`;
             }
             
             const usedCarbFists = Math.round((dailyUsed.carbs / PORTION_CONSTANTS.CARBS_PER_FIST) * 2) / 2;
             const targetCarbFists = dailyTargets.carbFists || Math.round(dailyTargets.carbs / PORTION_CONSTANTS.CARBS_PER_FIST);
             const carbsPortionsEl = document.getElementById('carbs-portions');
             if (carbsPortionsEl) {
-                carbsPortionsEl.textContent = `≈ ${usedCarbFists} из ${targetCarbFists} кулаков`;
+                carbsPortionsEl.textContent = `≈ ${usedCarbFists} ${getFistWord(usedCarbFists)} из ${targetCarbFists} ${getFistWord(targetCarbFists)}`;
             }
             
             // Обновляем прогресс-бары БЖУ
@@ -2759,10 +2794,16 @@
             const proteinEl = document.getElementById('guide-protein-palms');
             const carbsEl = document.getElementById('guide-carb-fists');
             const vegEl = document.getElementById('guide-veg-palms');
+            const proteinWordEl = document.getElementById('guide-protein-palms-word');
+            const carbsWordEl = document.getElementById('guide-carb-fists-word');
+            const vegWordEl = document.getElementById('guide-veg-palms-word');
             
             if (proteinEl) proteinEl.textContent = proteinPalms;
             if (carbsEl) carbsEl.textContent = carbFists;
             if (vegEl) vegEl.textContent = vegPalms;
+            if (proteinWordEl) proteinWordEl.textContent = getPalmWord(proteinPalms);
+            if (carbsWordEl) carbsWordEl.textContent = getFistWord(carbFists);
+            if (vegWordEl) vegWordEl.textContent = getPalmWord(vegPalms);
         }
 
         function showSection(sectionId) {
@@ -3429,5 +3470,4 @@
     </script>
 </body>
 </html>
-
 
