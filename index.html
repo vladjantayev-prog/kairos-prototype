@@ -2080,9 +2080,17 @@
             return `${Math.round(fists * 2) / 2} кулака`;
         }
 
-        document.getElementById('onboarding-form').addEventListener('submit', (e) => {
+        // Обработчик формы онбординга
+        const onboardingForm = document.getElementById('onboarding-form');
+        if (onboardingForm) {
+            onboardingForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            try {
             const btn = document.getElementById('calculate-btn');
+            if (!btn) {
+                console.error('Кнопка calculate-btn не найдена!');
+                return;
+            }
             btn.disabled = true;
             btn.textContent = 'Рассчитываем...';
 
@@ -2113,6 +2121,14 @@
             const proteinMin = Math.round(weight * 1.6);
             const proteinMax = proteinGrams;
 
+            // Расчёт порций (ладони/кулаки) - ДО сохранения профиля
+            const proteinPerPalm = gender === 'female' 
+                ? PORTION_CONSTANTS.FEMALE_PROTEIN_PER_PALM 
+                : PORTION_CONSTANTS.MALE_PROTEIN_PER_PALM;
+            const targetProteinPalms = Math.round(proteinGrams / proteinPerPalm);
+            const targetCarbFists = Math.round(carbsGrams / PORTION_CONSTANTS.CARBS_PER_FIST);
+            const targetVegPalms = PORTION_CONSTANTS.DEFAULT_VEG_PALMS;
+
             // Сохраняем профиль в kairosState
             kairosState.profile = {
                 sex: gender,
@@ -2141,14 +2157,6 @@
             if (!kairosState.today) {
                 kairosState.today = createEmptyDay(getTodayDate());
             }
-            
-            // Расчёт порций (ладони/кулаки)
-            const proteinPerPalm = gender === 'female' 
-                ? PORTION_CONSTANTS.FEMALE_PROTEIN_PER_PALM 
-                : PORTION_CONSTANTS.MALE_PROTEIN_PER_PALM;
-            const targetProteinPalms = Math.round(proteinGrams / proteinPerPalm);
-            const targetCarbFists = Math.round(carbsGrams / PORTION_CONSTANTS.CARBS_PER_FIST);
-            const targetVegPalms = PORTION_CONSTANTS.DEFAULT_VEG_PALMS;
             
             // Устанавливаем dailyTargets из рассчитанных значений
             dailyTargets = {
@@ -2190,7 +2198,19 @@
 
             btn.disabled = false;
             btn.textContent = 'Рассчитать мою норму';
-        });
+            } catch (error) {
+                console.error('Ошибка при расчёте:', error);
+                const btn = document.getElementById('calculate-btn');
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = 'Рассчитать мою норму';
+                }
+                alert('Произошла ошибка при расчёте. Пожалуйста, проверьте введённые данные.');
+            }
+            });
+        } else {
+            console.error('Форма онбординга не найдена!');
+        }
 
         document.getElementById('continue-to-mode').addEventListener('click', () => {
             document.getElementById('onboarding-step2').classList.add('hidden');
@@ -2960,7 +2980,7 @@
                     } else if (option.group === 'carb' && option.carbs) {
                         const portionText = getCarbPortionLabel(option.carbs);
                         portionHint = `<div style="font-size: 11px; color: #6B7280; margin-top: 4px;">≈ ${portionText}</div>`;
-                    } else if (option.group === 'fat') {
+                } else if (option.group === 'fat') {
                         portionHint = '<div style="font-size: 11px; color: #6B7280; margin-top: 4px;">≈ 1 порция</div>';
                     }
                 }
