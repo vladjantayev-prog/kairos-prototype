@@ -1098,7 +1098,7 @@
                 </div>
                 <div class="menu-card" onclick="openSnackHelper()">
                     <div class="menu-icon">🍫</div>
-                    <div class="menu-title">Хочу чего-нибудь пожевать</div>
+                    <div class="menu-title">Пауза перед перекусом</div>
                 </div>
                 <div class="menu-card" onclick="showSection('activity')">
                     <div class="menu-icon">🏃‍♂️</div>
@@ -1271,6 +1271,37 @@
                 <button class="btn btn-secondary" onclick="showMainMenu()" style="margin-top: 20px;">← Назад в меню</button>
             </section>
 
+            <!-- Snack Helper: Action Choice Screen (NEW) -->
+            <section id="snack-action-choice" class="card hidden">
+                <div class="step-header">
+                    <div class="step-title">Что ты хочешь сейчас больше всего?</div>
+                    <div class="step-subtitle">Можно по-разному позаботиться о себе.<br>Выбери, что ближе прямо сейчас 👇</div>
+                </div>
+                <div class="options-grid" style="display: flex; flex-direction: column; gap: 12px;">
+                    <button class="option-card" id="snack-action-switch" onclick="selectSnackAction('switch')" style="text-align: left; padding: 16px;">
+                        <div style="font-size: 20px; margin-bottom: 8px;">⚡</div>
+                        <div class="option-name">Переключиться и отвлечься</div>
+                    </button>
+                    <button class="option-card" id="snack-action-emotion" onclick="selectSnackAction('emotion')" style="text-align: left; padding: 16px;">
+                        <div style="font-size: 20px; margin-bottom: 8px;">💬</div>
+                        <div class="option-name">Выпустить эмоцию</div>
+                    </button>
+                    <button class="option-card" id="snack-action-relax" onclick="selectSnackAction('relax')" style="text-align: left; padding: 16px;">
+                        <div style="font-size: 20px; margin-bottom: 8px;">💆</div>
+                        <div class="option-name">Расслабиться</div>
+                    </button>
+                    <button class="option-card" id="snack-action-body" onclick="selectSnackAction('body')" style="text-align: left; padding: 16px;">
+                        <div style="font-size: 20px; margin-bottom: 8px;">🚶</div>
+                        <div class="option-name">Изменить состояние тела</div>
+                    </button>
+                    <button class="option-card" id="snack-action-snack" onclick="selectSnackAction('snack')" style="text-align: left; padding: 16px;">
+                        <div style="font-size: 20px; margin-bottom: 8px;">🍏</div>
+                        <div class="option-name">Всё равно перекусить</div>
+                    </button>
+                </div>
+                <button class="btn btn-secondary" onclick="showSnackQuestion()" style="margin-top: 20px;">← Назад</button>
+            </section>
+
             <!-- Snack Helper: Recommendation Screen 5 -->
             <section id="snack-recommendation" class="card hidden">
                 <div class="step-header">
@@ -1286,7 +1317,8 @@
             <!-- Snack Helper: Practice Screen 6 -->
             <section id="snack-practice" class="card hidden">
                 <div class="step-header">
-                    <div class="step-title">Пауза перед действием</div>
+                    <div class="step-title">60 секунд для паузы</div>
+                    <div class="step-subtitle">Следи за кругом, дыши медленнее, чем обычно.<br>Никакой идеальности не нужно.</div>
                 </div>
                 <div class="info-section" style="text-align: center;">
                     <p style="color: #2A2A2A; line-height: 1.8; margin: 0 0 24px 0;">
@@ -1295,7 +1327,7 @@
                         Обрати внимание: голод это или эмоция?
                     </p>
                     <div id="snack-timer-circle" style="width: 120px; height: 120px; margin: 0 auto 24px; border-radius: 50%; border: 4px solid #82C4FF; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 700; color: #1B2B4A; background: rgba(130, 196, 255, 0.1);">
-                        <span id="snack-timer-text">30</span>
+                        <span id="snack-timer-text">60</span>
                     </div>
                     <div id="snack-practice-buttons" style="display: none; flex-direction: column; gap: 12px;">
                         <button class="btn btn-primary" onclick="snackPracticeResult('want_snack')">🍏 Я хочу перекусить</button>
@@ -1303,6 +1335,215 @@
                     </div>
                 </div>
                 <button class="btn btn-secondary" onclick="goBackFromPractice()" style="margin-top: 20px;">← Назад</button>
+            </section>
+
+            <!-- Snack Helper: Switch Screen -->
+            <section id="snack-switch" class="card hidden">
+                <div class="step-header">
+                    <div class="step-title">Давай немного переключимся</div>
+                </div>
+                <div class="info-section">
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0 0 20px 0;">
+                        Иногда мозгу просто нужно другое впечатление.<br><br>
+                        Выбери, что тебе сейчас ближе 👇
+                    </p>
+                </div>
+                <div class="options-grid" style="display: flex; flex-direction: column; gap: 12px;">
+                    <button class="option-card" onclick="selectSwitchOption('music')" style="text-align: left; padding: 16px;">
+                        <div style="font-size: 20px; margin-bottom: 8px;">🎧</div>
+                        <div class="option-name">Включить любимый трек</div>
+                        <div style="font-size: 12px; color: #6B7280; margin-top: 8px;">
+                            «Включи любую любимую песню. Пока она играет — просто дыши и замечай, как ты себя чувствуешь.»
+                        </div>
+                    </button>
+                    <button class="option-card" onclick="selectSwitchOption('photo')" style="text-align: left; padding: 16px;">
+                        <div style="font-size: 20px; margin-bottom: 8px;">📷</div>
+                        <div class="option-name">Посмотреть тёплое фото</div>
+                        <div style="font-size: 12px; color: #6B7280; margin-top: 8px;">
+                            «Открой галерею и найди фото, от которого становится теплее. Побудь с этим воспоминанием пару секунд.»
+                        </div>
+                    </button>
+                    <button class="option-card" onclick="selectSwitchOption('5min')" style="text-align: left; padding: 16px;">
+                        <div style="font-size: 20px; margin-bottom: 8px;">⏱</div>
+                        <div class="option-name">Правило 5 минут</div>
+                        <div style="font-size: 12px; color: #6B7280; margin-top: 8px;">
+                            «Вместо перекуса попробуем сделать первый шаг в дело, которое ты откладывал. Всего 5 минут.»
+                        </div>
+                    </button>
+                </div>
+                <button class="btn btn-secondary" onclick="showSnackActionChoice(kairosState.profile?.snack_trigger_type)" style="margin-top: 20px;">← Назад</button>
+            </section>
+
+            <!-- Snack Helper: Switch Result Screen -->
+            <section id="snack-switch-result" class="card hidden">
+                <div class="step-header">
+                    <div class="step-title">Как сейчас с желанием пожевать?</div>
+                </div>
+                <div class="info-section" style="text-align: center;">
+                    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
+                        <button class="btn btn-primary" onclick="snackSwitchResult('want_snack')">🍏 Всё равно хочу перекусить</button>
+                        <button class="btn btn-secondary" onclick="snackSwitchResult('ok')">🙂 Импульс стал слабее / перекус не нужен</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Snack Helper: 5 Minutes Task Screen -->
+            <section id="snack-5min-task" class="card hidden">
+                <div class="step-header">
+                    <div class="step-title">Правило 5 минут</div>
+                </div>
+                <div class="info-section">
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0 0 24px 0;">
+                        Выбери маленькое действие: открыть документ, написать одно сообщение, начать задачу.<br><br>
+                        Через 5 минут ты сможешь решить — продолжать или нет.
+                    </p>
+                    <div id="snack-5min-timer-circle" style="width: 120px; height: 120px; margin: 0 auto 24px; border-radius: 50%; border: 4px solid #82C4FF; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 700; color: #1B2B4A; background: rgba(130, 196, 255, 0.1);">
+                        <span id="snack-5min-timer-text">5:00</span>
+                    </div>
+                    <div id="snack-5min-buttons" style="display: none; flex-direction: column; gap: 12px;">
+                        <button class="btn btn-primary" onclick="snackSwitchResult('want_snack')">🍏 Всё равно хочу перекусить</button>
+                        <button class="btn btn-secondary" onclick="snackSwitchResult('ok')">🙂 Импульс стал слабее / перекус не нужен</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Snack Helper: Emotion Screen -->
+            <section id="snack-emotion" class="card hidden">
+                <div class="step-header">
+                    <div class="step-title">Давай назовём, что ты чувствуешь</div>
+                </div>
+                <div class="info-section">
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0 0 20px 0;">
+                        Сильные эмоции — это нормально.<br><br>
+                        Иногда, когда мы их называем, они становятся чуть слабее.
+                    </p>
+                </div>
+                <div class="options-grid" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+                    <button class="option-card" onclick="selectEmotion('anger')" style="text-align: left; padding: 16px;">
+                        <div class="option-name">Злость</div>
+                    </button>
+                    <button class="option-card" onclick="selectEmotion('resentment')" style="text-align: left; padding: 16px;">
+                        <div class="option-name">Обида</div>
+                    </button>
+                    <button class="option-card" onclick="selectEmotion('anxiety')" style="text-align: left; padding: 16px;">
+                        <div class="option-name">Тревога</div>
+                    </button>
+                    <button class="option-card" onclick="selectEmotion('sadness')" style="text-align: left; padding: 16px;">
+                        <div class="option-name">Грусть</div>
+                    </button>
+                    <button class="option-card" onclick="selectEmotion('tiredness')" style="text-align: left; padding: 16px;">
+                        <div class="option-name">Усталость</div>
+                    </button>
+                    <button class="option-card" onclick="selectEmotion('other')" style="text-align: left; padding: 16px;">
+                        <div class="option-name">Другое</div>
+                    </button>
+                </div>
+                <div id="snack-emotion-textarea" style="display: none; margin-bottom: 20px;">
+                    <textarea id="emotion-text" placeholder="Если хочешь — напиши пару слов: что тебя особенно задело?" style="width: 100%; min-height: 100px; padding: 12px; border: 1px solid rgba(0,0,0,0.1); border-radius: 12px; font-size: 14px; font-family: inherit; resize: vertical;"></textarea>
+                </div>
+                <div id="snack-emotion-result" style="display: none;">
+                    <div class="info-section" style="background: linear-gradient(135deg, rgba(130, 196, 255, 0.1) 0%, rgba(74, 107, 200, 0.1) 100%);">
+                        <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                            Спасибо, что честен с собой.<br><br>
+                            Уже то, что ты это заметил, — большой шаг.
+                        </p>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
+                        <button class="btn btn-primary" onclick="snackEmotionResult('want_snack')">🍏 Теперь хочу подобрать перекус осознанно</button>
+                        <button class="btn btn-secondary" onclick="snackEmotionResult('ok')">🙂 Стало легче, перекус не нужен</button>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" onclick="showSnackActionChoice(kairosState.profile?.snack_trigger_type)" style="margin-top: 20px;">← Назад</button>
+            </section>
+
+            <!-- Snack Helper: Body Movement Screen -->
+            <section id="snack-body" class="card hidden">
+                <div class="step-header">
+                    <div class="step-title">Давай чуть-чуть подвигаться</div>
+                </div>
+                <div class="info-section">
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0 0 20px 0;">
+                        Иногда хочется пожевать просто потому, что тело застоялось.<br><br>
+                        Выбери мини-движение 👇
+                    </p>
+                </div>
+                <div class="options-grid" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+                    <button class="option-card" onclick="selectBodyMovement('walk')" style="text-align: left; padding: 16px;">
+                        <div style="font-size: 20px; margin-bottom: 8px;">🚶</div>
+                        <div class="option-name">Пройтись 1–2 минуты</div>
+                        <div style="font-size: 12px; color: #6B7280; margin-top: 8px;">
+                            «Встань, пройди по комнате или по коридору, сделай несколько шагов туда-сюда.»
+                        </div>
+                    </button>
+                    <button class="option-card" onclick="selectBodyMovement('stretch')" style="text-align: left; padding: 16px;">
+                        <div style="font-size: 20px; margin-bottom: 8px;">🧍</div>
+                        <div class="option-name">Размять плечи и шею</div>
+                        <div style="font-size: 12px; color: #6B7280; margin-top: 8px;">
+                            «Сделай 5 кругов плечами вперёд и назад, мягко потяни шею вправо и влево.»
+                        </div>
+                    </button>
+                </div>
+                <div id="snack-body-result" style="display: none;">
+                    <div class="info-section">
+                        <p style="color: #2A2A2A; line-height: 1.8; margin: 0 0 20px 0;">
+                            Как сейчас с желанием пожевать?
+                        </p>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <button class="btn btn-primary" onclick="snackBodyResult('want_snack')">🍏 Всё равно хочу перекусить</button>
+                        <button class="btn btn-secondary" onclick="snackBodyResult('ok')">🙂 Стало легче, перекус не нужен</button>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" onclick="showSnackActionChoice(kairosState.profile?.snack_trigger_type)" style="margin-top: 20px;">← Назад</button>
+            </section>
+
+            <!-- Snack Helper: Conscious Snack Screen 1 -->
+            <section id="snack-conscious-snack" class="card hidden">
+                <div class="step-header">
+                    <div class="step-title">Окей, давай сделаем перекус максимально бережным</div>
+                </div>
+                <div class="info-section">
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0 0 20px 0;">
+                        Мы не будем ничего запрещать.<br><br>
+                        Просто попробуем выбрать вариант, который поддержит тебя.
+                    </p>
+                    <p style="color: #1B2B4A; font-weight: 600; margin: 0 0 20px 0;">
+                        Что сейчас больше хочется?
+                    </p>
+                </div>
+                <div class="options-grid" style="display: flex; flex-direction: column; gap: 12px;">
+                    <button class="option-card" onclick="selectSnackType('sweet')" style="text-align: left; padding: 16px;">
+                        <div style="font-size: 20px; margin-bottom: 8px;">🍫</div>
+                        <div class="option-name">Сладкое</div>
+                    </button>
+                    <button class="option-card" onclick="selectSnackType('salty')" style="text-align: left; padding: 16px;">
+                        <div style="font-size: 20px; margin-bottom: 8px;">🧂</div>
+                        <div class="option-name">Солёное / хрустящее</div>
+                    </button>
+                    <button class="option-card" onclick="selectSnackType('filling')" style="text-align: left; padding: 16px;">
+                        <div style="font-size: 20px; margin-bottom: 8px;">🍽</div>
+                        <div class="option-name">Просто что-то сытное</div>
+                    </button>
+                </div>
+                <button class="btn btn-secondary" onclick="showSnackActionChoice(kairosState.profile?.snack_trigger_type)" style="margin-top: 20px;">← Назад</button>
+            </section>
+
+            <!-- Snack Helper: Conscious Snack Options Screen -->
+            <section id="snack-conscious-options" class="card hidden">
+                <div class="step-header">
+                    <div class="step-title" id="snack-options-title">Варианты перекуса</div>
+                </div>
+                <div class="info-section" id="snack-options-content">
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0;"></p>
+                </div>
+                <div class="info-section" style="background: linear-gradient(135deg, rgba(130, 196, 255, 0.1) 0%, rgba(74, 107, 200, 0.1) 100%); margin-top: 20px;">
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                        Ты всё равно молодец.<br><br>
+                        Ты остановился, заметил своё состояние и сделал более мягкий выбор.
+                    </p>
+                </div>
+                <button class="btn btn-primary" onclick="snackConsciousDone()" style="margin-top: 20px;">✔️ Сделано</button>
+                <button class="btn btn-secondary" onclick="showSnackConsciousSnack()" style="margin-top: 12px;">← Назад</button>
             </section>
 
             <!-- Constructor Section -->
@@ -2928,7 +3169,9 @@
             document.getElementById('main-menu').classList.add('hidden');
             ['plate-guide', 'constructor', 'activity', 'problems', 'sleep', 
              'snack-intro-1', 'snack-intro-2', 'snack-intro-3', 'snack-question', 
-             'snack-recommendation', 'snack-practice'].forEach(id => {
+             'snack-action-choice', 'snack-recommendation', 'snack-practice',
+             'snack-switch', 'snack-emotion', 'snack-body', 'snack-conscious-snack',
+             'snack-5min-task', 'snack-conscious-options'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.classList.add('hidden');
             });
@@ -2991,7 +3234,9 @@
         function showSnackQuestion() {
             document.getElementById('main-menu').classList.add('hidden');
             ['snack-intro-1', 'snack-intro-2', 'snack-intro-3', 'snack-question', 
-             'snack-recommendation', 'snack-practice'].forEach(id => {
+             'snack-action-choice', 'snack-recommendation', 'snack-practice',
+             'snack-switch', 'snack-switch-result', 'snack-emotion', 'snack-body', 
+             'snack-conscious-snack', 'snack-5min-task', 'snack-conscious-options'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.classList.add('hidden');
             });
@@ -3007,8 +3252,78 @@
             kairosState.profile.snack_trigger_type = triggerType;
             saveState();
             
-            // Показываем рекомендацию
-            showSnackRecommendation(triggerType);
+            // Показываем новый экран выбора действия
+            showSnackActionChoice(triggerType);
+        }
+
+        function showSnackActionChoice(triggerType) {
+            document.getElementById('main-menu').classList.add('hidden');
+            ['snack-intro-1', 'snack-intro-2', 'snack-intro-3', 'snack-question', 
+             'snack-action-choice', 'snack-recommendation', 'snack-practice',
+             'snack-switch', 'snack-emotion', 'snack-body', 'snack-conscious-snack'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+            
+            // Подсвечиваем рекомендуемую кнопку в зависимости от триггера
+            const recommendedActions = {
+                'hunger': 'snack-action-snack',
+                'stress': 'snack-action-relax',
+                'not_hungry': 'snack-action-switch',
+                'boredom': 'snack-action-switch',
+                'impulse': 'snack-action-switch'
+            };
+            
+            // Убираем подсветку со всех кнопок
+            ['snack-action-switch', 'snack-action-emotion', 'snack-action-relax', 
+             'snack-action-body', 'snack-action-snack'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.classList.remove('selected');
+                    el.style.border = '';
+                }
+            });
+            
+            // Подсвечиваем рекомендуемую
+            const recommendedId = recommendedActions[triggerType];
+            if (recommendedId) {
+                const recommendedEl = document.getElementById(recommendedId);
+                if (recommendedEl) {
+                    recommendedEl.style.border = '2px solid #82C4FF';
+                    recommendedEl.style.boxShadow = '0 0 12px rgba(130, 196, 255, 0.3)';
+                }
+            }
+            
+            document.getElementById('snack-action-choice').classList.remove('hidden');
+            hapticFeedback('light');
+        }
+
+        function selectSnackAction(actionType) {
+            // Сохраняем выбранное действие
+            if (!kairosState.profile) {
+                kairosState.profile = {};
+            }
+            kairosState.profile.snack_action_type = actionType;
+            saveState();
+            
+            // Переходим к соответствующей ветке
+            switch(actionType) {
+                case 'switch':
+                    showSnackSwitch();
+                    break;
+                case 'emotion':
+                    showSnackEmotion();
+                    break;
+                case 'relax':
+                    showSnackRelax();
+                    break;
+                case 'body':
+                    showSnackBody();
+                    break;
+                case 'snack':
+                    showSnackConsciousSnack();
+                    break;
+            }
         }
 
         function showSnackRecommendation(triggerType) {
@@ -3109,7 +3424,9 @@
         function showSnackPractice() {
             document.getElementById('main-menu').classList.add('hidden');
             ['snack-intro-1', 'snack-intro-2', 'snack-intro-3', 'snack-question', 
-             'snack-recommendation', 'snack-practice'].forEach(id => {
+             'snack-action-choice', 'snack-recommendation', 'snack-practice',
+             'snack-switch', 'snack-switch-result', 'snack-emotion', 'snack-body', 
+             'snack-conscious-snack', 'snack-5min-task', 'snack-conscious-options'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.classList.add('hidden');
             });
@@ -3117,16 +3434,244 @@
             document.getElementById('snack-practice').classList.remove('hidden');
             document.getElementById('snack-practice-buttons').style.display = 'none';
             
-            // Запускаем таймер
+            // Запускаем таймер (60 секунд для расслабления)
+            snackTimerSeconds = 60;
             startSnackTimer();
             hapticFeedback('light');
         }
 
+        // ========== НОВЫЕ ФУНКЦИИ ДЛЯ ВЕТОК ==========
+
+        function showSnackSwitch() {
+            document.getElementById('main-menu').classList.add('hidden');
+            ['snack-intro-1', 'snack-intro-2', 'snack-intro-3', 'snack-question', 
+             'snack-action-choice', 'snack-recommendation', 'snack-practice',
+             'snack-switch', 'snack-switch-result', 'snack-emotion', 'snack-body', 
+             'snack-conscious-snack', 'snack-5min-task', 'snack-conscious-options'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+            document.getElementById('snack-switch').classList.remove('hidden');
+            hapticFeedback('light');
+        }
+
+        function selectSwitchOption(option) {
+            if (option === '5min') {
+                // Показываем экран с таймером 5 минут
+                document.getElementById('snack-switch').classList.add('hidden');
+                document.getElementById('snack-5min-task').classList.remove('hidden');
+                start5MinTimer();
+            } else {
+                // Для музыки и фото показываем экран с вопросом
+                document.getElementById('snack-switch').classList.add('hidden');
+                document.getElementById('snack-switch-result').classList.remove('hidden');
+            }
+        }
+
+        let snack5MinTimerInterval = null;
+        let snack5MinSeconds = 300; // 5 минут
+
+        function start5MinTimer() {
+            snack5MinSeconds = 300;
+            const timerText = document.getElementById('snack-5min-timer-text');
+            const timerCircle = document.getElementById('snack-5min-timer-circle');
+            const buttons = document.getElementById('snack-5min-buttons');
+            
+            timerText.textContent = '5:00';
+            buttons.style.display = 'none';
+            
+            snack5MinTimerInterval = setInterval(() => {
+                snack5MinSeconds--;
+                const minutes = Math.floor(snack5MinSeconds / 60);
+                const seconds = snack5MinSeconds % 60;
+                timerText.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                const progress = (300 - snack5MinSeconds) / 300;
+                const angle = progress * 360;
+                timerCircle.style.background = `conic-gradient(#82C4FF ${angle}deg, rgba(130, 196, 255, 0.1) ${angle}deg)`;
+                
+                if (snack5MinSeconds <= 0) {
+                    clearInterval(snack5MinTimerInterval);
+                    timerText.textContent = '✓';
+                    buttons.style.display = 'flex';
+                    hapticFeedback('medium');
+                }
+            }, 1000);
+        }
+
+        function snackSwitchResult(result) {
+            if (snack5MinTimerInterval) {
+                clearInterval(snack5MinTimerInterval);
+            }
+            
+            // Скрываем экран результата
+            document.getElementById('snack-switch-result').classList.add('hidden');
+            document.getElementById('snack-5min-task').classList.add('hidden');
+            
+            if (result === 'want_snack') {
+                showSnackConsciousSnack();
+            } else {
+                // Начисляем XP за осознанность
+                if (kairosState.today) {
+                    kairosState.today.xp += 5;
+                    saveState();
+                    updateLevel();
+                }
+                showToast('✨ +5 XP за осознанность');
+                showMainMenu();
+            }
+        }
+
+        function showSnackEmotion() {
+            document.getElementById('main-menu').classList.add('hidden');
+            ['snack-intro-1', 'snack-intro-2', 'snack-intro-3', 'snack-question', 
+             'snack-action-choice', 'snack-recommendation', 'snack-practice',
+             'snack-switch', 'snack-switch-result', 'snack-emotion', 'snack-body', 
+             'snack-conscious-snack', 'snack-5min-task', 'snack-conscious-options'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+            document.getElementById('snack-emotion').classList.remove('hidden');
+            document.getElementById('snack-emotion-textarea').style.display = 'none';
+            document.getElementById('snack-emotion-result').style.display = 'none';
+            hapticFeedback('light');
+        }
+
+        function selectEmotion(emotion) {
+            if (emotion === 'other') {
+                document.getElementById('snack-emotion-textarea').style.display = 'block';
+            }
+            // Показываем результат
+            document.getElementById('snack-emotion-result').style.display = 'block';
+            hapticFeedback('light');
+        }
+
+        function snackEmotionResult(result) {
+            if (result === 'want_snack') {
+                showSnackConsciousSnack();
+            } else {
+                if (kairosState.today) {
+                    kairosState.today.xp += 5;
+                    saveState();
+                    updateLevel();
+                }
+                showToast('✨ +5 XP за осознанность');
+                showMainMenu();
+            }
+        }
+
+        function showSnackRelax() {
+            // Используем существующий экран практики
+            showSnackPractice();
+        }
+
+        function showSnackBody() {
+            document.getElementById('main-menu').classList.add('hidden');
+            ['snack-intro-1', 'snack-intro-2', 'snack-intro-3', 'snack-question', 
+             'snack-action-choice', 'snack-recommendation', 'snack-practice',
+             'snack-switch', 'snack-switch-result', 'snack-emotion', 'snack-body', 
+             'snack-conscious-snack', 'snack-5min-task', 'snack-conscious-options'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+            document.getElementById('snack-body').classList.remove('hidden');
+            document.getElementById('snack-body-result').style.display = 'none';
+            hapticFeedback('light');
+        }
+
+        function selectBodyMovement(movement) {
+            document.getElementById('snack-body-result').style.display = 'block';
+            hapticFeedback('light');
+        }
+
+        function snackBodyResult(result) {
+            if (result === 'want_snack') {
+                showSnackConsciousSnack();
+            } else {
+                if (kairosState.today) {
+                    kairosState.today.xp += 5;
+                    saveState();
+                    updateLevel();
+                }
+                showToast('✨ +5 XP за осознанность');
+                showMainMenu();
+            }
+        }
+
+        function showSnackConsciousSnack() {
+            document.getElementById('main-menu').classList.add('hidden');
+            ['snack-intro-1', 'snack-intro-2', 'snack-intro-3', 'snack-question', 
+             'snack-action-choice', 'snack-recommendation', 'snack-practice',
+             'snack-switch', 'snack-switch-result', 'snack-emotion', 'snack-body', 
+             'snack-conscious-snack', 'snack-5min-task', 'snack-conscious-options'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+            document.getElementById('snack-conscious-snack').classList.remove('hidden');
+            hapticFeedback('light');
+        }
+
+        function selectSnackType(type) {
+            const titleEl = document.getElementById('snack-options-title');
+            const contentEl = document.getElementById('snack-options-content');
+            
+            let content = '';
+            
+            switch(type) {
+                case 'sweet':
+                    content = `
+                        <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                            Попробуй один из вариантов:<br><br>
+                            • греческий йогурт + немного ягод<br>
+                            • творог с чайной ложкой мёда<br>
+                            • фрукт + немного орехов (10–20 г)
+                        </p>
+                    `;
+                    break;
+                case 'salty':
+                    content = `
+                        <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                            Можно так:<br><br>
+                            • овощи с хумусом<br>
+                            • сыр + овощи<br>
+                            • несладкий йогурт с огурцом/зеленью
+                        </p>
+                    `;
+                    break;
+                case 'filling':
+                    content = `
+                        <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                            Сделай мини-приём пищи:<br><br>
+                            • яйцо + овощи<br>
+                            • кусочек курицы/рыбы + овощи<br>
+                            • творог / несладкий йогурт с овощами/зеленью
+                        </p>
+                    `;
+                    break;
+            }
+            
+            contentEl.innerHTML = content;
+            
+            document.getElementById('snack-conscious-snack').classList.add('hidden');
+            document.getElementById('snack-conscious-options').classList.remove('hidden');
+            hapticFeedback('light');
+        }
+
+        function snackConsciousDone() {
+            // Начисляем XP за осознанный перекус
+            if (kairosState.today) {
+                kairosState.today.xp += 10;
+                saveState();
+                updateLevel();
+            }
+            showToast('✨ +10 XP за осознанный выбор');
+            showMainMenu();
+        }
+
         let snackTimerInterval = null;
-        let snackTimerSeconds = 30;
+        let snackTimerSeconds = 60; // Для расслабления - 60 секунд
 
         function startSnackTimer() {
-            snackTimerSeconds = 30;
             const timerText = document.getElementById('snack-timer-text');
             const timerCircle = document.getElementById('snack-timer-circle');
             const buttons = document.getElementById('snack-practice-buttons');
@@ -3141,7 +3686,8 @@
                 timerText.textContent = snackTimerSeconds;
                 
                 // Обновляем визуальный прогресс (круг заполняется)
-                const progress = (30 - snackTimerSeconds) / 30;
+                const totalSeconds = 60; // для расслабления
+                const progress = (totalSeconds - snackTimerSeconds) / totalSeconds;
                 const angle = progress * 360;
                 timerCircle.style.background = `conic-gradient(#82C4FF ${angle}deg, rgba(130, 196, 255, 0.1) ${angle}deg)`;
                 
@@ -3159,20 +3705,26 @@
             clearInterval(snackTimerInterval);
             
             if (result === 'want_snack') {
-                // Переходим к конструктору перекуса
-                startConstructor('snack');
+                // Переходим к осознанному перекусу
+                showSnackConsciousSnack();
             } else {
-                // Закрываем и возвращаемся в меню
+                // Начисляем XP за осознанность
+                if (kairosState.today) {
+                    kairosState.today.xp += 5;
+                    saveState();
+                    updateLevel();
+                }
+                showToast('✨ +5 XP за осознанность');
                 showMainMenu();
             }
         }
 
         function goBackFromPractice() {
             clearInterval(snackTimerInterval);
-            // Возвращаемся к рекомендации
+            // Возвращаемся к выбору действия
             const triggerType = kairosState.profile ? kairosState.profile.snack_trigger_type : null;
             if (triggerType) {
-                showSnackRecommendation(triggerType);
+                showSnackActionChoice(triggerType);
             } else {
                 showSnackQuestion();
             }
@@ -3182,15 +3734,21 @@
             document.getElementById('main-menu').classList.remove('hidden');
             ['plate-guide', 'constructor', 'activity', 'problems', 'sleep',
              'snack-intro-1', 'snack-intro-2', 'snack-intro-3', 'snack-question', 
-             'snack-recommendation', 'snack-practice'].forEach(id => {
+             'snack-action-choice', 'snack-recommendation', 'snack-practice',
+             'snack-switch', 'snack-emotion', 'snack-body', 'snack-conscious-snack',
+             'snack-5min-task', 'snack-conscious-options'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.classList.add('hidden');
             });
             
-            // Останавливаем таймер, если он запущен
+            // Останавливаем все таймеры, если они запущены
             if (snackTimerInterval) {
                 clearInterval(snackTimerInterval);
                 snackTimerInterval = null;
+            }
+            if (snack5MinTimerInterval) {
+                clearInterval(snack5MinTimerInterval);
+                snack5MinTimerInterval = null;
             }
             
             // Скрываем главную кнопку и кнопку "Назад" в главном меню
