@@ -1096,6 +1096,10 @@
                     <div class="menu-icon">🍎</div>
                     <div class="menu-title">Перекус</div>
                 </div>
+                <div class="menu-card" onclick="openSnackHelper()">
+                    <div class="menu-icon">🍫</div>
+                    <div class="menu-title">Хочу чего-нибудь пожевать</div>
+                </div>
                 <div class="menu-card" onclick="showSection('activity')">
                     <div class="menu-icon">🏃‍♂️</div>
                     <div class="menu-title">Активность</div>
@@ -1187,6 +1191,118 @@
                     </p>
                 </div>
                 <button class="btn btn-secondary" onclick="showMainMenu()">← Назад в меню</button>
+            </section>
+
+            <!-- Snack Helper: Intro Screen 1 -->
+            <section id="snack-intro-1" class="card hidden">
+                <div class="step-header">
+                    <div class="step-title">Почему нас тянет перекусывать?</div>
+                </div>
+                <div class="info-section">
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                        Иногда тяга к перекусу— это не истинный голод.<br><br>
+                        Это усталость, стресс, скука или просто привычка «что-то пожевать».<br><br>
+                        Эта функция поможет быстро понять, что именно сейчас происходит — и выбрать действие, которое поддержит тебя, без силы воли и без запретов.
+                    </p>
+                </div>
+                <button class="btn btn-primary" onclick="showSnackIntro(2)">👉 Как это работает?</button>
+                <button class="btn btn-secondary" onclick="showMainMenu()" style="margin-top: 12px;">← Назад</button>
+            </section>
+
+            <!-- Snack Helper: Intro Screen 2 -->
+            <section id="snack-intro-2" class="card hidden">
+                <div class="step-header">
+                    <div class="step-title">Как работает пауза перед перекусом</div>
+                </div>
+                <div class="info-section">
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                        Когда ты жмёшь «Хочу чего-нибудь пожевать», приложение задаёт 1–2 коротких вопроса и помогает определить, это настоящий голод или что-то другое?<br><br>
+                        И сразу предлагает то, что поможет именно в твоем состоянии.
+                    </p>
+                </div>
+                <button class="btn btn-primary" onclick="showSnackIntro(3)">👉 Что я получу?</button>
+                <button class="btn btn-secondary" onclick="showSnackIntro(1)" style="margin-top: 12px;">← Назад</button>
+            </section>
+
+            <!-- Snack Helper: Intro Screen 3 -->
+            <section id="snack-intro-3" class="card hidden">
+                <div class="step-header">
+                    <div class="step-title">Что даст тебе эта функция</div>
+                </div>
+                <div class="info-section">
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                        Если ты реально голоден — подскажу простой полезный перекус.<br><br>
+                        Если это импульс — помогу снять напряжение, переключиться или поставить короткую паузу.<br><br>
+                        Без запретов и давления.<br>
+                        Ты просто начинаешь лучше чувствовать себя и своё тело.
+                    </p>
+                </div>
+                <button class="btn btn-primary" onclick="completeSnackIntro()">👍 Понятно, начать</button>
+                <button class="btn btn-secondary" onclick="showSnackIntro(2)" style="margin-top: 12px;">← Назад</button>
+            </section>
+
+            <!-- Snack Helper: Question Screen 4 -->
+            <section id="snack-question" class="card hidden">
+                <div class="step-header">
+                    <div class="step-title">Что чувствуешь прямо сейчас?</div>
+                </div>
+                <div class="options-grid" style="display: flex; flex-direction: column; gap: 12px;">
+                    <button class="option-card" onclick="selectSnackTrigger('hunger')" style="text-align: left; padding: 16px;">
+                        <div style="font-size: 20px; margin-bottom: 8px;">1️⃣</div>
+                        <div class="option-name">Голод — хочу поесть</div>
+                    </button>
+                    <button class="option-card" onclick="selectSnackTrigger('not_hungry')" style="text-align: left; padding: 16px;">
+                        <div style="font-size: 20px; margin-bottom: 8px;">2️⃣</div>
+                        <div class="option-name">Хочется перекусить, но голода нет</div>
+                    </button>
+                    <button class="option-card" onclick="selectSnackTrigger('stress')" style="text-align: left; padding: 16px;">
+                        <div style="font-size: 20px; margin-bottom: 8px;">3️⃣</div>
+                        <div class="option-name">Стресс / тревога / обида</div>
+                    </button>
+                    <button class="option-card" onclick="selectSnackTrigger('boredom')" style="text-align: left; padding: 16px;">
+                        <div style="font-size: 20px; margin-bottom: 8px;">4️⃣</div>
+                        <div class="option-name">Хочу отвлечься / скучно</div>
+                    </button>
+                    <button class="option-card" onclick="selectSnackTrigger('impulse')" style="text-align: left; padding: 16px;">
+                        <div style="font-size: 20px; margin-bottom: 8px;">5️⃣</div>
+                        <div class="option-name">Тянет что-то пожевать (импульс)</div>
+                    </button>
+                </div>
+                <button class="btn btn-secondary" onclick="showMainMenu()" style="margin-top: 20px;">← Назад в меню</button>
+            </section>
+
+            <!-- Snack Helper: Recommendation Screen 5 -->
+            <section id="snack-recommendation" class="card hidden">
+                <div class="step-header">
+                    <div class="step-title" id="snack-rec-title">Рекомендация</div>
+                </div>
+                <div class="info-section" id="snack-rec-content">
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0;"></p>
+                </div>
+                <div id="snack-rec-buttons" style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;"></div>
+                <button class="btn btn-secondary" onclick="showSnackQuestion()" style="margin-top: 12px;">← Назад</button>
+            </section>
+
+            <!-- Snack Helper: Practice Screen 6 -->
+            <section id="snack-practice" class="card hidden">
+                <div class="step-header">
+                    <div class="step-title">Пауза перед действием</div>
+                </div>
+                <div class="info-section" style="text-align: center;">
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0 0 24px 0;">
+                        Закрой глаза (если удобно).<br>
+                        Сделай 3 спокойных вдоха.<br>
+                        Обрати внимание: голод это или эмоция?
+                    </p>
+                    <div id="snack-timer-circle" style="width: 120px; height: 120px; margin: 0 auto 24px; border-radius: 50%; border: 4px solid #82C4FF; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 700; color: #1B2B4A; background: rgba(130, 196, 255, 0.1);">
+                        <span id="snack-timer-text">30</span>
+                    </div>
+                    <div id="snack-practice-buttons" style="display: none; flex-direction: column; gap: 12px;">
+                        <button class="btn btn-primary" onclick="snackPracticeResult('want_snack')">🍏 Я хочу перекусить</button>
+                        <button class="btn btn-secondary" onclick="snackPracticeResult('ok')">🙂 Импульс прошёл, всё ок</button>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" onclick="goBackFromPractice()" style="margin-top: 20px;">← Назад</button>
             </section>
 
             <!-- Constructor Section -->
@@ -2185,6 +2301,8 @@
                 veg_palms: targetVegPalms,
                 mode: trackingMode || 'numbers',
                 hero: '',
+                snack_intro_completed: false,
+                snack_trigger_type: null,
                 created_at: new Date().toISOString()
             };
             
@@ -2808,8 +2926,11 @@
 
         function showSection(sectionId) {
             document.getElementById('main-menu').classList.add('hidden');
-            ['plate-guide', 'constructor', 'activity', 'problems', 'sleep'].forEach(id => {
-                document.getElementById(id).classList.add('hidden');
+            ['plate-guide', 'constructor', 'activity', 'problems', 'sleep', 
+             'snack-intro-1', 'snack-intro-2', 'snack-intro-3', 'snack-question', 
+             'snack-recommendation', 'snack-practice'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
             });
             document.getElementById(sectionId).classList.remove('hidden');
             
@@ -2827,11 +2948,250 @@
             hapticFeedback('light');
         }
 
+        // ========== SNACK HELPER ФУНКЦИИ ==========
+        
+        function openSnackHelper() {
+            // Проверяем, проходил ли пользователь онбординг
+            if (!kairosState.profile) {
+                kairosState.profile = {};
+            }
+            
+            if (!kairosState.profile.snack_intro_completed) {
+                // Показываем онбординг
+                showSnackIntro(1);
+            } else {
+                // Показываем сразу вопрос
+                showSnackQuestion();
+            }
+        }
+
+        function showSnackIntro(screenNum) {
+            document.getElementById('main-menu').classList.add('hidden');
+            ['snack-intro-1', 'snack-intro-2', 'snack-intro-3', 'snack-question', 
+             'snack-recommendation', 'snack-practice'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+            document.getElementById(`snack-intro-${screenNum}`).classList.remove('hidden');
+            hapticFeedback('light');
+        }
+
+        function completeSnackIntro() {
+            // Сохраняем флаг завершения онбординга
+            if (!kairosState.profile) {
+                kairosState.profile = {};
+            }
+            kairosState.profile.snack_intro_completed = true;
+            saveState();
+            
+            // Переходим к вопросу
+            showSnackQuestion();
+        }
+
+        function showSnackQuestion() {
+            document.getElementById('main-menu').classList.add('hidden');
+            ['snack-intro-1', 'snack-intro-2', 'snack-intro-3', 'snack-question', 
+             'snack-recommendation', 'snack-practice'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+            document.getElementById('snack-question').classList.remove('hidden');
+            hapticFeedback('light');
+        }
+
+        function selectSnackTrigger(triggerType) {
+            // Сохраняем тип триггера
+            if (!kairosState.profile) {
+                kairosState.profile = {};
+            }
+            kairosState.profile.snack_trigger_type = triggerType;
+            saveState();
+            
+            // Показываем рекомендацию
+            showSnackRecommendation(triggerType);
+        }
+
+        function showSnackRecommendation(triggerType) {
+            document.getElementById('main-menu').classList.add('hidden');
+            ['snack-intro-1', 'snack-intro-2', 'snack-intro-3', 'snack-question', 
+             'snack-recommendation', 'snack-practice'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+            
+            const titleEl = document.getElementById('snack-rec-title');
+            const contentEl = document.getElementById('snack-rec-content');
+            const buttonsEl = document.getElementById('snack-rec-buttons');
+            
+            let title = '';
+            let content = '';
+            let buttons = '';
+            
+            switch(triggerType) {
+                case 'hunger':
+                    title = 'Твой организм действительно хочет еды';
+                    content = `
+                        <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                            Отлично, что ты прислушиваешься к себе.<br><br>
+                            Вот быстрый полезный перекус, который насытит, но не сорвёт твой план питания:<br><br>
+                            — греческий йогурт 150–200 г<br>
+                            — творог 100–150 г<br>
+                            — яйцо + овощи<br>
+                            — орехи 20–25 г<br>
+                            — фрукт + белок (йогурт / творог / яйцо)<br><br>
+                            Если есть возможность — лучше собрать полноценный приём пищи по тарелке.
+                        </p>
+                    `;
+                    buttons = '<button class="btn btn-primary" onclick="startConstructor(\'snack\')">✔️ Подобрать перекус</button>';
+                    break;
+                    
+                case 'not_hungry':
+                    title = 'Похоже, это не про голод';
+                    content = `
+                        <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                            Попробуй небольшую паузу — 20–30 секунд.<br>
+                            Иногда этого достаточно, чтобы понять, что телу сейчас нужно.<br><br>
+                            Попробуем короткое переключение?
+                        </p>
+                    `;
+                    buttons = `
+                        <button class="btn btn-primary" onclick="showSnackPractice()">▶️ Да, хочу переключиться</button>
+                        <button class="btn btn-secondary" onclick="startConstructor('snack')">🍏 Нет, всё равно хочу перекусить</button>
+                    `;
+                    break;
+                    
+                case 'stress':
+                    title = 'Похоже, тебе сейчас нелегко';
+                    content = `
+                        <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                            Еда даёт быстрое «облегчение», но не решает сам стресс.<br>
+                            Давай попробуем мягкий способ снизить напряжение.
+                        </p>
+                    `;
+                    buttons = '<button class="btn btn-primary" onclick="showSnackPractice()">💆 Снять напряжение 1 минутой</button>';
+                    break;
+                    
+                case 'boredom':
+                    title = 'Тебе хочется переключения';
+                    content = `
+                        <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                            Это нормальная реакция.<br>
+                            Когда мозг устал, он ищет быстрый дофамин: «что-то съесть».<br><br>
+                            Попробуем заменить это на лёгкое действие?
+                        </p>
+                    `;
+                    buttons = `
+                        <button class="btn btn-primary" onclick="showSnackPractice()">✨ Сделать мини-задачу (1 мин)</button>
+                        <button class="btn btn-secondary" onclick="startConstructor('snack')">🍏 Перекусить осознанно</button>
+                    `;
+                    break;
+                    
+                case 'impulse':
+                    title = 'Это похоже на автоматическое желание «пожевать»';
+                    content = `
+                        <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                            Так бывает у всех.<br>
+                            Поможет быстрая пауза, чтобы мозг «догнал», что происходит.
+                        </p>
+                    `;
+                    buttons = '<button class="btn btn-primary" onclick="showSnackPractice()">⏸️ Сделать короткую паузу (20 сек)</button>';
+                    break;
+            }
+            
+            titleEl.textContent = title;
+            contentEl.innerHTML = content;
+            buttonsEl.innerHTML = buttons;
+            
+            document.getElementById('snack-recommendation').classList.remove('hidden');
+            hapticFeedback('light');
+        }
+
+        function showSnackPractice() {
+            document.getElementById('main-menu').classList.add('hidden');
+            ['snack-intro-1', 'snack-intro-2', 'snack-intro-3', 'snack-question', 
+             'snack-recommendation', 'snack-practice'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+            
+            document.getElementById('snack-practice').classList.remove('hidden');
+            document.getElementById('snack-practice-buttons').style.display = 'none';
+            
+            // Запускаем таймер
+            startSnackTimer();
+            hapticFeedback('light');
+        }
+
+        let snackTimerInterval = null;
+        let snackTimerSeconds = 30;
+
+        function startSnackTimer() {
+            snackTimerSeconds = 30;
+            const timerText = document.getElementById('snack-timer-text');
+            const timerCircle = document.getElementById('snack-timer-circle');
+            const buttons = document.getElementById('snack-practice-buttons');
+            
+            // Сбрасываем стили
+            timerCircle.style.background = 'rgba(130, 196, 255, 0.1)';
+            timerText.textContent = snackTimerSeconds;
+            buttons.style.display = 'none';
+            
+            snackTimerInterval = setInterval(() => {
+                snackTimerSeconds--;
+                timerText.textContent = snackTimerSeconds;
+                
+                // Обновляем визуальный прогресс (круг заполняется)
+                const progress = (30 - snackTimerSeconds) / 30;
+                const angle = progress * 360;
+                timerCircle.style.background = `conic-gradient(#82C4FF ${angle}deg, rgba(130, 196, 255, 0.1) ${angle}deg)`;
+                
+                if (snackTimerSeconds <= 0) {
+                    clearInterval(snackTimerInterval);
+                    timerText.textContent = '✓';
+                    timerCircle.style.background = 'rgba(130, 196, 255, 0.2)';
+                    buttons.style.display = 'flex';
+                    hapticFeedback('medium');
+                }
+            }, 1000);
+        }
+
+        function snackPracticeResult(result) {
+            clearInterval(snackTimerInterval);
+            
+            if (result === 'want_snack') {
+                // Переходим к конструктору перекуса
+                startConstructor('snack');
+            } else {
+                // Закрываем и возвращаемся в меню
+                showMainMenu();
+            }
+        }
+
+        function goBackFromPractice() {
+            clearInterval(snackTimerInterval);
+            // Возвращаемся к рекомендации
+            const triggerType = kairosState.profile ? kairosState.profile.snack_trigger_type : null;
+            if (triggerType) {
+                showSnackRecommendation(triggerType);
+            } else {
+                showSnackQuestion();
+            }
+        }
+
         function showMainMenu() {
             document.getElementById('main-menu').classList.remove('hidden');
-            ['plate-guide', 'constructor', 'activity', 'problems', 'sleep'].forEach(id => {
-                document.getElementById(id).classList.add('hidden');
+            ['plate-guide', 'constructor', 'activity', 'problems', 'sleep',
+             'snack-intro-1', 'snack-intro-2', 'snack-intro-3', 'snack-question', 
+             'snack-recommendation', 'snack-practice'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
             });
+            
+            // Останавливаем таймер, если он запущен
+            if (snackTimerInterval) {
+                clearInterval(snackTimerInterval);
+                snackTimerInterval = null;
+            }
             
             // Скрываем главную кнопку и кнопку "Назад" в главном меню
             if (tg) {
