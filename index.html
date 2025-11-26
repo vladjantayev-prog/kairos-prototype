@@ -1066,6 +1066,15 @@
                     <div style="font-size: 18px; font-weight: 700; color: #1B2B4A; margin-bottom: 4px;">Прогресс здоровья</div>
                     <div style="font-size: 14px; color: #6B7280;" id="progress-subtitle">Уровень 1 • Серия: 0 дней</div>
                 </div>
+                <div style="margin-top: 16px; margin-bottom: 20px;">
+                    <div style="font-size: 14px; font-weight: 600; color: #1B2B4A; margin-bottom: 8px;">📊 Уровень саморегуляции:</div>
+                    <div style="background: rgba(0, 0, 0, 0.06); border-radius: 999px; height: 8px; overflow: hidden; margin-bottom: 4px;">
+                        <div id="self-regulation-progress" style="background: linear-gradient(135deg, #82C4FF, #4A6BC8); height: 100%; border-radius: 999px; transition: width 0.3s ease; width: 0%;"></div>
+                    </div>
+                    <div style="font-size: 12px; color: #6B7280; text-align: center;">
+                        <span id="self-regulation-text">0 из 10 использований</span>
+                    </div>
+                </div>
                 <div style="margin-top: 16px;">
                     <div style="font-size: 14px; font-weight: 600; color: #1B2B4A; margin-bottom: 12px;">Треки прокачки:</div>
                     <div id="tracks-list">
@@ -1098,7 +1107,7 @@
                 </div>
                 <div class="menu-card" onclick="openSnackHelper()">
                     <div class="menu-icon">🍫</div>
-                    <div class="menu-title">Пауза перед перекусом</div>
+                    <div class="menu-title">Хочу чего-нибудь пожевать</div>
                 </div>
                 <div class="menu-card" onclick="showSection('activity')">
                     <div class="menu-icon">🏃‍♂️</div>
@@ -1879,7 +1888,8 @@
                     skin: 0,
                     brain: 0
                 },
-                meals: []
+                meals: [],
+                selfRegulationCount: 0 // Счётчик использования функции саморегуляции
             };
         }
 
@@ -2351,6 +2361,8 @@
             checkOnboardingStatus();
             // Обновляем состояние орба при инициализации
             updateHealthOrbState();
+            // Обновляем прогресс саморегуляции
+            updateSelfRegulationProgress();
         }
 
         function checkOnboardingStatus() {
@@ -2668,6 +2680,7 @@
             
             updateDailyTotals();
             updateDailySummary();
+            updateSelfRegulationProgress();
         }
 
         function updateHeroDisplay() {
@@ -2678,8 +2691,30 @@
                 const streak = kairosState.streak.currentStreak || 0;
                 progressSubtitle.textContent = `Уровень ${level} • Серия: ${streak} дней`;
             }
-                // Обновляем треки
-                updateTracksDisplay();
+            // Обновляем прогресс саморегуляции
+            updateSelfRegulationProgress();
+            // Обновляем треки
+            updateTracksDisplay();
+        }
+
+        function updateSelfRegulationProgress() {
+            const progressBar = document.getElementById('self-regulation-progress');
+            const progressText = document.getElementById('self-regulation-text');
+            
+            if (!progressBar || !progressText) return;
+            
+            if (!kairosState.today) {
+                progressBar.style.width = '0%';
+                progressText.textContent = '0 из 10 использований';
+                return;
+            }
+            
+            const count = kairosState.today.selfRegulationCount || 0;
+            const target = 10; // Цель - 10 использований
+            const progress = Math.min(100, (count / target) * 100);
+            
+            progressBar.style.width = progress + '%';
+            progressText.textContent = `${count} из ${target} использований`;
         }
         
         function updateTracksDisplay() {
@@ -3511,11 +3546,13 @@
             if (result === 'want_snack') {
                 showSnackConsciousSnack();
             } else {
-                // Начисляем XP за осознанность
+                // Начисляем XP за осознанность и увеличиваем счётчик саморегуляции
                 if (kairosState.today) {
                     kairosState.today.xp += 5;
+                    kairosState.today.selfRegulationCount = (kairosState.today.selfRegulationCount || 0) + 1;
                     saveState();
                     updateLevel();
+                    updateSelfRegulationProgress();
                 }
                 showToast('✨ +5 XP за осознанность');
                 showMainMenu();
@@ -3552,8 +3589,10 @@
             } else {
                 if (kairosState.today) {
                     kairosState.today.xp += 5;
+                    kairosState.today.selfRegulationCount = (kairosState.today.selfRegulationCount || 0) + 1;
                     saveState();
                     updateLevel();
+                    updateSelfRegulationProgress();
                 }
                 showToast('✨ +5 XP за осознанность');
                 showMainMenu();
@@ -3590,8 +3629,10 @@
             } else {
                 if (kairosState.today) {
                     kairosState.today.xp += 5;
+                    kairosState.today.selfRegulationCount = (kairosState.today.selfRegulationCount || 0) + 1;
                     saveState();
                     updateLevel();
+                    updateSelfRegulationProgress();
                 }
                 showToast('✨ +5 XP за осознанность');
                 showMainMenu();
@@ -3658,11 +3699,13 @@
         }
 
         function snackConsciousDone() {
-            // Начисляем XP за осознанный перекус
+            // Начисляем XP за осознанный перекус и увеличиваем счётчик саморегуляции
             if (kairosState.today) {
                 kairosState.today.xp += 10;
+                kairosState.today.selfRegulationCount = (kairosState.today.selfRegulationCount || 0) + 1;
                 saveState();
                 updateLevel();
+                updateSelfRegulationProgress();
             }
             showToast('✨ +10 XP за осознанный выбор');
             showMainMenu();
@@ -3708,11 +3751,13 @@
                 // Переходим к осознанному перекусу
                 showSnackConsciousSnack();
             } else {
-                // Начисляем XP за осознанность
+                // Начисляем XP за осознанность и увеличиваем счётчик саморегуляции
                 if (kairosState.today) {
                     kairosState.today.xp += 5;
+                    kairosState.today.selfRegulationCount = (kairosState.today.selfRegulationCount || 0) + 1;
                     saveState();
                     updateLevel();
+                    updateSelfRegulationProgress();
                 }
                 showToast('✨ +5 XP за осознанность');
                 showMainMenu();
