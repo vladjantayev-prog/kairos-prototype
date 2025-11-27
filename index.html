@@ -4185,6 +4185,15 @@
         }
 
         function startConstructor(mealType) {
+            // Сбрасываем флаг сохранения
+            isSavingMeal = false;
+            
+            // Убираем старые обработчики кнопок Telegram
+            if (tg) {
+                tg.MainButton.offClick();
+                tg.MainButton.hide();
+            }
+            
             currentMeal = {
                 type: mealType,
                 step: 0,
@@ -4270,6 +4279,13 @@
             document.getElementById('next-step-btn').disabled = true;
             document.getElementById('next-step-btn').style.display = 'block';
             document.getElementById('save-meal-btn').style.display = 'none';
+            
+            // Убираем обработчики MainButton при показе нового шага
+            if (tg) {
+                tg.MainButton.offClick();
+                tg.MainButton.hide();
+            }
+            
             updateOptionCards();
         }
 
@@ -4376,16 +4392,22 @@
             document.getElementById('next-step-btn').disabled = !hasSelections;
             
             // Показываем главную кнопку, если есть выбор
+            // НО НЕ на последнем шаге - там кнопка уже настроена на сохранение
             if (tg) {
-                if (hasSelections) {
+                const isLastStep = currentMeal.step >= steps.length - 1;
+                if (hasSelections && !isLastStep) {
+                    // Убираем старый обработчик перед установкой нового
+                    tg.MainButton.offClick();
                     tg.MainButton.setText('Далее');
                     tg.MainButton.onClick(() => {
                         nextStep();
                     });
                     tg.MainButton.show();
-                } else {
+                } else if (!hasSelections) {
+                    tg.MainButton.offClick();
                     tg.MainButton.hide();
                 }
+                // Если это последний шаг, не трогаем кнопку - она уже настроена на сохранение
             }
             
             updateOptionCards();
@@ -4403,6 +4425,8 @@
                 
                 // Показываем главную кнопку для сохранения
                 if (tg) {
+                    // Убираем старый обработчик перед установкой нового
+                    tg.MainButton.offClick();
                     tg.MainButton.setText('Сохранить приём пищи');
                     tg.MainButton.show();
                     tg.MainButton.onClick(() => {
@@ -4412,7 +4436,18 @@
             }
         }
 
+        // Флаг для предотвращения множественных вызовов saveMeal
+        let isSavingMeal = false;
+
         function saveMeal() {
+            // Защита от множественных вызовов
+            if (isSavingMeal) {
+                console.log('saveMeal уже выполняется, пропускаем');
+                return;
+            }
+            
+            isSavingMeal = true;
+            
             const btn = document.getElementById('save-meal-btn');
             if (btn) {
                 btn.disabled = true;
@@ -4421,6 +4456,8 @@
             
             if (tg) {
                 tg.MainButton.showProgress();
+                // Убираем обработчик, чтобы предотвратить повторные вызовы
+                tg.MainButton.offClick();
             }
 
             let totalCalories = 0, totalProtein = 0, totalCarbs = 0, totalFats = 0, totalFiber = 0;
@@ -4567,6 +4604,17 @@
             }
             
             setTimeout(() => {
+                // Сбрасываем флаг после завершения
+                isSavingMeal = false;
+                
+                // Сбрасываем текущий приём пищи
+                currentMeal = {
+                    type: '',
+                    step: 0,
+                    selections: {},
+                    totals: { calories: 0, protein: 0, carbs: 0, fats: 0 }
+                };
+                
                 showMainMenu();
                 updateDailyTotals();
                 updateDailySummary();
@@ -4575,6 +4623,7 @@
                 if (tg) {
                     tg.MainButton.hideProgress();
                     tg.MainButton.hide();
+                    tg.MainButton.offClick();
                 }
             }, 2000);
 
