@@ -1091,16 +1091,36 @@
                 </div>
             </section>
 
+            <!-- Start Guide Section -->
+            <section id="start-guide" class="card hidden">
+                <div class="step-header">
+                    <div class="step-title">📋 С чего начать?</div>
+                </div>
+                <div class="info-section blue-accent">
+                    <h3>🍽️ Конструктор питания</h3>
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                        Помощник для планирования твоего меню на день из простых и полезных источников. 
+                        Собирай приёмы пищи, чтобы понимать что тебе есть, очень просто без заморочек.
+                    </p>
+                </div>
+                <div class="info-section">
+                    <h3>📅 Что можно делать в приложении:</h3>
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                        • Планируй приёмы пищи с конструктором питания<br>
+                        • Планируй активность на день<br>
+                        • Фиксируй количество выпитой воды<br>
+                        • Добавляй информацию о сне<br>
+                        • Перед приёмом пищи фотографируй тарелку — ИИ посчитает тебе КБЖУ
+                    </p>
+                </div>
+                <button class="btn btn-primary" onclick="showMainMenu()" style="margin-top: 24px;">Начать!</button>
+            </section>
+
             <!-- Main Menu -->
             <main id="main-menu" class="main-menu">
-                <div class="info-section" style="margin-bottom: 20px; padding: 16px;">
-                    <h3 style="color: #1B2B4A; margin-top: 0; margin-bottom: 12px; font-size: 16px;">📋 С чего начать?</h3>
-                    <p style="color: #2A2A2A; line-height: 1.6; margin: 0; font-size: 14px;">
-                        <strong>Конструктор питания</strong> — помощник для планирования твоего меню на день из простых и полезных источников. 
-                        Собирай приёмы пищи, чтобы понимать что тебе есть, очень просто без заморочек.<br><br>
-                        Планируй активность на день, фиксируй количество выпитой воды, добавляй информацию о сне. 
-                        Перед приёмом пищи фотографируй тарелку — ИИ посчитает тебе КБЖУ.
-                    </p>
+                <div class="menu-card" onclick="showSection('start-guide')">
+                    <div class="menu-icon">📋</div>
+                    <div class="menu-title">С чего начать?</div>
                 </div>
                 <div class="menu-card" onclick="showSection('plate-guide')">
                     <div class="menu-icon">🍽️</div>
@@ -1130,10 +1150,6 @@
                     <div class="menu-icon">🏃‍♂️</div>
                     <div class="menu-title">Активность</div>
                     <div class="menu-subtitle" id="activity-menu-subtitle" style="font-size: 12px; color: #6B7280; margin-top: 4px;">Движение: 0 из 4 дней</div>
-                </div>
-                <div class="menu-card" onclick="showSection('problems')">
-                    <div class="menu-icon">💡</div>
-                    <div class="menu-title">Частые проблемы</div>
                 </div>
                 <div class="menu-card" onclick="showSection('sleep')">
                     <div class="menu-icon">😴</div>
@@ -1909,6 +1925,17 @@
                     </div>
                 </div>
                 <button class="btn btn-secondary" onclick="showMainMenu()">← Назад в меню</button>
+            </section>
+
+            <!-- Useful Section -->
+            <section id="useful" class="card hidden" style="padding-bottom: 80px;">
+                <div class="step-header">
+                    <div class="step-title">📚 Полезное</div>
+                    <div class="step-subtitle">Образовательные материалы и подсказки</div>
+                </div>
+                <div id="useful-cards-container" style="display: flex; flex-direction: column; gap: 16px; margin-top: 20px;">
+                    <!-- Карточки будут добавлены динамически -->
+                </div>
             </section>
 
             <!-- Bottom Navigation Tabs -->
@@ -2940,9 +2967,8 @@
             document.getElementById('onboarding-step1').classList.add('hidden');
             document.getElementById('onboarding-step2').classList.add('hidden');
             document.getElementById('app-main').classList.remove('hidden');
-            // Переходим к plate-guide
-            document.getElementById('plate-guide').classList.remove('hidden');
-            document.getElementById('main-menu').classList.remove('hidden');
+            // Показываем карточку "С чего начать"
+            document.getElementById('start-guide').classList.remove('hidden');
             updatePlateGuidePortions();
             // Обновляем вкладки
             switchTab('plans');
@@ -3556,7 +3582,7 @@
 
         function showSection(sectionId) {
             document.getElementById('main-menu').classList.add('hidden');
-            ['plate-guide', 'constructor', 'activity', 'problems', 'sleep', 
+            ['start-guide', 'plate-guide', 'constructor', 'activity', 'problems', 'sleep', 
              'snack-intro-1', 'snack-intro-2', 'snack-intro-3', 'snack-question', 
              'snack-action-choice', 'snack-recommendation', 'snack-practice',
              'snack-switch', 'snack-emotion', 'snack-body', 'snack-conscious-snack',
@@ -4159,7 +4185,7 @@
 
         function switchTab(tabName) {
             // Скрываем все секции
-            ['plate-guide', 'constructor', 'activity', 'problems', 'sleep', 'useful',
+            ['start-guide', 'plate-guide', 'constructor', 'activity', 'problems', 'sleep', 'useful',
              'snack-intro-1', 'snack-intro-2', 'snack-intro-3', 'snack-question', 
              'snack-action-choice', 'snack-recommendation', 'snack-practice',
              'snack-switch', 'snack-emotion', 'snack-body', 'snack-conscious-snack',
@@ -4187,6 +4213,7 @@
                 }
             } else if (tabName === 'useful') {
                 document.getElementById('useful').classList.remove('hidden');
+                renderUsefulCards();
                 if (tabPlans) {
                     tabPlans.style.color = '#6B7280';
                     tabPlans.style.fontWeight = '500';
@@ -4196,6 +4223,110 @@
                     tabUseful.style.fontWeight = '600';
                 }
             }
+        }
+
+        function renderUsefulCards() {
+            const container = document.getElementById('useful-cards-container');
+            if (!container) return;
+            
+            const cards = [
+                {
+                    title: '💡 Частые проблемы',
+                    content: `
+                        <div class="info-section" style="margin-bottom: 12px;">
+                            <h3>🍰 Тяга к сладкому</h3>
+                            <p style="color: #2A2A2A; line-height: 1.6; margin: 0;">
+                                Добавь больше белка в завтрак, пей достаточно воды, замени сладости на фрукты с орехами.
+                            </p>
+                        </div>
+                        <div class="info-section" style="margin-bottom: 12px;">
+                            <h3>☕ Что есть в кафе</h3>
+                            <p style="color: #2A2A2A; line-height: 1.6; margin: 0;">
+                                Выбирай блюда с видимым белком (курица, рыба, яйца), проси овощной гарнир, избегай соусов.
+                            </p>
+                        </div>
+                        <div class="info-section">
+                            <h3>🤰 Вздутие живота</h3>
+                            <p style="color: #2A2A2A; line-height: 1.6; margin: 0;">
+                                Пей больше воды, добавь ферментированные продукты, уменьши бобовые и капусту, ешь медленнее.
+                            </p>
+                        </div>
+                    `
+                },
+                {
+                    title: '🍫 Почему нас тянет перекусывать?',
+                    content: `
+                        <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                            Иногда тяга к перекусу — это не истинный голод.<br><br>
+                            Это усталость, стресс, скука или просто привычка «что-то пожевать».<br><br>
+                            Функция «Хочу чего-нибудь пожевать» поможет быстро понять, что именно сейчас происходит — и выбрать действие, которое поддержит тебя, без силы воли и без запретов.
+                        </p>
+                    `
+                },
+                {
+                    title: '🏃‍♂️ Почему движение важно?',
+                    content: `
+                        <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                            Движение — это не только про похудение или мышцы. Это про энергию, настроение, здоровье сердца и сосудов, крепкие кости и суставы.<br><br>
+                            Регулярная активность помогает чувствовать себя лучше, справляться со стрессом и поддерживать здоровье на долгие годы.
+                        </p>
+                    `
+                },
+                {
+                    title: '💪 Почему важно добирать норму белка?',
+                    content: `
+                        <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                            Белок — это основа для мышц, иммунитета и энергии. Когда ты ешь достаточно белка:<br><br>
+                            • Мышцы остаются сильными и подтянутыми<br>
+                            • Метаболизм работает быстрее<br>
+                            • Чувство сытости длится дольше<br>
+                            • Кожа и волосы выглядят лучше<br><br>
+                            <strong>Твоя норма белка:</strong> <span id="useful-protein-range">${kairosState?.profile?.protein_min || 110}–${kairosState?.profile?.protein_max || 130}</span> г в день. Это примерно 4–5 порций размером с твою ладонь.
+                        </p>
+                    `
+                },
+                {
+                    title: '📊 Что такое БЖУ?',
+                    content: `
+                        <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                            <strong>Белки (Б):</strong> ${kairosState?.profile?.protein_min || 110}–${kairosState?.profile?.protein_max || 130} г в день<br>
+                            Курица, рыба, яйца, творог, бобовые. Нужны для мышц и энергии.<br><br>
+                            <strong>Жиры (Ж):</strong> ${Math.round((kairosState?.profile?.target_calories || 1800) * 0.25 / 9)}–${Math.round((kairosState?.profile?.target_calories || 1800) * 0.30 / 9)} г в день<br>
+                            Орехи, авокадо, оливковое масло, рыба. Важны для гормонов и усвоения витаминов.<br><br>
+                            <strong>Углеводы (У):</strong> ${Math.round((kairosState?.profile?.target_calories || 1800) * 0.40 / 4)}–${Math.round((kairosState?.profile?.target_calories || 1800) * 0.50 / 4)} г в день<br>
+                            Крупы, хлеб, фрукты, овощи. Дают энергию для активности.<br><br>
+                            В конструкторе питания ты увидишь, сколько каждого макронутриента уже съел и сколько осталось.
+                        </p>
+                    `
+                },
+                {
+                    title: '📈 Направления развития',
+                    content: `
+                        <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                            Это твои треки прокачки — области, в которых ты развиваешься и получаешь очки за здоровые привычки.<br><br>
+                            Каждое действие (правильный завтрак, добавленная активность, выпитая вода, качественный сон) приносит тебе очки и помогает прокачивать разные направления.<br><br>
+                            Следи за прогрессом и видь, как твои усилия складываются в общую картину здоровья!
+                        </p>
+                    `
+                },
+                {
+                    title: '🎯 Осознанный выбор',
+                    content: `
+                        <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                            Уровень осознанного выбора показывает, насколько ты научился(ась) различать истинный голод от эмоциональных триггеров и импульсов.<br><br>
+                            Когда ты используешь функцию «Хочу чего-нибудь пожевать» и делаешь паузу, чтобы понять своё состояние, ты получаешь очки за осознанность.<br><br>
+                            Это не про контроль или запреты — это про понимание себя и выбор действий, которые действительно поддержат тебя.
+                        </p>
+                    `
+                }
+            ];
+            
+            container.innerHTML = cards.map(card => `
+                <div class="info-section" style="padding: 20px;">
+                    <h3 style="color: #1B2B4A; margin-top: 0; margin-bottom: 12px; font-size: 18px;">${card.title}</h3>
+                    ${card.content}
+                </div>
+            `).join('');
         }
 
         // Функция для сброса дневного прогресса (калории и приёмы пищи)
