@@ -990,7 +990,7 @@
                     Это научно обоснованный метод, который используют диетологи по всему миру — твоя рука идеально подходит для измерения порций! 
                     Не нужно взвешивать еду — просто смотри на размер ладони и кулака. 🖐️
                 </p>
-            </div>
+                </div>
             <div class="info-section">
                 <h3>🍽️ Как собирать приёмы пищи?</h3>
                 <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
@@ -1000,7 +1000,7 @@
                     <strong>Перекусы:</strong> фрукт + немного орехов / йогурт / творог<br><br>
                     <strong>Про жиры:</strong> В день нужно 3–4 порции полезных жиров. Это может быть: авокадо (¼ шт), орехи (20 г), оливковое масло (1 ст.л.), рыба. Распределяй их между приёмами пищи — не обязательно все в один приём.
                 </p>
-            </div>
+                </div>
             <button class="btn btn-primary" id="continue-to-mode" style="margin-top: 24px;">Понятно, продолжить →</button>
             <button class="btn btn-secondary" id="back-to-form" style="margin-top: 12px;">← Назад к анкете</button>
         </section>
@@ -1570,7 +1570,7 @@
                 </div>
                 <div class="info-section" style="background: linear-gradient(135deg, rgba(130, 196, 255, 0.1) 0%, rgba(74, 107, 200, 0.1) 100%); margin-top: 20px;">
                     <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
-                        Ты всё равно молодец.<br><br>
+                        Ты молодец.<br><br>
                         Ты остановился, заметил своё состояние и сделал более мягкий выбор.
                     </p>
                 </div>
@@ -1599,7 +1599,7 @@
                     <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
                         Чтобы подобрать движение под тебя — ответь на пару вопросов.
                     </p>
-                </div>
+                        </div>
                 <button class="btn btn-primary" onclick="showActivityIntro(2)">Далее</button>
             </section>
 
@@ -1607,7 +1607,7 @@
             <section id="activity-intro-2" class="card hidden">
                 <div class="step-header">
                     <div class="step-title">Сколько сейчас в среднем активных дней в неделю у тебя получается?</div>
-                </div>
+                        </div>
                 <div class="options-grid" style="display: flex; flex-direction: column; gap: 12px;">
                     <button class="option-card" onclick="selectActivityLevel('beginner')" style="text-align: left; padding: 16px;">
                         <div class="option-name">Почти не двигаюсь</div>
@@ -1618,7 +1618,7 @@
                     <button class="option-card" onclick="selectActivityLevel('advanced')" style="text-align: left; padding: 16px;">
                         <div class="option-name">3 раза и больше в неделю</div>
                     </button>
-                </div>
+                        </div>
                 <button class="btn btn-secondary" onclick="showActivityIntro(1)" style="margin-top: 20px;">← Назад</button>
             </section>
 
@@ -1627,7 +1627,7 @@
                 <div class="step-header">
                     <div class="step-title">Что тебе проще всего внедрить сейчас?</div>
                     <div class="step-subtitle" style="font-size: 13px; color: #6B7280; margin-top: 8px;">Можно выбрать несколько вариантов</div>
-                </div>
+                        </div>
                 <div class="options-grid" style="display: flex; flex-direction: column; gap: 12px;">
                     <label class="option-card" style="text-align: left; padding: 16px; cursor: pointer;">
                         <input type="checkbox" value="walks" onchange="toggleActivityPreference('walks', this.checked)" style="margin-right: 12px;">
@@ -1657,7 +1657,7 @@
                         <input type="checkbox" value="other" onchange="toggleActivityPreference('other', this.checked)" style="margin-right: 12px;">
                         <span class="option-name">Другое</span>
                     </label>
-                </div>
+                        </div>
                 <button class="btn btn-primary" onclick="showActivityIntro(4)" style="margin-top: 20px;">Далее</button>
                 <button class="btn btn-secondary" onclick="showActivityIntro(2)" style="margin-top: 12px;">← Назад</button>
             </section>
@@ -1667,7 +1667,7 @@
                 <div class="step-header">
                     <div class="step-title">Какая цель в движении для тебя сейчас важнее?</div>
                     <div class="step-subtitle">Можно выбрать 1–2 варианта</div>
-                </div>
+                    </div>
                 <div class="options-grid" style="display: flex; flex-direction: column; gap: 12px;">
                     <label class="option-card" style="text-align: left; padding: 16px; cursor: pointer;">
                         <input type="checkbox" value="endurance" onchange="toggleActivityGoal('endurance', this.checked)" style="margin-right: 12px;">
@@ -1689,7 +1689,7 @@
                         <input type="checkbox" value="joy" onchange="toggleActivityGoal('joy', this.checked)" style="margin-right: 12px;">
                         <span class="option-name">Движение ради удовольствия (настроение, антистресс)</span>
                     </label>
-                </div>
+                    </div>
                 <button class="btn btn-primary" onclick="showActivityIntro(5)" style="margin-top: 20px;">Далее</button>
                 <button class="btn btn-secondary" onclick="showActivityIntro(3)" style="margin-top: 12px;">← Назад</button>
             </section>
@@ -1900,7 +1900,7 @@
                 <div class="step-header">
                     <div class="step-title">📅 Календарь</div>
                     <div class="step-subtitle">Просмотр истории дней</div>
-                </div>
+        </div>
                 <div id="calendar-container" style="margin-bottom: 24px;"></div>
                 <div id="calendar-day-details" style="display: none;">
                     <div class="info-section blue-accent">
@@ -2901,11 +2901,13 @@
             document.getElementById('target-calories').textContent = targetCalories;
             document.getElementById('protein-range').textContent = `${proteinMin}–${proteinMax}`;
             document.getElementById('budget-explanation').textContent = `${targetCalories} калорий`;
-            // Обновляем значения БЖУ в онбординге
+            // Обновляем значения БЖУ в онбординге (используем одинаковые значения для белка везде)
             const proteinRangeDisplay = document.getElementById('protein-range-display');
+            const proteinTargetDisplay = document.getElementById('protein-target-display');
             const fatsTargetDisplay = document.getElementById('fats-target-display');
             const carbsTargetDisplay = document.getElementById('carbs-target-display');
             if (proteinRangeDisplay) proteinRangeDisplay.textContent = `${proteinMin}–${proteinMax}`;
+            if (proteinTargetDisplay) proteinTargetDisplay.textContent = `${proteinMin}–${proteinMax}`;
             if (fatsTargetDisplay) fatsTargetDisplay.textContent = `${Math.round(fatGramsMin)}–${Math.round(fatGramsMin * 1.2)}`;
             if (carbsTargetDisplay) carbsTargetDisplay.textContent = `${Math.round(carbsGrams * 0.9)}–${Math.round(carbsGrams * 1.1)}`;
             
@@ -2934,11 +2936,16 @@
                 kairosState.profile.mode = 'numbers';
                 saveState();
             }
-            // Сразу переходим к plate-guide
+            // Показываем главное приложение
+            document.getElementById('onboarding-step1').classList.add('hidden');
             document.getElementById('onboarding-step2').classList.add('hidden');
+            document.getElementById('app-main').classList.remove('hidden');
+            // Переходим к plate-guide
             document.getElementById('plate-guide').classList.remove('hidden');
             document.getElementById('main-menu').classList.remove('hidden');
             updatePlateGuidePortions();
+            // Обновляем вкладки
+            switchTab('plans');
         });
         
         function selectTrackingMode(mode) {
@@ -3564,7 +3571,7 @@
             if (sectionId === 'activity') {
                 openActivityModule();
             } else {
-                document.getElementById(sectionId).classList.remove('hidden');
+            document.getElementById(sectionId).classList.remove('hidden');
             }
             
             // Обновляем порции в "Как собирать тарелку"
@@ -4169,7 +4176,7 @@
             const tabUseful = document.getElementById('tab-useful');
             
             if (tabName === 'plans') {
-                document.getElementById('main-menu').classList.remove('hidden');
+            document.getElementById('main-menu').classList.remove('hidden');
                 if (tabPlans) {
                     tabPlans.style.color = '#82C4FF';
                     tabPlans.style.fontWeight = '600';
@@ -4289,10 +4296,10 @@
                     }
                     
                     // Скрываем кнопки Telegram
-                    if (tg) {
-                        tg.MainButton.hide();
-                        tg.BackButton.hide();
-                    }
+            if (tg) {
+                tg.MainButton.hide();
+                tg.BackButton.hide();
+            }
                     
                     showToast('🔄 Начинаем сначала');
                     hapticFeedback('heavy');
