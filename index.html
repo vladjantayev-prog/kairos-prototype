@@ -1024,29 +1024,29 @@
             <header id="app-header" class="card">
                 <h1>Конструктор питания</h1>
                 <div class="budget-display">
-                    <div class="budget-label">Твой дневной "бюджет" калорий</div>
+                    <div class="budget-label">Твой дневной бюджет (калории):</div>
                     <div class="budget-amount">
-                        <span id="target-calories-display">1800</span> <span id="currency-name">калорий</span>
+                        <span id="remaining-calories">1800</span> <span id="currency-name">калорий</span>
                     </div>
-                    <div style="font-size: 14px; color: #FFFFFF; margin-top: 8px; text-align: center; opacity: 0.9;">
-                        Осталось: <span id="calories-remaining" style="font-weight: 600;">1800</span> калорий
+                    <div style="font-size: 14px; color: #6B7280; margin-top: 8px; text-align: center;">
+                        Осталось: <span id="calories-remaining" style="font-weight: 600; color: #1B2B4A;">1800</span> калорий
                     </div>
                 </div>
                 <div class="macros-grid">
                     <div class="macro-card">
                         <div class="macro-label">Белки</div>
-                        <div class="macro-value"><span id="used-protein">0</span> г</div>
-                        <div class="macro-total" id="protein-total-display">из <span id="total-protein">90</span> г</div>
-                        <div class="macro-portions" id="protein-portions" style="font-size: 12px; color: #6B7280; margin-top: 4px;"></div>
+                        <div class="macro-value"><span id="used-protein">0</span></div>
+                        <div class="macro-total">из <span id="total-protein">90</span> г</div>
+                        <div class="macro-portions" id="protein-portions" style="font-size: 12px; color: #6B7280; margin-top: 4px;">≈ 0 ладоней из 4 ладоней</div>
                         <div class="macro-progress">
                             <div class="macro-progress-fill macro-progress-fill--protein"></div>
                         </div>
                     </div>
                     <div class="macro-card">
                         <div class="macro-label">Углеводы</div>
-                        <div class="macro-value"><span id="used-carbs">0</span> г</div>
-                        <div class="macro-total" id="carbs-total-display">из <span id="total-carbs">200</span> г</div>
-                        <div class="macro-portions" id="carbs-portions" style="font-size: 12px; color: #6B7280; margin-top: 4px;"></div>
+                        <div class="macro-value"><span id="used-carbs">0</span></div>
+                        <div class="macro-total">из <span id="total-carbs">200</span> г</div>
+                        <div class="macro-portions" id="carbs-portions" style="font-size: 12px; color: #6B7280; margin-top: 4px;">≈ 0 кулаков из 3 кулаков</div>
                         <div class="macro-progress">
                             <div class="macro-progress-fill macro-progress-fill--carbs"></div>
                         </div>
@@ -1167,6 +1167,10 @@
                     <div class="menu-icon">🏠</div>
                     <div class="menu-title">Начать сначала</div>
                 </div>
+                <div class="menu-card" onclick="showSection('calendar')">
+                    <div class="menu-icon">📅</div>
+                    <div class="menu-title">Календарь</div>
+                    </div>
             </main>
 
             <!-- Daily Summary -->
@@ -1621,18 +1625,17 @@
                     <div class="step-title">Сколько сейчас в среднем активных дней в неделю у тебя получается?</div>
                         </div>
                 <div class="options-grid" style="display: flex; flex-direction: column; gap: 12px;">
-                    <button id="activity-level-beginner" class="option-card" onclick="selectActivityLevel('beginner')" style="text-align: left; padding: 16px;">
+                    <button class="option-card" onclick="selectActivityLevel('beginner', event)" style="text-align: left; padding: 16px;">
                         <div class="option-name">Почти не двигаюсь</div>
                     </button>
-                    <button id="activity-level-intermediate" class="option-card" onclick="selectActivityLevel('intermediate')" style="text-align: left; padding: 16px;">
+                    <button class="option-card" onclick="selectActivityLevel('intermediate', event)" style="text-align: left; padding: 16px;">
                         <div class="option-name">1–2 раза в неделю</div>
                     </button>
-                    <button id="activity-level-advanced" class="option-card" onclick="selectActivityLevel('advanced')" style="text-align: left; padding: 16px;">
+                    <button class="option-card" onclick="selectActivityLevel('advanced', event)" style="text-align: left; padding: 16px;">
                         <div class="option-name">3 раза и больше в неделю</div>
                     </button>
                         </div>
-                <button id="activity-level-next" class="btn btn-primary" onclick="showActivityIntro(3)" style="margin-top: 20px; display: none;">Далее</button>
-                <button class="btn btn-secondary" onclick="showActivityIntro(1)" style="margin-top: 12px;">← Назад</button>
+                <button class="btn btn-secondary" onclick="showActivityIntro(1)" style="margin-top: 20px;">← Назад</button>
             </section>
 
             <!-- Activity Module: Intro Screen 3 -->
@@ -2655,35 +2658,25 @@
 
         function checkOnboardingStatus() {
             // Скрываем все секции сначала
-            const onboardingStep1 = document.getElementById('onboarding-step1');
-            const onboardingStep2 = document.getElementById('onboarding-step2');
-            const modeSelection = document.getElementById('mode-selection');
-            const appMain = document.getElementById('app-main');
+            document.getElementById('onboarding-step1').classList.add('hidden');
+            document.getElementById('onboarding-step2').classList.add('hidden');
+            document.getElementById('mode-selection').classList.add('hidden');
+            document.getElementById('app-main').classList.add('hidden');
             
-            if (onboardingStep1) onboardingStep1.classList.add('hidden');
-            if (onboardingStep2) onboardingStep2.classList.add('hidden');
-            if (modeSelection) modeSelection.classList.add('hidden');
-            if (appMain) appMain.classList.add('hidden');
-            
-            // Проверяем наличие профиля с целевыми калориями
-            if (kairosState && kairosState.profile && kairosState.profile.target_calories) {
+            if (kairosState.profile) {
                 // Устанавливаем dailyTargets из профиля
                 dailyTargets = {
                     calories: kairosState.profile.target_calories || 1800,
                     protein: kairosState.profile.protein_max || 90,
-                    carbs: kairosState.profile.carbs_grams || Math.round((kairosState.profile.target_calories || 1800) * 0.45 / 4),
-                    fats: kairosState.profile.fats_grams || Math.round((kairosState.profile.target_calories || 1800) * 0.30 / 9),
-                    fiber: 30,
-                    // Порции
-                    proteinPalms: kairosState.profile.protein_palms || 4,
-                    carbFists: kairosState.profile.carb_fists || 3,
-                    vegPalms: kairosState.profile.veg_palms || 6
+                    carbs: Math.round((kairosState.profile.target_calories || 1800) * 0.45 / 4),
+                    fats: Math.round((kairosState.profile.target_calories || 1800) * 0.30 / 9),
+                    fiber: 30
                 };
                 
                 showApp();
             } else {
                 // Нет профиля - показываем анкету
-                if (onboardingStep1) onboardingStep1.classList.remove('hidden');
+                document.getElementById('onboarding-step1').classList.remove('hidden');
             }
         }
 
@@ -2755,23 +2748,21 @@
 
         // Функция для правильного склонения "ладонь"
         function getPalmWord(count) {
-            const num = Math.abs(Math.round(count));
+            const num = Math.abs(count) % 100;
             const num1 = num % 10;
-            const num10 = num % 100;
-            if (num10 >= 11 && num10 <= 14) return 'ладоней';
+            if (num > 10 && num < 20) return 'ладоней';
+            if (num1 > 1 && num1 < 5) return 'ладони';
             if (num1 === 1) return 'ладонь';
-            if (num1 >= 2 && num1 <= 4) return 'ладони';
             return 'ладоней';
         }
 
         // Функция для правильного склонения "кулак"
         function getFistWord(count) {
-            const num = Math.abs(Math.round(count));
+            const num = Math.abs(count) % 100;
             const num1 = num % 10;
-            const num10 = num % 100;
-            if (num10 >= 11 && num10 <= 14) return 'кулаков';
+            if (num > 10 && num < 20) return 'кулаков';
+            if (num1 > 1 && num1 < 5) return 'кулака';
             if (num1 === 1) return 'кулак';
-            if (num1 >= 2 && num1 <= 4) return 'кулака';
             return 'кулаков';
         }
 
@@ -2966,20 +2957,22 @@
             console.error('Форма онбординга не найдена!');
         }
 
-        const continueBtn = document.getElementById('continue-to-mode');
-        if (continueBtn) {
-            continueBtn.addEventListener('click', () => {
-                // Устанавливаем режим по умолчанию (цифры)
-                if (kairosState.profile) {
-                    kairosState.profile.mode = 'numbers';
-                    saveState();
-                }
-                // Показываем главное приложение через showApp
-                showApp();
-                // Показываем карточку "С чего начать"
-                document.getElementById('start-guide').classList.remove('hidden');
-            });
-        }
+        document.getElementById('continue-to-mode').addEventListener('click', () => {
+            // Устанавливаем режим по умолчанию (цифры)
+            if (kairosState.profile) {
+                kairosState.profile.mode = 'numbers';
+                saveState();
+            }
+            // Показываем главное приложение
+            document.getElementById('onboarding-step1').classList.add('hidden');
+            document.getElementById('onboarding-step2').classList.add('hidden');
+            document.getElementById('app-main').classList.remove('hidden');
+            // Показываем карточку "С чего начать"
+            document.getElementById('start-guide').classList.remove('hidden');
+            updatePlateGuidePortions();
+            // Обновляем вкладки
+            switchTab('plans');
+        });
         
         function selectTrackingMode(mode) {
             trackingMode = mode;
@@ -3011,16 +3004,13 @@
         });
 
         function showApp() {
-            // Скрываем все экраны онбординга
             document.getElementById('onboarding-step1').classList.add('hidden');
             document.getElementById('onboarding-step2').classList.add('hidden');
             document.getElementById('mode-selection').classList.add('hidden');
-            
-            // Показываем главное приложение
             document.getElementById('app-main').classList.remove('hidden');
             
-            // Устанавливаем dailyTargets из профиля (если еще не установлены)
-            if (kairosState.profile && (!dailyTargets || !dailyTargets.calories)) {
+            // Устанавливаем dailyTargets из профиля
+            if (kairosState.profile) {
                 dailyTargets = {
                     calories: kairosState.profile.target_calories || 1800,
                     protein: kairosState.profile.protein_max || 90,
@@ -3034,14 +3024,9 @@
                 };
             }
             
-            // Показываем главное меню
-            switchTab('plans');
-            
-            // Обновляем все данные
             updateDailyTotals();
             updateDailySummary();
             updateSelfRegulationProgress();
-            updatePlateGuidePortions();
         }
 
         function updateHeroDisplay() {
@@ -3157,9 +3142,9 @@
             allMeals = getAllMeals();
 
             const remainingCalories = dailyTargets.calories - dailyUsed.calories;
-            const targetCaloriesDisplay = document.getElementById('target-calories-display');
-            if (targetCaloriesDisplay) {
-                targetCaloriesDisplay.textContent = Math.round(dailyTargets.calories);
+            const remainingEl = document.getElementById('remaining-calories');
+            if (remainingEl) {
+                remainingEl.textContent = Math.round(remainingCalories);
             }
             // Обновляем остаток калорий
             const caloriesRemainingEl = document.getElementById('calories-remaining');
@@ -3191,28 +3176,24 @@
                 totalFatsEl.textContent = dailyTargets.fats;
             }
             
-            // Обновляем порции (ладони/кулаки) в новом формате
+            // Обновляем порции (ладони/кулаки)
             const sex = kairosState.profile ? kairosState.profile.sex : 'female';
             const proteinPerPalm = sex === 'female' 
                 ? PORTION_CONSTANTS.FEMALE_PROTEIN_PER_PALM 
                 : PORTION_CONSTANTS.MALE_PROTEIN_PER_PALM;
             
+            const usedProteinPalms = Math.round((dailyUsed.protein / proteinPerPalm) * 2) / 2;
             const targetProteinPalms = dailyTargets.proteinPalms || Math.round(dailyTargets.protein / proteinPerPalm);
             const proteinPortionsEl = document.getElementById('protein-portions');
             if (proteinPortionsEl) {
-                const proteinTotalDisplay = document.getElementById('protein-total-display');
-                if (proteinTotalDisplay) {
-                    proteinTotalDisplay.textContent = `из ${Math.round(dailyTargets.protein)} г (это примерно ${targetProteinPalms} ${getPalmWord(targetProteinPalms)})`;
-                }
+                proteinPortionsEl.textContent = `≈ ${usedProteinPalms} ${getPalmWord(usedProteinPalms)} из ${targetProteinPalms} ${getPalmWord(targetProteinPalms)}`;
             }
             
+            const usedCarbFists = Math.round((dailyUsed.carbs / PORTION_CONSTANTS.CARBS_PER_FIST) * 2) / 2;
             const targetCarbFists = dailyTargets.carbFists || Math.round(dailyTargets.carbs / PORTION_CONSTANTS.CARBS_PER_FIST);
             const carbsPortionsEl = document.getElementById('carbs-portions');
             if (carbsPortionsEl) {
-                const carbsTotalDisplay = document.getElementById('carbs-total-display');
-                if (carbsTotalDisplay) {
-                    carbsTotalDisplay.textContent = `из ${Math.round(dailyTargets.carbs)} г (это примерно ${targetCarbFists} ${getFistWord(targetCarbFists)})`;
-                }
+                carbsPortionsEl.textContent = `≈ ${usedCarbFists} ${getFistWord(usedCarbFists)} из ${targetCarbFists} ${getFistWord(targetCarbFists)}`;
             }
             
             // Обновляем прогресс-бары БЖУ
@@ -4469,20 +4450,6 @@
                 tg.MainButton.hide();
             }
             
-            // Скрываем меню и все секции
-            document.getElementById('main-menu').classList.add('hidden');
-            ['start-guide', 'plate-guide', 'activity', 'problems', 'sleep', 'useful',
-             'snack-intro-1', 'snack-intro-2', 'snack-intro-3', 'snack-question', 
-             'snack-action-choice', 'snack-recommendation', 'snack-practice',
-             'snack-switch', 'snack-emotion', 'snack-body', 'snack-conscious-snack',
-             'snack-5min-task', 'snack-conscious-options',
-             'activity-intro-1', 'activity-intro-2', 'activity-intro-3', 'activity-intro-4',
-             'activity-intro-5', 'activity-intro-6', 'activity-main', 'activity-today',
-             'activity-instruction', 'activity-education'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.classList.add('hidden');
-            });
-            
             currentMeal = {
                 type: mealType,
                 step: 0,
@@ -4499,12 +4466,7 @@
 
             document.getElementById('constructor-title').textContent = mealNames[mealType];
             showConstructorStep();
-            
-            // Показываем конструктор
-            const constructorEl = document.getElementById('constructor');
-            if (constructorEl) {
-                constructorEl.classList.remove('hidden');
-            }
+            showSection('constructor');
             
             // Показываем кнопку "Назад" при входе в конструктор
             if (tg) {
@@ -4995,84 +4957,69 @@
 
         // Показать экран онбординга
         function showActivityIntro(screenNum) {
-            // Скрываем все экраны активности
-            ['activity-intro-1', 'activity-intro-2', 'activity-intro-3', 'activity-intro-4', 
-             'activity-intro-5', 'activity-intro-6', 'activity-main', 'activity-today', 
-             'activity-instruction', 'activity-education'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.classList.add('hidden');
-            });
-            
-            // Показываем нужный экран
-            const screenId = `activity-intro-${screenNum}`;
-            const screen = document.getElementById(screenId);
-            if (screen) {
-                screen.classList.remove('hidden');
-                document.getElementById('main-menu').classList.add('hidden');
-            }
-            
-            // Если показываем экран 2, сбрасываем состояние кнопок
-            if (screenNum === 2) {
-                const nextBtn = document.getElementById('activity-level-next');
-                if (nextBtn) {
-                    nextBtn.style.display = 'none';
-                }
-                // Сбрасываем выделение кнопок
-                ['beginner', 'intermediate', 'advanced'].forEach(l => {
-                    const btn = document.getElementById(`activity-level-${l}`);
-                    if (btn) {
-                        btn.style.background = '';
-                        btn.style.borderColor = '';
-                    }
+            try {
+                // Скрываем все экраны активности
+                ['activity-intro-1', 'activity-intro-2', 'activity-intro-3', 'activity-intro-4', 
+                 'activity-intro-5', 'activity-intro-6', 'activity-main', 'activity-today', 
+                 'activity-instruction', 'activity-education'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.classList.add('hidden');
                 });
-                // Если уже был выбран уровень, восстанавливаем выделение
-                if (activityOnboardingData.level) {
-                    const selectedBtn = document.getElementById(`activity-level-${activityOnboardingData.level}`);
-                    if (selectedBtn) {
-                        selectedBtn.style.background = 'linear-gradient(135deg, rgba(130, 196, 255, 0.15) 0%, rgba(74, 107, 200, 0.15) 100%)';
-                        selectedBtn.style.borderColor = '#82C4FF';
-                        if (nextBtn) {
-                            nextBtn.style.display = 'block';
-                        }
-                    }
+                
+                // Скрываем другие секции
+                ['start-guide', 'plate-guide', 'constructor', 'problems', 'sleep', 'useful',
+                 'snack-intro-1', 'snack-intro-2', 'snack-intro-3', 'snack-question', 
+                 'snack-action-choice', 'snack-recommendation', 'snack-practice',
+                 'snack-switch', 'snack-emotion', 'snack-body', 'snack-conscious-snack',
+                 'snack-5min-task', 'snack-conscious-options'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.classList.add('hidden');
+                });
+                
+                // Показываем нужный экран
+                const screenId = `activity-intro-${screenNum}`;
+                const screen = document.getElementById(screenId);
+                if (screen) {
+                    screen.classList.remove('hidden');
+                    document.getElementById('main-menu').classList.add('hidden');
+                    // Убеждаемся, что app-main виден
+                    const appMain = document.getElementById('app-main');
+                    if (appMain) appMain.classList.remove('hidden');
+                } else {
+                    console.error(`Экран ${screenId} не найден!`);
                 }
-            }
-            
-            // Если переходим на экран 3, проверяем что уровень выбран
-            if (screenNum === 3) {
-                if (!activityOnboardingData.level) {
-                    // Если уровень не выбран, возвращаемся на экран 2
-                    showActivityIntro(2);
-                    showToast('Пожалуйста, выбери уровень активности');
-                    return;
-                }
+            } catch (error) {
+                console.error('Ошибка при показе экрана онбординга:', error);
             }
         }
 
         // Выбрать уровень активности
-        function selectActivityLevel(level) {
-            activityOnboardingData.level = level;
-            
-            // Убираем выделение со всех кнопок
-            ['beginner', 'intermediate', 'advanced'].forEach(l => {
-                const btn = document.getElementById(`activity-level-${l}`);
-                if (btn) {
-                    btn.style.background = '';
-                    btn.style.borderColor = '';
+        function selectActivityLevel(level, event) {
+            try {
+                // Убираем выделение со всех кнопок
+                const buttons = document.querySelectorAll('#activity-intro-2 .option-card');
+                buttons.forEach(btn => btn.classList.remove('selected'));
+                
+                // Выделяем выбранную кнопку
+                if (event && event.target) {
+                    const clickedButton = event.target.closest('.option-card');
+                    if (clickedButton) {
+                        clickedButton.classList.add('selected');
+                    }
                 }
-            });
-            
-            // Выделяем выбранную кнопку
-            const selectedBtn = document.getElementById(`activity-level-${level}`);
-            if (selectedBtn) {
-                selectedBtn.style.background = 'linear-gradient(135deg, rgba(130, 196, 255, 0.15) 0%, rgba(74, 107, 200, 0.15) 100%)';
-                selectedBtn.style.borderColor = '#82C4FF';
-            }
-            
-            // Показываем кнопку "Далее"
-            const nextBtn = document.getElementById('activity-level-next');
-            if (nextBtn) {
-                nextBtn.style.display = 'block';
+                
+                // Сохраняем выбор
+                activityOnboardingData.level = level;
+                
+                // Небольшая задержка для визуальной обратной связи
+                setTimeout(() => {
+                    showActivityIntro(3);
+                }, 200);
+            } catch (error) {
+                console.error('Ошибка при выборе уровня активности:', error);
+                // В случае ошибки всё равно переходим к следующему экрану
+                activityOnboardingData.level = level;
+                showActivityIntro(3);
             }
         }
 
