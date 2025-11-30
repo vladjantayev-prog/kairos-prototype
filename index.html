@@ -302,27 +302,35 @@
 
         .budget-display {
             background: linear-gradient(135deg, #82C4FF, #4A6BC8);
-            border: none;
-            border-radius: 20px;
-            padding: 18px 20px;
+            border-radius: 24px;
+            padding: 20px;
             text-align: center;
-            margin-bottom: 16px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+            margin-bottom: 20px;
+            box-shadow: none;
         }
 
         .budget-label {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
-            color: #FFFFFF;
-            margin-bottom: 8px;
-            opacity: 0.95;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 6px;
+            line-height: 1.4;
         }
 
         .budget-amount {
-            font-size: 24px;
+            font-size: 46px;
             font-weight: 800;
             color: #FFFFFF;
-            line-height: 1.2;
+            line-height: 1.1;
+            display: inline-flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .budget-unit {
+            font-size: 18px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .macros-grid {
@@ -1051,15 +1059,6 @@
         <!-- Main App -->
         <div id="app-main" class="hidden">
             <div class="container">
-            <!-- Health Orb -->
-            <div id="health-orb" class="state-calm emotion-calm">
-                <div class="orb-eye left"></div>
-                <div class="orb-eye right"></div>
-                <div class="orb-mouth"></div>
-                <div class="orb-blush left"></div>
-                <div class="orb-blush right"></div>
-            </div>
-
             <!-- Main App Header -->
             <header id="app-header" class="card">
                 <h1>Конструктор питания</h1>
