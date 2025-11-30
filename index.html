@@ -4133,7 +4133,20 @@
             }
         }
 
+        function toggleMainWidgets(show) {
+            ['app-header', 'progress-widget', 'daily-summary'].forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                if (show) {
+                    el.classList.remove('hidden');
+                } else {
+                    el.classList.add('hidden');
+                }
+            });
+        }
+
         function showMainMenu() {
+            toggleMainWidgets(true);
             switchTab('plans');
             
             // Останавливаем все таймеры, если они запущены
@@ -4616,6 +4629,7 @@
             document.getElementById('constructor-title').textContent = mealNames[mealType];
             
             // Отрисовываем первый шаг и показываем конструктор
+            toggleMainWidgets(false);
             showConstructorStep();
             showSection('constructor');
             
@@ -4624,6 +4638,8 @@
             if (constructorEl) {
                 constructorEl.classList.remove('hidden');
                 constructorEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
             
             hapticFeedback('light');
