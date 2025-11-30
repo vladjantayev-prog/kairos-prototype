@@ -3166,14 +3166,6 @@
                 totalFatsEl.textContent = dailyTargets.fats;
             }
             
-            // Обновляем порции (ладони/кулаки)
-            const sex = kairosState.profile ? kairosState.profile.sex : 'female';
-            const proteinPerPalm = sex === 'female' 
-                ? PORTION_CONSTANTS.FEMALE_PROTEIN_PER_PALM 
-                : PORTION_CONSTANTS.MALE_PROTEIN_PER_PALM;
-            
-            // Порции больше не отображаются в карточках макронутриентов
-            
             // Обновляем прогресс-бары БЖУ
             const proteinProgress = document.querySelector('.macro-progress-fill--protein');
             if (proteinProgress && dailyTargets.protein > 0) {
@@ -4623,36 +4615,15 @@
 
             document.getElementById('constructor-title').textContent = mealNames[mealType];
             
-            // Скрываем меню и показываем app-main и constructor
-            document.getElementById('main-menu').classList.add('hidden');
-            const appMain = document.getElementById('app-main');
-            if (appMain) appMain.classList.remove('hidden');
+            // Отрисовываем первый шаг и показываем конструктор
+            showConstructorStep();
+            showSection('constructor');
             
-            // Скрываем все другие секции
-            ['start-guide', 'plate-guide', 'activity', 'problems', 'sleep', 'useful',
-             'snack-intro-1', 'snack-intro-2', 'snack-intro-3', 'snack-question', 
-             'snack-action-choice', 'snack-recommendation', 'snack-practice',
-             'snack-switch', 'snack-emotion', 'snack-body', 'snack-conscious-snack',
-             'snack-5min-task', 'snack-conscious-options',
-             'activity-intro-1', 'activity-intro-2', 'activity-intro-3', 'activity-intro-4',
-             'activity-intro-5', 'activity-intro-6', 'activity-main', 'activity-today',
-             'activity-instruction', 'activity-education'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.classList.add('hidden');
-            });
-            
-            // Показываем конструктор
+            // Скроллим к конструктору, чтобы он точно попал в зону видимости
             const constructorEl = document.getElementById('constructor');
             if (constructorEl) {
                 constructorEl.classList.remove('hidden');
-            }
-            
-            showConstructorStep();
-            
-            // Показываем кнопку "Назад" при входе в конструктор
-            if (tg) {
-                tg.BackButton.show();
-                tg.MainButton.hide();
+                constructorEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
             
             hapticFeedback('light');
