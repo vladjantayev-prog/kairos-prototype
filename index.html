@@ -1034,7 +1034,6 @@
                         <div class="macro-label">Белки</div>
                         <div class="macro-value"><span id="used-protein">0</span></div>
                         <div class="macro-total">из <span id="total-protein">90</span> г</div>
-                        <div class="macro-portions" id="protein-portions" style="font-size: 12px; color: #6B7280; margin-top: 4px;">(это примерно <span id="protein-palms-count">4</span> <span id="protein-palms-word">ладоней</span>)</div>
                         <div class="macro-progress">
                             <div class="macro-progress-fill macro-progress-fill--protein"></div>
                         </div>
@@ -1043,7 +1042,6 @@
                         <div class="macro-label">Углеводы</div>
                         <div class="macro-value"><span id="used-carbs">0</span></div>
                         <div class="macro-total">из <span id="total-carbs">200</span> г</div>
-                        <div class="macro-portions" id="carbs-portions" style="font-size: 12px; color: #6B7280; margin-top: 4px;">≈ 0 кулаков из 3 кулаков</div>
                         <div class="macro-progress">
                             <div class="macro-progress-fill macro-progress-fill--carbs"></div>
                         </div>
@@ -3174,22 +3172,7 @@
                 ? PORTION_CONSTANTS.FEMALE_PROTEIN_PER_PALM 
                 : PORTION_CONSTANTS.MALE_PROTEIN_PER_PALM;
             
-            const usedProteinPalms = Math.round((dailyUsed.protein / proteinPerPalm) * 2) / 2;
-            const targetProteinPalms = dailyTargets.proteinPalms || Math.round(dailyTargets.protein / proteinPerPalm);
-            const proteinPortionsEl = document.getElementById('protein-portions');
-            if (proteinPortionsEl) {
-                const proteinPalmsCountEl = document.getElementById('protein-palms-count');
-                const proteinPalmsWordEl = document.getElementById('protein-palms-word');
-                if (proteinPalmsCountEl) proteinPalmsCountEl.textContent = targetProteinPalms;
-                if (proteinPalmsWordEl) proteinPalmsWordEl.textContent = getPalmWord(targetProteinPalms);
-            }
-            
-            const usedCarbFists = Math.round((dailyUsed.carbs / PORTION_CONSTANTS.CARBS_PER_FIST) * 2) / 2;
-            const targetCarbFists = dailyTargets.carbFists || Math.round(dailyTargets.carbs / PORTION_CONSTANTS.CARBS_PER_FIST);
-            const carbsPortionsEl = document.getElementById('carbs-portions');
-            if (carbsPortionsEl) {
-                carbsPortionsEl.textContent = `≈ ${usedCarbFists} ${getFistWord(usedCarbFists)} из ${targetCarbFists} ${getFistWord(targetCarbFists)}`;
-            }
+            // Порции больше не отображаются в карточках макронутриентов
             
             // Обновляем прогресс-бары БЖУ
             const proteinProgress = document.querySelector('.macro-progress-fill--protein');
@@ -4639,8 +4622,32 @@
             };
 
             document.getElementById('constructor-title').textContent = mealNames[mealType];
+            
+            // Скрываем меню и показываем app-main и constructor
+            document.getElementById('main-menu').classList.add('hidden');
+            const appMain = document.getElementById('app-main');
+            if (appMain) appMain.classList.remove('hidden');
+            
+            // Скрываем все другие секции
+            ['start-guide', 'plate-guide', 'activity', 'problems', 'sleep', 'useful',
+             'snack-intro-1', 'snack-intro-2', 'snack-intro-3', 'snack-question', 
+             'snack-action-choice', 'snack-recommendation', 'snack-practice',
+             'snack-switch', 'snack-emotion', 'snack-body', 'snack-conscious-snack',
+             'snack-5min-task', 'snack-conscious-options',
+             'activity-intro-1', 'activity-intro-2', 'activity-intro-3', 'activity-intro-4',
+             'activity-intro-5', 'activity-intro-6', 'activity-main', 'activity-today',
+             'activity-instruction', 'activity-education'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+            
+            // Показываем конструктор
+            const constructorEl = document.getElementById('constructor');
+            if (constructorEl) {
+                constructorEl.classList.remove('hidden');
+            }
+            
             showConstructorStep();
-            showSection('constructor');
             
             // Показываем кнопку "Назад" при входе в конструктор
             if (tg) {
