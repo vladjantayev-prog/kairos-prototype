@@ -940,63 +940,74 @@
         <!-- Onboarding Step 2 -->
         <section id="onboarding-step2" class="card hidden">
             <h1>Ваши результаты</h1>
-            <div class="results">
-                <h2>Ваша ориентировочная норма:</h2>
-                <p><strong id="target-calories">1800</strong> ккал и <strong id="protein-range">110–130</strong> г белка в день</p>
-            </div>
-            <div class="info-section" style="background: linear-gradient(135deg, rgba(130, 196, 255, 0.1) 0%, rgba(74, 107, 200, 0.1) 100%); border-color: rgba(130, 196, 255, 0.3);">
-                <h3 style="color: #1B2B4A; margin-top: 0;">🎯 Это твой персональный план!</h3>
-                <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
-                    Мы рассчитали твою норму по научной формуле Mifflin-St Jeor — это признанный стандарт в диетологии. 
-                    Теперь у тебя есть точный план: сколько калорий и БЖУ нужно именно тебе для достижения цели.<br><br>
-                    <strong>Бонус:</strong> Набирай очки за здоровые привычки и трать их на вкусности! 🎁
+            <div class="results" style="text-align: left; padding: 24px; border-radius: 20px;">
+                <div style="font-size: 14px; color: #6B7280; margin-bottom: 8px;">Ваша ориентировочная норма:</div>
+                <p style="font-size: 26px; font-weight: 700; color: #1B2B4A; margin: 0;">
+                    <span id="target-calories">1800</span> ккал и <span id="protein-range">110–130</span> г белка в день
                 </p>
             </div>
-            <div class="info-section" style="background: linear-gradient(135deg, rgba(130, 196, 255, 0.08) 0%, rgba(74, 107, 200, 0.08) 100%); border-color: rgba(130, 196, 255, 0.2);">
-                <h3 style="color: #1B2B4A; margin-top: 0;">💪 Почему важно добирать норму белка?</h3>
+            <div class="info-section blue-accent">
+                <h3 style="color: #1B2B4A; margin-top: 0;">🎯 Это твой персональный план!</h3>
                 <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
-                    Белок — это основа для мышц, крепких костей и стабильного уровня энергии. 
-                    Когда ты получаешь достаточно белка, тело лучше восстанавливается, меньше теряет мышечную массу, 
-                    и ты дольше чувствуешь сытость. Это особенно важно, если ты хочешь похудеть или набрать мышечную массу.<br><br>
-                    <strong>Твоя норма белка:</strong> <span id="protein-range-explanation">110–130 г</span> в день — это примерно 4–5 ладоней белка.
+                    Мы рассчитали твою норму по формуле Mifflin–St Jeor — это признанный стандарт в диетологии.
+                    Теперь у тебя есть точный план: сколько калорий и БЖУ нужно именно тебе для достижения цели.<br><br>
+                    <strong>Бонус:</strong> Набирай баллы за здоровые привычки и трать их на вкусности! 🎁
                 </p>
             </div>
             <div class="info-section">
-                <h3>💰 Что такое дневной бюджет калорий?</h3>
+                <h3>💰 Что такое дневной бюджет?</h3>
                 <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
-                    У тебя есть <strong id="budget-explanation">1800 калорий</strong> на день — это твой дневной бюджет. 
-                    Ты можешь "тратить" их на еду, собирая приёмы пищи в конструкторе. 
-                    Приложение считает всё автоматически и показывает, сколько осталось до цели. ⚡
+                    У тебя есть <strong id="budget-explanation">1800 калорий</strong> на день — это твой дневной «бюджет».
+                    Ты «тратишь» его на еду, собирая приёмы пищи в конструкторе. Приложение считает всё автоматически и
+                    показывает, сколько осталось до цели. ⚡
                 </p>
             </div>
-            <div class="info-section" style="background: linear-gradient(135deg, rgba(130, 196, 255, 0.08) 0%, rgba(74, 107, 200, 0.08) 100%); border-color: rgba(130, 196, 255, 0.2);">
-                <h3 style="color: #1B2B4A; margin-top: 0;">📊 Сколько и чего нужно есть?</h3>
+            <div class="info-section">
+                <h3>💪 Почему важно добирать норму белка?</h3>
+                <p style="color: #2A2A2A; line-height: 1.8; margin-bottom: 12px;">
+                    Белок — это основа для мышц, иммунитета и энергии. Когда ты ешь достаточно белка:
+                </p>
+                <ul style="color: #2A2A2A; line-height: 1.8; margin: 0 0 12px 20px; padding: 0;">
+                    <li>Мышцы остаются сильными и подтянутыми</li>
+                    <li>Метаболизм работает быстрее</li>
+                    <li>Чувство сытости держится дольше</li>
+                    <li>Кожа и волосы выглядят лучше</li>
+                </ul>
                 <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
-                    <strong>Белки:</strong> <span id="protein-palms-explanation">4–5 ладоней</span> в день. Распределяй на все приёмы пищи: завтрак, обед, ужин и перекусы.<br><br>
-                    <strong>Углеводы:</strong> <span id="carb-fists-explanation">3 кулака</span> в день. Лучше есть в первой половине дня (завтрак, обед) и после тренировки.<br><br>
-                    <strong>Жиры:</strong> <span id="fats-explanation">50–60 г</span> в день. Это примерно 1–2 столовые ложки масла, или авокадо, или орехи. Распределяй на все приёмы пищи.<br><br>
-                    <strong>Овощи:</strong> <span id="veg-palms-explanation">6 ладоней</span> в день. Можно есть в любое время, они почти не считаются в калории, но дают сытость и витамины.
+                    <strong>Твоя норма белка:</strong> <span id="protein-range-explanation">110–130 г</span> в день — это примерно 4–5 ладоней.
                 </p>
             </div>
-            <div class="info-section" style="background: linear-gradient(135deg, rgba(130, 196, 255, 0.08) 0%, rgba(74, 107, 200, 0.08) 100%); border-color: rgba(130, 196, 255, 0.2);">
+            <div class="info-section">
+                <h3>📊 Что такое БЖУ и сколько нужно?</h3>
+                <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                    <strong>Белки (Б):</strong> <span id="macro-protein-range">110–130 г</span> в день. Курица, рыба, яйца, творог, бобовые. Нужны для мышц и энергии.<br><br>
+                    <strong>Жиры (Ж):</strong> <span id="macro-fat-range">60–70 г</span> в день. Орехи, авокадо, оливковое масло, рыба. Важны для гормонов и усвоения витаминов.<br><br>
+                    <strong>Углеводы (У):</strong> <span id="macro-carb-range">250–300 г</span> в день. Крупы, хлеб, фрукты, овощи. Дают энергию для активности.<br><br>
+                    В конструкторе питания ты увидишь, сколько каждого макронутриента уже съел и сколько осталось.
+                </p>
+            </div>
+            <div class="info-section blue-accent">
                 <h3 style="color: #1B2B4A; margin-top: 0;">✋ Визуальные порции — без весов!</h3>
                 <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
-                    Мы перевели твою норму в граммах в простые порции "на глаз": ладони для белка, кулаки для гарнира. 
-                    Это научно обоснованный метод, который используют диетологи по всему миру — твоя рука идеально подходит для измерения порций! 
+                    Мы перевели твою норму в граммах в простые порции «на глаз»: ладони для белка, кулаки для гарнира.
+                    Это научно обоснованный метод, который используют диетологи по всему миру — твоя рука идеально подходит для измерения!
                     Не нужно взвешивать еду — просто смотри на размер ладони и кулака. 🖐️
                 </p>
             </div>
-            <div class="info-section" style="background: linear-gradient(135deg, rgba(130, 196, 255, 0.08) 0%, rgba(74, 107, 200, 0.08) 100%); border-color: rgba(130, 196, 255, 0.2); margin-top: 20px;">
-                <h3 style="color: #1B2B4A; margin-top: 0;">🍽️ Как собирать приёмы пищи?</h3>
+            <div class="info-section">
+                <h3>🍽️ Как собирать приёмы пищи?</h3>
                 <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
-                    <strong>Завтрак:</strong> 1 ладонь белка + 1 кулак углеводов + 2 ладони овощей + немного жиров (масло, орехи, авокадо).<br><br>
-                    <strong>Обед:</strong> 1 ладонь белка + 1 кулак углеводов + 2 ладони овощей + жиры (масло в салат или авокадо).<br><br>
-                    <strong>Ужин:</strong> 1 ладонь белка + 2 ладони овощей + немного жиров. Углеводы по желанию (0–½ кулака).<br><br>
-                    <strong>Перекусы:</strong> белок (творог, йогурт) + фрукт или орехи.<br><br>
-                    <strong>Важно:</strong> Жиры можно брать из разных источников в течение дня: масло в салат, авокадо, орехи, сыр. Не нужно есть всё сразу — распределяй на приёмы пищи.
+                    <strong>Завтрак:</strong> 1 ладонь белка + 1 кулак гарнира + 2 ладони овощей + 1 порция жиров.<br><br>
+                    <strong>Обед:</strong> 1 ладонь белка + 1 кулак гарнира + 2 ладони овощей + 1 порция жиров.<br><br>
+                    <strong>Ужин:</strong> 1 ладонь белка + 2 ладони овощей, гарнир по желанию (0–½ кулака) + 1 порция жиров.<br><br>
+                    <strong>Перекусы:</strong> фрукт + немного орехов / йогурт / творог.
+                </p>
+                <p style="color: #2A2A2A; line-height: 1.8; margin: 16px 0 0 0;">
+                    <strong>Про жиры:</strong> В день нужно 3–4 порции полезных жиров. Это может быть авокадо (¼ шт.), орехи (20 г),
+                    оливковое масло (1 ст.л.), рыба. Распределяй их между приёмами пищи — не обязательно все в один приём.
                 </p>
             </div>
-            <button class="btn btn-primary" id="continue-to-mode" style="margin-top: 24px;">Понятно, далее →</button>
+            <button class="btn btn-primary" id="continue-to-mode" style="margin-top: 24px;">Понятно, продолжить →</button>
             <button class="btn btn-secondary" id="back-to-form" style="margin-top: 12px;">← Назад к анкете</button>
         </section>
 
@@ -1053,12 +1064,10 @@
             <header id="app-header" class="card">
                 <h1>Конструктор питания</h1>
                 <div class="budget-display">
-                    <div class="budget-label">Твой дневной бюджет калорий:</div>
+                    <div class="budget-label">Твой дневной «бюджет» • Осталось:</div>
                     <div class="budget-amount">
-                        <span id="remaining-calories">1800</span> <span id="currency-name">калорий</span>
-                    </div>
-                    <div id="budget-remaining-text" style="font-size: 14px; color: #6B7280; margin-top: 8px; text-align: center;">
-                        Осталось <span id="remaining-calories-text">1800</span> калорий
+                        <span id="remaining-calories">1800</span>
+                        <span style="font-size: 16px; color: #6B7280; margin-left: 8px;">калорий</span>
                     </div>
                 </div>
                 <div class="macros-grid">
@@ -1095,12 +1104,11 @@
             <section id="progress-widget" class="card">
                 <div style="text-align: center; margin-bottom: 16px;">
                     <div style="font-size: 18px; font-weight: 700; color: #1B2B4A; margin-bottom: 4px;">Прогресс здоровья</div>
-                    <div style="font-size: 12px; color: #6B7280; margin-bottom: 8px;">Отслеживай свой прогресс: уровень, серия дней, осознанность в питании</div>
                     <div style="font-size: 14px; color: #6B7280;" id="progress-subtitle">Уровень 1 • Серия: 0 дней</div>
                 </div>
-                <div style="margin-top: 16px; margin-bottom: 20px;">
-                    <div style="font-size: 14px; font-weight: 600; color: #1B2B4A; margin-bottom: 4px;">🎯 Осознанные паузы:</div>
-                    <div style="font-size: 11px; color: #6B7280; margin-bottom: 8px;">Используй функцию "Хочу чего-нибудь пожевать" для осознанного выбора</div>
+                <div style="margin-top: 8px; margin-bottom: 20px;">
+                    <div style="font-size: 14px; font-weight: 600; color: #1B2B4A; margin-bottom: 4px;">🧘 Осознанный выбор</div>
+                    <div style="font-size: 13px; color: #6B7280; margin-bottom: 8px;">Использование функции «Хочу чего-нибудь пожевать» для понимания своих импульсов</div>
                     <div style="background: rgba(0, 0, 0, 0.06); border-radius: 999px; height: 8px; overflow: hidden; margin-bottom: 4px;">
                         <div id="self-regulation-progress" style="background: linear-gradient(135deg, #82C4FF, #4A6BC8); height: 100%; border-radius: 999px; transition: width 0.3s ease; width: 0%;"></div>
                     </div>
@@ -1108,24 +1116,20 @@
                         <span id="self-regulation-text">0 из 10 использований</span>
                     </div>
                 </div>
-                <div style="margin-top: 16px;">
-                    <div style="font-size: 14px; font-weight: 600; color: #1B2B4A; margin-bottom: 4px;">💪 Направления развития:</div>
-                    <div style="font-size: 11px; color: #6B7280; margin-bottom: 12px;">Выбирай полезные продукты — получай очки по разным направлениям здоровья</div>
+                <div style="margin-top: 8px;">
+                    <div style="font-size: 14px; font-weight: 600; color: #1B2B4A; margin-bottom: 4px;">💎 Направления развития</div>
+                    <div style="font-size: 13px; color: #6B7280; margin-bottom: 12px;">Прокачивай разные аспекты здоровья, добавляя полезные продукты</div>
                     <div id="tracks-list">
-                        <div style="color: #6B7280; font-style: italic; font-size: 13px;">Добавляй продукты для развития</div>
+                        <div style="color: #6B7280; font-style: italic; font-size: 13px;">Добавляй продукты для прокачки</div>
                     </div>
                 </div>
             </section>
 
             <!-- Main Menu -->
             <main id="main-menu" class="main-menu">
-                <div style="padding: 16px 20px; background: rgba(130, 196, 255, 0.05); border-radius: 18px; margin-bottom: 16px;">
-                    <p style="color: #2A2A2A; line-height: 1.6; margin: 0; font-size: 14px;">
-                        <strong>С чего начать?</strong><br>
-                        Планируй приёмы пищи с конструктором питания — это помощник для планирования твоего меню на день из простых и полезных источников. 
-                        Собирай в конструкторе меню на день, чтобы спланировать и понимать что тебе есть, очень просто без заморочек.<br><br>
-                        Выбирай активность на день, фиксируй количество выпитой воды, добавляй информацию о сне.
-                    </p>
+                <div class="menu-card" onclick="showSection('getting-started')">
+                    <div class="menu-icon">📝</div>
+                    <div class="menu-title">С чего начать?</div>
                 </div>
                 <div class="menu-card" onclick="showSection('plate-guide')">
                     <div class="menu-icon">🍽️</div>
@@ -1240,6 +1244,23 @@
                         Наши внутренние расчёты показывают, что порции рук примерно на 95% так же точны, как и тщательное взвешивание, измерение и отслеживание пищи. 
                         Со существенно меньшими усилиями и временем.<br><br>
                         Твоя рука пропорциональна твоему телу — это идеальный инструмент для измерения порций! 🖐️
+                    </p>
+                </div>
+                <button class="btn btn-secondary" onclick="showMainMenu()">← Назад в меню</button>
+            </section>
+
+            <section id="getting-started" class="card hidden">
+                <div class="step-header">
+                    <div class="step-title">С чего начать?</div>
+                    <div class="step-subtitle">Короткий ориентир, чтобы быстро войти в ритм</div>
+                </div>
+                <div class="info-section">
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0 0 16px 0;">
+                        Планируй приёмы пищи заранее вместе с конструктором — это простой способ собрать меню на день из знакомых продуктов.
+                        Выбирай источники белка, углеводов, жиров и овощей — приложение покажет, сколько уже съел и что ещё стоит добавить.
+                    </p>
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                        Добавляй активность, следи за водой и сном — так ты видишь всю картину дня в одном месте и быстрее приближаешься к цели.
                     </p>
                 </div>
                 <button class="btn btn-secondary" onclick="showMainMenu()">← Назад в меню</button>
@@ -1619,7 +1640,7 @@
                     <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
                         Чтобы подобрать движение под тебя — ответь на пару вопросов.
                     </p>
-                </div>
+                        </div>
                 <button class="btn btn-primary" onclick="showActivityIntro(2)">Далее</button>
             </section>
 
@@ -1627,7 +1648,7 @@
             <section id="activity-intro-2" class="card hidden">
                 <div class="step-header">
                     <div class="step-title">Сколько сейчас в среднем активных дней в неделю у тебя получается?</div>
-                </div>
+                        </div>
                 <div class="options-grid" style="display: flex; flex-direction: column; gap: 12px;">
                     <button class="option-card" onclick="selectActivityLevel('beginner')" style="text-align: left; padding: 16px;">
                         <div class="option-name">Почти не двигаюсь</div>
@@ -1638,7 +1659,7 @@
                     <button class="option-card" onclick="selectActivityLevel('advanced')" style="text-align: left; padding: 16px;">
                         <div class="option-name">3 раза и больше в неделю</div>
                     </button>
-                </div>
+                        </div>
                 <button class="btn btn-secondary" onclick="showActivityIntro(1)" style="margin-top: 20px;">← Назад</button>
             </section>
 
@@ -1646,7 +1667,7 @@
             <section id="activity-intro-3" class="card hidden">
                 <div class="step-header">
                     <div class="step-title">Что тебе проще всего внедрить сейчас?</div>
-                </div>
+                        </div>
                 <div class="options-grid" style="display: flex; flex-direction: column; gap: 12px;">
                     <label class="option-card" style="text-align: left; padding: 16px; cursor: pointer;">
                         <input type="checkbox" value="walks" onchange="toggleActivityPreference('walks', this.checked)" style="margin-right: 12px;">
@@ -1676,7 +1697,7 @@
                         <input type="checkbox" value="other" onchange="toggleActivityPreference('other', this.checked)" style="margin-right: 12px;">
                         <span class="option-name">Другое</span>
                     </label>
-                </div>
+                        </div>
                 <button class="btn btn-primary" onclick="showActivityIntro(4)" style="margin-top: 20px;">Далее</button>
                 <button class="btn btn-secondary" onclick="showActivityIntro(2)" style="margin-top: 12px;">← Назад</button>
             </section>
@@ -1686,7 +1707,7 @@
                 <div class="step-header">
                     <div class="step-title">Что для тебя важнее в движении сейчас?</div>
                     <div class="step-subtitle">Можно выбрать 1–2 варианта</div>
-                </div>
+                    </div>
                 <div class="options-grid" style="display: flex; flex-direction: column; gap: 12px;">
                     <label class="option-card" style="text-align: left; padding: 16px; cursor: pointer;">
                         <input type="checkbox" value="endurance" onchange="toggleActivityGoal('endurance', this.checked)" style="margin-right: 12px;">
@@ -1704,7 +1725,7 @@
                         <input type="checkbox" value="joy" onchange="toggleActivityGoal('joy', this.checked)" style="margin-right: 12px;">
                         <span class="option-name">Движение ради удовольствия (настроение, антистресс)</span>
                     </label>
-                </div>
+                    </div>
                 <button class="btn btn-primary" onclick="showActivityIntro(5)" style="margin-top: 20px;">Далее</button>
                 <button class="btn btn-secondary" onclick="showActivityIntro(3)" style="margin-top: 12px;">← Назад</button>
             </section>
@@ -2796,6 +2817,9 @@
             const fatCalories = fatGramsMin * 9;
             const carbsCalories = Math.max(0, targetCalories - proteinCalories - fatCalories);
             const carbsGrams = Math.round(carbsCalories / 4);
+            const carbsMin = Math.max(0, Math.round(carbsGrams * 0.9));
+            const carbsMax = Math.round(carbsGrams * 1.1);
+            const fatGramsMax = Math.round(fatGramsMin * 1.2);
             
             const proteinMin = Math.round(weight * 1.6);
             const proteinMax = proteinGrams;
@@ -2823,6 +2847,10 @@
                 protein_grams: proteinGrams,
                 carbs_grams: carbsGrams,
                 fats_grams: fatGramsMin,
+                carbs_min: carbsMin,
+                carbs_max: carbsMax,
+                fats_min: fatGramsMin,
+                fats_max: fatGramsMax,
                 // Порции
                 protein_palms: targetProteinPalms,
                 carb_fists: targetCarbFists,
@@ -2880,6 +2908,22 @@
             document.getElementById('target-calories').textContent = targetCalories;
             document.getElementById('protein-range').textContent = `${proteinMin}–${proteinMax}`;
             document.getElementById('budget-explanation').textContent = `${targetCalories} калорий`;
+            const proteinRangeExplanationEl = document.getElementById('protein-range-explanation');
+            if (proteinRangeExplanationEl) {
+                proteinRangeExplanationEl.textContent = `${proteinMin}–${proteinMax} г`;
+            }
+            const macroProteinRangeEl = document.getElementById('macro-protein-range');
+            if (macroProteinRangeEl) {
+                macroProteinRangeEl.textContent = `${proteinMin}–${proteinMax} г`;
+            }
+            const macroFatRangeEl = document.getElementById('macro-fat-range');
+            if (macroFatRangeEl) {
+                macroFatRangeEl.textContent = `${fatGramsMin}–${fatGramsMax} г`;
+            }
+            const macroCarbRangeEl = document.getElementById('macro-carb-range');
+            if (macroCarbRangeEl) {
+                macroCarbRangeEl.textContent = `${carbsMin}–${carbsMax} г`;
+            }
             
             document.getElementById('onboarding-step1').classList.add('hidden');
             document.getElementById('onboarding-step2').classList.remove('hidden');
@@ -3083,10 +3127,6 @@
             const remainingEl = document.getElementById('remaining-calories');
             if (remainingEl) {
                 remainingEl.textContent = Math.round(remainingCalories);
-            }
-            const remainingTextEl = document.getElementById('remaining-calories-text');
-            if (remainingTextEl) {
-                remainingTextEl.textContent = Math.round(remainingCalories);
             }
             const usedProteinEl = document.getElementById('used-protein');
             if (usedProteinEl) {
@@ -3519,7 +3559,7 @@
 
         function showSection(sectionId) {
             document.getElementById('main-menu').classList.add('hidden');
-            ['plate-guide', 'constructor', 'activity', 'problems', 'sleep', 
+            ['plate-guide', 'getting-started', 'constructor', 'activity', 'problems', 'sleep', 
              'snack-intro-1', 'snack-intro-2', 'snack-intro-3', 'snack-question', 
              'snack-action-choice', 'snack-recommendation', 'snack-practice',
              'snack-switch', 'snack-emotion', 'snack-body', 'snack-conscious-snack',
@@ -3534,7 +3574,7 @@
             if (sectionId === 'activity') {
                 openActivityModule();
             } else {
-                document.getElementById(sectionId).classList.remove('hidden');
+            document.getElementById(sectionId).classList.remove('hidden');
             }
             
             // Обновляем порции в "Как собирать тарелку"
@@ -4102,7 +4142,7 @@
 
         function showMainMenu() {
             document.getElementById('main-menu').classList.remove('hidden');
-            ['plate-guide', 'constructor', 'activity', 'problems', 'sleep',
+            ['plate-guide', 'getting-started', 'constructor', 'activity', 'problems', 'sleep',
              'snack-intro-1', 'snack-intro-2', 'snack-intro-3', 'snack-question', 
              'snack-action-choice', 'snack-recommendation', 'snack-practice',
              'snack-switch', 'snack-emotion', 'snack-body', 'snack-conscious-snack',
@@ -5387,7 +5427,6 @@
     </script>
 </body>
 </html>
-
 
 
 
