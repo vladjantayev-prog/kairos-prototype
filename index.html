@@ -2655,25 +2655,35 @@
 
         function checkOnboardingStatus() {
             // Скрываем все секции сначала
-            document.getElementById('onboarding-step1').classList.add('hidden');
-            document.getElementById('onboarding-step2').classList.add('hidden');
-            document.getElementById('mode-selection').classList.add('hidden');
-            document.getElementById('app-main').classList.add('hidden');
+            const onboardingStep1 = document.getElementById('onboarding-step1');
+            const onboardingStep2 = document.getElementById('onboarding-step2');
+            const modeSelection = document.getElementById('mode-selection');
+            const appMain = document.getElementById('app-main');
             
-            if (kairosState.profile) {
+            if (onboardingStep1) onboardingStep1.classList.add('hidden');
+            if (onboardingStep2) onboardingStep2.classList.add('hidden');
+            if (modeSelection) modeSelection.classList.add('hidden');
+            if (appMain) appMain.classList.add('hidden');
+            
+            // Проверяем наличие профиля с целевыми калориями
+            if (kairosState && kairosState.profile && kairosState.profile.target_calories) {
                 // Устанавливаем dailyTargets из профиля
                 dailyTargets = {
                     calories: kairosState.profile.target_calories || 1800,
                     protein: kairosState.profile.protein_max || 90,
-                    carbs: Math.round((kairosState.profile.target_calories || 1800) * 0.45 / 4),
-                    fats: Math.round((kairosState.profile.target_calories || 1800) * 0.30 / 9),
-                    fiber: 30
+                    carbs: kairosState.profile.carbs_grams || Math.round((kairosState.profile.target_calories || 1800) * 0.45 / 4),
+                    fats: kairosState.profile.fats_grams || Math.round((kairosState.profile.target_calories || 1800) * 0.30 / 9),
+                    fiber: 30,
+                    // Порции
+                    proteinPalms: kairosState.profile.protein_palms || 4,
+                    carbFists: kairosState.profile.carb_fists || 3,
+                    vegPalms: kairosState.profile.veg_palms || 6
                 };
                 
                 showApp();
             } else {
                 // Нет профиля - показываем анкету
-                document.getElementById('onboarding-step1').classList.remove('hidden');
+                if (onboardingStep1) onboardingStep1.classList.remove('hidden');
             }
         }
 
@@ -2956,22 +2966,20 @@
             console.error('Форма онбординга не найдена!');
         }
 
-        document.getElementById('continue-to-mode').addEventListener('click', () => {
-            // Устанавливаем режим по умолчанию (цифры)
-            if (kairosState.profile) {
-                kairosState.profile.mode = 'numbers';
-                saveState();
-            }
-            // Показываем главное приложение
-            document.getElementById('onboarding-step1').classList.add('hidden');
-            document.getElementById('onboarding-step2').classList.add('hidden');
-            document.getElementById('app-main').classList.remove('hidden');
-            // Показываем карточку "С чего начать"
-            document.getElementById('start-guide').classList.remove('hidden');
-            updatePlateGuidePortions();
-            // Обновляем вкладки
-            switchTab('plans');
-        });
+        const continueBtn = document.getElementById('continue-to-mode');
+        if (continueBtn) {
+            continueBtn.addEventListener('click', () => {
+                // Устанавливаем режим по умолчанию (цифры)
+                if (kairosState.profile) {
+                    kairosState.profile.mode = 'numbers';
+                    saveState();
+                }
+                // Показываем главное приложение через showApp
+                showApp();
+                // Показываем карточку "С чего начать"
+                document.getElementById('start-guide').classList.remove('hidden');
+            });
+        }
         
         function selectTrackingMode(mode) {
             trackingMode = mode;
@@ -3003,13 +3011,16 @@
         });
 
         function showApp() {
+            // Скрываем все экраны онбординга
             document.getElementById('onboarding-step1').classList.add('hidden');
             document.getElementById('onboarding-step2').classList.add('hidden');
             document.getElementById('mode-selection').classList.add('hidden');
+            
+            // Показываем главное приложение
             document.getElementById('app-main').classList.remove('hidden');
             
-            // Устанавливаем dailyTargets из профиля
-            if (kairosState.profile) {
+            // Устанавливаем dailyTargets из профиля (если еще не установлены)
+            if (kairosState.profile && (!dailyTargets || !dailyTargets.calories)) {
                 dailyTargets = {
                     calories: kairosState.profile.target_calories || 1800,
                     protein: kairosState.profile.protein_max || 90,
@@ -3023,9 +3034,14 @@
                 };
             }
             
+            // Показываем главное меню
+            switchTab('plans');
+            
+            // Обновляем все данные
             updateDailyTotals();
             updateDailySummary();
             updateSelfRegulationProgress();
+            updatePlateGuidePortions();
         }
 
         function updateHeroDisplay() {
