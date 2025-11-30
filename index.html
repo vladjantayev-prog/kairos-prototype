@@ -1024,29 +1024,29 @@
             <header id="app-header" class="card">
                 <h1>Конструктор питания</h1>
                 <div class="budget-display">
-                    <div class="budget-label">Твой дневной бюджет (калории):</div>
+                    <div class="budget-label">Твой дневной "бюджет" калорий</div>
                     <div class="budget-amount">
-                        <span id="remaining-calories">1800</span> <span id="currency-name">калорий</span>
+                        <span id="target-calories-display">1800</span> <span id="currency-name">калорий</span>
                     </div>
-                    <div style="font-size: 14px; color: #6B7280; margin-top: 8px; text-align: center;">
-                        Осталось: <span id="calories-remaining" style="font-weight: 600; color: #1B2B4A;">1800</span> калорий
+                    <div style="font-size: 14px; color: #FFFFFF; margin-top: 8px; text-align: center; opacity: 0.9;">
+                        Осталось: <span id="calories-remaining" style="font-weight: 600;">1800</span> калорий
                     </div>
                 </div>
                 <div class="macros-grid">
                     <div class="macro-card">
                         <div class="macro-label">Белки</div>
-                        <div class="macro-value"><span id="used-protein">0</span></div>
-                        <div class="macro-total">из <span id="total-protein">90</span> г</div>
-                        <div class="macro-portions" id="protein-portions" style="font-size: 12px; color: #6B7280; margin-top: 4px;">≈ 0 ладоней из 4 ладоней</div>
+                        <div class="macro-value"><span id="used-protein">0</span> г</div>
+                        <div class="macro-total" id="protein-total-display">из <span id="total-protein">90</span> г</div>
+                        <div class="macro-portions" id="protein-portions" style="font-size: 12px; color: #6B7280; margin-top: 4px;"></div>
                         <div class="macro-progress">
                             <div class="macro-progress-fill macro-progress-fill--protein"></div>
                         </div>
                     </div>
                     <div class="macro-card">
                         <div class="macro-label">Углеводы</div>
-                        <div class="macro-value"><span id="used-carbs">0</span></div>
-                        <div class="macro-total">из <span id="total-carbs">200</span> г</div>
-                        <div class="macro-portions" id="carbs-portions" style="font-size: 12px; color: #6B7280; margin-top: 4px;">≈ 0 кулаков из 3 кулаков</div>
+                        <div class="macro-value"><span id="used-carbs">0</span> г</div>
+                        <div class="macro-total" id="carbs-total-display">из <span id="total-carbs">200</span> г</div>
+                        <div class="macro-portions" id="carbs-portions" style="font-size: 12px; color: #6B7280; margin-top: 4px;"></div>
                         <div class="macro-progress">
                             <div class="macro-progress-fill macro-progress-fill--carbs"></div>
                         </div>
@@ -1167,10 +1167,6 @@
                     <div class="menu-icon">🏠</div>
                     <div class="menu-title">Начать сначала</div>
                 </div>
-                <div class="menu-card" onclick="showSection('calendar')">
-                    <div class="menu-icon">📅</div>
-                    <div class="menu-title">Календарь</div>
-                    </div>
             </main>
 
             <!-- Daily Summary -->
@@ -1625,17 +1621,18 @@
                     <div class="step-title">Сколько сейчас в среднем активных дней в неделю у тебя получается?</div>
                         </div>
                 <div class="options-grid" style="display: flex; flex-direction: column; gap: 12px;">
-                    <button class="option-card" onclick="selectActivityLevel('beginner')" style="text-align: left; padding: 16px;">
+                    <button id="activity-level-beginner" class="option-card" onclick="selectActivityLevel('beginner')" style="text-align: left; padding: 16px;">
                         <div class="option-name">Почти не двигаюсь</div>
                     </button>
-                    <button class="option-card" onclick="selectActivityLevel('intermediate')" style="text-align: left; padding: 16px;">
+                    <button id="activity-level-intermediate" class="option-card" onclick="selectActivityLevel('intermediate')" style="text-align: left; padding: 16px;">
                         <div class="option-name">1–2 раза в неделю</div>
                     </button>
-                    <button class="option-card" onclick="selectActivityLevel('advanced')" style="text-align: left; padding: 16px;">
+                    <button id="activity-level-advanced" class="option-card" onclick="selectActivityLevel('advanced')" style="text-align: left; padding: 16px;">
                         <div class="option-name">3 раза и больше в неделю</div>
                     </button>
                         </div>
-                <button class="btn btn-secondary" onclick="showActivityIntro(1)" style="margin-top: 20px;">← Назад</button>
+                <button id="activity-level-next" class="btn btn-primary" onclick="showActivityIntro(3)" style="margin-top: 20px; display: none;">Далее</button>
+                <button class="btn btn-secondary" onclick="showActivityIntro(1)" style="margin-top: 12px;">← Назад</button>
             </section>
 
             <!-- Activity Module: Intro Screen 3 -->
@@ -2748,21 +2745,23 @@
 
         // Функция для правильного склонения "ладонь"
         function getPalmWord(count) {
-            const num = Math.abs(count) % 100;
+            const num = Math.abs(Math.round(count));
             const num1 = num % 10;
-            if (num > 10 && num < 20) return 'ладоней';
-            if (num1 > 1 && num1 < 5) return 'ладони';
+            const num10 = num % 100;
+            if (num10 >= 11 && num10 <= 14) return 'ладоней';
             if (num1 === 1) return 'ладонь';
+            if (num1 >= 2 && num1 <= 4) return 'ладони';
             return 'ладоней';
         }
 
         // Функция для правильного склонения "кулак"
         function getFistWord(count) {
-            const num = Math.abs(count) % 100;
+            const num = Math.abs(Math.round(count));
             const num1 = num % 10;
-            if (num > 10 && num < 20) return 'кулаков';
-            if (num1 > 1 && num1 < 5) return 'кулака';
+            const num10 = num % 100;
+            if (num10 >= 11 && num10 <= 14) return 'кулаков';
             if (num1 === 1) return 'кулак';
+            if (num1 >= 2 && num1 <= 4) return 'кулака';
             return 'кулаков';
         }
 
@@ -3142,9 +3141,9 @@
             allMeals = getAllMeals();
 
             const remainingCalories = dailyTargets.calories - dailyUsed.calories;
-            const remainingEl = document.getElementById('remaining-calories');
-            if (remainingEl) {
-                remainingEl.textContent = Math.round(remainingCalories);
+            const targetCaloriesDisplay = document.getElementById('target-calories-display');
+            if (targetCaloriesDisplay) {
+                targetCaloriesDisplay.textContent = Math.round(dailyTargets.calories);
             }
             // Обновляем остаток калорий
             const caloriesRemainingEl = document.getElementById('calories-remaining');
@@ -3176,24 +3175,28 @@
                 totalFatsEl.textContent = dailyTargets.fats;
             }
             
-            // Обновляем порции (ладони/кулаки)
+            // Обновляем порции (ладони/кулаки) в новом формате
             const sex = kairosState.profile ? kairosState.profile.sex : 'female';
             const proteinPerPalm = sex === 'female' 
                 ? PORTION_CONSTANTS.FEMALE_PROTEIN_PER_PALM 
                 : PORTION_CONSTANTS.MALE_PROTEIN_PER_PALM;
             
-            const usedProteinPalms = Math.round((dailyUsed.protein / proteinPerPalm) * 2) / 2;
             const targetProteinPalms = dailyTargets.proteinPalms || Math.round(dailyTargets.protein / proteinPerPalm);
             const proteinPortionsEl = document.getElementById('protein-portions');
             if (proteinPortionsEl) {
-                proteinPortionsEl.textContent = `≈ ${usedProteinPalms} ${getPalmWord(usedProteinPalms)} из ${targetProteinPalms} ${getPalmWord(targetProteinPalms)}`;
+                const proteinTotalDisplay = document.getElementById('protein-total-display');
+                if (proteinTotalDisplay) {
+                    proteinTotalDisplay.textContent = `из ${Math.round(dailyTargets.protein)} г (это примерно ${targetProteinPalms} ${getPalmWord(targetProteinPalms)})`;
+                }
             }
             
-            const usedCarbFists = Math.round((dailyUsed.carbs / PORTION_CONSTANTS.CARBS_PER_FIST) * 2) / 2;
             const targetCarbFists = dailyTargets.carbFists || Math.round(dailyTargets.carbs / PORTION_CONSTANTS.CARBS_PER_FIST);
             const carbsPortionsEl = document.getElementById('carbs-portions');
             if (carbsPortionsEl) {
-                carbsPortionsEl.textContent = `≈ ${usedCarbFists} ${getFistWord(usedCarbFists)} из ${targetCarbFists} ${getFistWord(targetCarbFists)}`;
+                const carbsTotalDisplay = document.getElementById('carbs-total-display');
+                if (carbsTotalDisplay) {
+                    carbsTotalDisplay.textContent = `из ${Math.round(dailyTargets.carbs)} г (это примерно ${targetCarbFists} ${getFistWord(targetCarbFists)})`;
+                }
             }
             
             // Обновляем прогресс-бары БЖУ
@@ -4450,6 +4453,20 @@
                 tg.MainButton.hide();
             }
             
+            // Скрываем меню и все секции
+            document.getElementById('main-menu').classList.add('hidden');
+            ['start-guide', 'plate-guide', 'activity', 'problems', 'sleep', 'useful',
+             'snack-intro-1', 'snack-intro-2', 'snack-intro-3', 'snack-question', 
+             'snack-action-choice', 'snack-recommendation', 'snack-practice',
+             'snack-switch', 'snack-emotion', 'snack-body', 'snack-conscious-snack',
+             'snack-5min-task', 'snack-conscious-options',
+             'activity-intro-1', 'activity-intro-2', 'activity-intro-3', 'activity-intro-4',
+             'activity-intro-5', 'activity-intro-6', 'activity-main', 'activity-today',
+             'activity-instruction', 'activity-education'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+            
             currentMeal = {
                 type: mealType,
                 step: 0,
@@ -4466,7 +4483,12 @@
 
             document.getElementById('constructor-title').textContent = mealNames[mealType];
             showConstructorStep();
-            showSection('constructor');
+            
+            // Показываем конструктор
+            const constructorEl = document.getElementById('constructor');
+            if (constructorEl) {
+                constructorEl.classList.remove('hidden');
+            }
             
             // Показываем кнопку "Назад" при входе в конструктор
             if (tg) {
@@ -4972,12 +4994,70 @@
                 screen.classList.remove('hidden');
                 document.getElementById('main-menu').classList.add('hidden');
             }
+            
+            // Если показываем экран 2, сбрасываем состояние кнопок
+            if (screenNum === 2) {
+                const nextBtn = document.getElementById('activity-level-next');
+                if (nextBtn) {
+                    nextBtn.style.display = 'none';
+                }
+                // Сбрасываем выделение кнопок
+                ['beginner', 'intermediate', 'advanced'].forEach(l => {
+                    const btn = document.getElementById(`activity-level-${l}`);
+                    if (btn) {
+                        btn.style.background = '';
+                        btn.style.borderColor = '';
+                    }
+                });
+                // Если уже был выбран уровень, восстанавливаем выделение
+                if (activityOnboardingData.level) {
+                    const selectedBtn = document.getElementById(`activity-level-${activityOnboardingData.level}`);
+                    if (selectedBtn) {
+                        selectedBtn.style.background = 'linear-gradient(135deg, rgba(130, 196, 255, 0.15) 0%, rgba(74, 107, 200, 0.15) 100%)';
+                        selectedBtn.style.borderColor = '#82C4FF';
+                        if (nextBtn) {
+                            nextBtn.style.display = 'block';
+                        }
+                    }
+                }
+            }
+            
+            // Если переходим на экран 3, проверяем что уровень выбран
+            if (screenNum === 3) {
+                if (!activityOnboardingData.level) {
+                    // Если уровень не выбран, возвращаемся на экран 2
+                    showActivityIntro(2);
+                    showToast('Пожалуйста, выбери уровень активности');
+                    return;
+                }
+            }
         }
 
         // Выбрать уровень активности
         function selectActivityLevel(level) {
             activityOnboardingData.level = level;
-            showActivityIntro(3);
+            
+            // Убираем выделение со всех кнопок
+            ['beginner', 'intermediate', 'advanced'].forEach(l => {
+                const btn = document.getElementById(`activity-level-${l}`);
+                if (btn) {
+                    btn.style.background = '';
+                    btn.style.borderColor = '';
+                }
+            });
+            
+            // Выделяем выбранную кнопку
+            const selectedBtn = document.getElementById(`activity-level-${level}`);
+            if (selectedBtn) {
+                selectedBtn.style.background = 'linear-gradient(135deg, rgba(130, 196, 255, 0.15) 0%, rgba(74, 107, 200, 0.15) 100%)';
+                selectedBtn.style.borderColor = '#82C4FF';
+            }
+            
+            // Показываем кнопку "Далее"
+            const nextBtn = document.getElementById('activity-level-next');
+            if (nextBtn) {
+                nextBtn.style.display = 'block';
+            }
         }
 
         // Переключить предпочтение
