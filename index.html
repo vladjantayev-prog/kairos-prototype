@@ -1262,6 +1262,21 @@
                     <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
                         Добавляй активность, следи за водой и сном — так ты видишь всю картину дня в одном месте и быстрее приближаешься к цели.
                     </p>
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 16px 0 0 0;">
+                        Используй сковороду с антипригарным покрытием и минимум масла при жарке. Лучше выбирать масла, устойчивые к нагреву: рафинированное оливковое, масло авокадо или топлёное гхи. Попробуй готовить на овощном бульоне вместо масла — пища не пригорает и калорий меньше.
+                    </p>
+                </div>
+                <div class="info-section">
+                    <h3 style="color: #1B2B4A; margin-top: 0;">Как готовить полезнее?</h3>
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0 0 12px 0;">
+                        <strong>Готовка на пару.</strong> Самый диетический метод: сохраняет максимум витаминов и не требует масла.
+                    </p>
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0 0 12px 0;">
+                        <strong>Запекание.</strong> Подходит для мяса, рыбы и овощей. В духовке можно обойтись несколькими каплями масла, при этом вкус остаётся насыщенным.
+                    </p>
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                        <strong>Жарка.</strong> Используй реже, жарь на среднем огне и с подходящим маслом. При жарке калорий больше и часть витаминов разрушается, поэтому это скорее вариант «для разнообразия».
+                    </p>
                 </div>
                 <button class="btn btn-secondary" onclick="showMainMenu()">← Назад в меню</button>
             </section>
@@ -1611,7 +1626,7 @@
                 </div>
                 <div class="info-section" style="background: linear-gradient(135deg, rgba(130, 196, 255, 0.1) 0%, rgba(74, 107, 200, 0.1) 100%); margin-top: 20px;">
                     <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
-                        Ты всё равно молодец.<br><br>
+                        Ты молодец.<br><br>
                         Ты остановился, заметил своё состояние и сделал более мягкий выбор.
                     </p>
                 </div>
@@ -1667,6 +1682,7 @@
             <section id="activity-intro-3" class="card hidden">
                 <div class="step-header">
                     <div class="step-title">Что тебе проще всего внедрить сейчас?</div>
+                    <div class="step-subtitle">Можно выбрать несколько вариантов ответа</div>
                         </div>
                 <div class="options-grid" style="display: flex; flex-direction: column; gap: 12px;">
                     <label class="option-card" style="text-align: left; padding: 16px; cursor: pointer;">
@@ -1705,7 +1721,7 @@
             <!-- Activity Module: Intro Screen 4 -->
             <section id="activity-intro-4" class="card hidden">
                 <div class="step-header">
-                    <div class="step-title">Что для тебя важнее в движении сейчас?</div>
+                    <div class="step-title">Какую цель ты сейчас преследуешь в физической активности?</div>
                     <div class="step-subtitle">Можно выбрать 1–2 варианта</div>
                     </div>
                 <div class="options-grid" style="display: flex; flex-direction: column; gap: 12px;">
@@ -1724,6 +1740,10 @@
                     <label class="option-card" style="text-align: left; padding: 16px; cursor: pointer;">
                         <input type="checkbox" value="joy" onchange="toggleActivityGoal('joy', this.checked)" style="margin-right: 12px;">
                         <span class="option-name">Движение ради удовольствия (настроение, антистресс)</span>
+                    </label>
+                    <label class="option-card" style="text-align: left; padding: 16px; cursor: pointer;">
+                        <input type="checkbox" value="weight_loss" onchange="toggleActivityGoal('weight_loss', this.checked)" style="margin-right: 12px;">
+                        <span class="option-name">Хочу похудеть</span>
                     </label>
                     </div>
                 <button class="btn btn-primary" onclick="showActivityIntro(5)" style="margin-top: 20px;">Далее</button>
@@ -1767,6 +1787,12 @@
                 <div class="step-header">
                     <div class="step-title">Активность</div>
                     <div class="step-subtitle">Твой план движения на неделю</div>
+                </div>
+                <div class="info-section" style="margin-bottom: 16px;">
+                    <p style="color: #2A2A2A; line-height: 1.7; margin: 0;">
+                        Старайся каждый день проходить не менее 30–40 минут в комфортном темпе (быстрая ходьба, велосипед, плавание).
+                        Добавляй 2–3 тренировки в неделю для сердца и мышц, а также время для активности ради удовольствия — это основа устойчивого прогресса.
+                    </p>
                 </div>
                 
                 <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 20px;">
@@ -1908,8 +1934,14 @@
                 </div>
                 <div class="info-section">
                     <h3>☕ Что есть в кафе</h3>
+                    <p style="color: #2A2A2A; line-height: 1.6; margin: 0 0 12px 0;">
+                        Выбирай блюда, где легко распознать продукты: кусок мяса, рыбы или яйца + овощи на гарнир. Старайся избегать избыточных соусов, кляра и панировки.
+                    </p>
+                    <p style="color: #2A2A2A; line-height: 1.6; margin: 0 0 12px 0;">
+                        Чтобы прикинуть калории: кусок мяса размером с ладонь (~100 г) — около 150–200 ккал; овощной гарнир размером с кулак — ~50 ккал. Соусы и хрустящая панировка могут удваивать калорийность.
+                    </p>
                     <p style="color: #2A2A2A; line-height: 1.6; margin: 0;">
-                        Выбирай блюда с видимым белком (курица, рыба, яйца), проси овощной гарнир, избегай соусов.
+                        После визита в кафе добавь похожие продукты в конструктор (например, «курица» + «овощи» + «масло») — так дневник останется точным.
                     </p>
                 </div>
                 <div class="info-section">
@@ -2360,10 +2392,12 @@
             chicken_120: { id: 'chicken_120', group: 'protein', label: 'Курица', portion: '120 г готового', p: 26, c: 0, f: 6, kcal: 160, meals: ['lunch', 'dinner'], baseQty: 1 },
             turkey_120: { id: 'turkey_120', group: 'protein', label: 'Индейка', portion: '120 г готового', p: 25, c: 0, f: 4, kcal: 136, meals: ['lunch', 'dinner'], baseQty: 1 },
             whitefish_120: { id: 'whitefish_120', group: 'protein', label: 'Рыба белая', portion: '120 г', p: 24, c: 0, f: 3, kcal: 123, meals: ['lunch', 'dinner'], baseQty: 1 },
-            salmon_120: { id: 'salmon_120', group: 'protein', label: 'Лосось', portion: '120 г', p: 24, c: 0, f: 12, kcal: 204, meals: ['lunch', 'dinner'], baseQty: 1 },
+            salmon_120: { id: 'salmon_120', group: 'protein', label: 'Лосось', portion: '120 г', p: 24, c: 0, f: 12, kcal: 204, meals: ['breakfast', 'lunch', 'dinner'], baseQty: 1 },
             tuna_120: { id: 'tuna_120', group: 'protein', label: 'Тунец консерв.', portion: '120 г (в с/с)', p: 26, c: 0, f: 1, kcal: 113, meals: ['lunch', 'dinner'], baseQty: 1 },
             cottage_5_150: { id: 'cottage_5_150', group: 'protein', label: 'Творог 5%', portion: '150 г', p: 22, c: 6, f: 7, kcal: 175, meals: ['breakfast', 'snack', 'dinner'], baseQty: 1 },
             greek_150: { id: 'greek_150', group: 'protein', label: 'Йогурт греческий 2%', portion: '150 г', p: 17, c: 6, f: 3, kcal: 119, meals: ['breakfast', 'snack'], baseQty: 1 },
+            yogurt_150: { id: 'yogurt_150', group: 'protein', label: 'Йогурт натуральный 2%', portion: '150 г', p: 5, c: 8, f: 5, kcal: 90, meals: ['breakfast', 'snack'], baseQty: 1 },
+            cheese_30: { id: 'cheese_30', group: 'protein', label: 'Сыр', portion: '30 г', p: 7, c: 0, f: 6, kcal: 80, meals: ['breakfast', 'snack'], baseQty: 1 },
             tofu_100: { id: 'tofu_100', group: 'protein', label: 'Тофу', portion: '100 г', p: 12, c: 3, f: 7, kcal: 123, meals: ['lunch', 'dinner', 'breakfast'], baseQty: 1 },
             shake_1: { id: 'shake_1', group: 'protein', label: 'Протеиновый напиток', portion: '1 порция', p: 25, c: 2, f: 2, kcal: 120, meals: ['breakfast', 'snack', 'postworkout'], baseQty: 1 },
             
@@ -2374,8 +2408,12 @@
             potato_150: { id: 'potato_150', group: 'carb', label: 'Картофель', portion: '150 г', p: 3, c: 27, f: 0, kcal: 120, meals: ['lunch', 'dinner'], baseQty: 1, slowCarb: true },
             pasta_whole_100: { id: 'pasta_whole_100', group: 'carb', label: 'Паста цельнозерн.', portion: '100 г готовой', p: 4, c: 25, f: 1, kcal: 125, meals: ['lunch', 'dinner'], baseQty: 1, slowCarb: true },
             bread_40: { id: 'bread_40', group: 'carb', label: 'Хлеб цельнозерн.', portion: '1 ломтик (40 г)', p: 3, c: 18, f: 1.2, kcal: 95, meals: ['breakfast', 'snack'], baseQty: 1, slowCarb: true },
+            granola_40: { id: 'granola_40', group: 'carb', label: 'Гранола', portion: '40 г', p: 5, c: 25, f: 8, kcal: 200, meals: ['breakfast'], baseQty: 1 },
             oats_50dry: { id: 'oats_50dry', group: 'carb', label: 'Овсянка', portion: '50 г сухого', p: 6, c: 30, f: 4.5, kcal: 185, meals: ['breakfast'], baseQty: 1, slowCarb: true },
             banana_1: { id: 'banana_1', group: 'carb', label: 'Банан', portion: '1 шт', p: 1, c: 27, f: 0, kcal: 116, meals: ['breakfast', 'snack', 'postworkout'], baseQty: 1, fastCarb: true },
+            berries_100: { id: 'berries_100', group: 'carb', label: 'Ягоды', portion: '100 г', p: 1, c: 10, f: 0, kcal: 45, meals: ['breakfast', 'snack'], baseQty: 1, fastCarb: true },
+            honey_tsp: { id: 'honey_tsp', group: 'carb', label: 'Мёд', portion: '1 ч.л. (8 г)', p: 0, c: 8, f: 0, kcal: 30, meals: ['breakfast', 'snack'], baseQty: 1, fastCarb: true },
+            milk_200: { id: 'milk_200', group: 'carb', label: 'Молоко 2.5%', portion: '200 мл', p: 6, c: 10, f: 5, kcal: 105, meals: ['breakfast'], baseQty: 1, slowCarb: false },
             
             // ПОЛЕЗНЫЕ ЖИРЫ
             oil_tsp: { id: 'oil_tsp', group: 'fat', label: 'Оливковое масло', portion: '1 ч.л. (5 мл)', p: 0, c: 0, f: 4.5, kcal: 40, meals: ['breakfast', 'lunch', 'dinner'], baseQty: 1 },
@@ -2383,6 +2421,7 @@
             nuts_20: { id: 'nuts_20', group: 'fat', label: 'Орехи', portion: '20 г', p: 4, c: 3, f: 11, kcal: 125, meals: ['snack', 'breakfast'], baseQty: 1 },
             avocado_quarter: { id: 'avocado_quarter', group: 'fat', label: 'Авокадо', portion: '¼ шт', p: 1, c: 4, f: 8, kcal: 92, meals: ['breakfast', 'lunch', 'dinner'], baseQty: 1 },
             seeds_10: { id: 'seeds_10', group: 'fat', label: 'Лён/чия/семечки', portion: '1 ст.л. (10 г)', p: 2, c: 1, f: 3.5, kcal: 45, meals: ['breakfast', 'snack'], baseQty: 1 },
+            butter_5: { id: 'butter_5', group: 'fat', label: 'Масло сливочное', portion: '5 г (1 ч.л.)', p: 0, c: 0, f: 4, kcal: 36, meals: ['breakfast'], baseQty: 1 },
             
             // ОВОЩИ
             salad_200: { id: 'salad_200', group: 'veg', label: 'Свежий салат', portion: '200 г', p: 2, c: 6, f: 0, kcal: 32, meals: ['lunch', 'dinner'], baseQty: 1 },
@@ -2394,7 +2433,8 @@
             snack_yog_berries: { id: 'snack_yog_berries', group: 'snack', label: 'Йогурт греч. + ягоды', portion: '150 г + 100 г', p: 17, c: 13, f: 3, kcal: 150, meals: ['snack', 'breakfast'], baseQty: 1 },
             snack_cottage_berries: { id: 'snack_cottage_berries', group: 'snack', label: 'Творог + ягоды', portion: '100 г + 100 г', p: 16, c: 12, f: 5, kcal: 160, meals: ['snack', 'breakfast'], baseQty: 1 },
             snack_banana_pb: { id: 'snack_banana_pb', group: 'snack', label: 'Банан + арах. паста', portion: '1 шт + 1 ч.л.', p: 4, c: 29, f: 5, kcal: 180, meals: ['snack', 'postworkout'], baseQty: 1 },
-            snack_bar: { id: 'snack_bar', group: 'snack', label: 'Протеиновый батончик', portion: '1 шт', p: 20, c: 20, f: 7, kcal: 223, meals: ['snack', 'postworkout'], baseQty: 1 }
+            snack_bread_cottage: { id: 'snack_bread_cottage', group: 'snack', label: 'Хлеб цельнозерн. + творог', portion: '1 ломтик + 50 г', p: 10, c: 20, f: 3, kcal: 150, meals: ['snack'], baseQty: 1 },
+            snack_bar: { id: 'snack_bar', group: 'snack', label: 'Протеиновый батончик', portion: '1 шт', p: 20, c: 20, f: 7, kcal: 223, meals: ['snack', 'postworkout', 'breakfast'], baseQty: 1 }
         };
         
         // Функция для получения продуктов по группе и приёму пищи
@@ -3301,7 +3341,13 @@
                         <div class="meal-calories">${Math.round(meal.calories)} ккал</div>
                     </div>
                     <div class="meal-items">${items.join(', ')}</div>
+                    <button class="btn btn-secondary meal-delete-btn" type="button" style="margin-top: 8px; font-size: 12px; padding: 6px 12px;">Удалить</button>
                 `;
+                const deleteBtn = mealDiv.querySelector('.meal-delete-btn');
+                deleteBtn.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    deleteMeal(meal.id);
+                });
                 container.appendChild(mealDiv);
             });
 
@@ -3310,6 +3356,41 @@
             document.getElementById('summary-total-carbs').textContent = Math.round(dailyUsed.carbs);
             document.getElementById('summary-total-fats').textContent = Math.round(dailyUsed.fats);
             document.getElementById('summary-totals').style.display = 'block';
+        }
+
+        function deleteMeal(mealId) {
+            if (!mealId || !kairosState.today) return;
+            
+            showTelegramConfirm('Удалить этот приём пищи?', (confirmed) => {
+                if (!confirmed) return;
+                
+                const index = kairosState.today.meals.findIndex(meal => meal.id === mealId);
+                if (index === -1) return;
+                
+                const meal = kairosState.today.meals[index];
+                kairosState.today.meals.splice(index, 1);
+                
+                const calories = meal.calories || 0;
+                const protein = meal.protein_g || 0;
+                const carbs = meal.carbs_g || 0;
+                const fats = meal.fats_g || 0;
+                const fiber = meal.fiber_g || 0;
+                
+                kairosState.today.kcalUsed = Math.max(0, kairosState.today.kcalUsed - calories);
+                kairosState.today.pUsed = Math.max(0, kairosState.today.pUsed - protein);
+                kairosState.today.cUsed = Math.max(0, kairosState.today.cUsed - carbs);
+                kairosState.today.fUsed = Math.max(0, kairosState.today.fUsed - fats);
+                kairosState.today.fiber = Math.max(0, kairosState.today.fiber - fiber);
+                
+                saveState();
+                dailyUsed = getDailyUsed();
+                allMeals = getAllMeals();
+                
+                updateDailyTotals();
+                updateDailySummary();
+                
+                showToast('Приём пищи удалён');
+            });
         }
 
         // ========== КАЛЕНДАРЬ ==========
