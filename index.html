@@ -1267,6 +1267,39 @@
                     </p>
                 </div>
                 <div class="info-section">
+                    <h3 style="color: #1B2B4A; margin-top: 0;">📅 Ежедневные ориентиры по БЖУ</h3>
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0 0 12px 0;">
+                        Приложение уже перевело твою норму в порции «на глаз» — не нужно взвешивать еду, достаточно ориентироваться на ладони и кулаки:
+                    </p>
+                    <ul style="color: #2A2A2A; line-height: 1.8; margin: 0 0 12px 20px; padding: 0;">
+                        <li><strong>Белки (~4 ладони ≈ 80–120 г):</strong> мясо, птица, рыба, яйца, творог, бобовые.</li>
+                        <li><strong>Углеводы (~3 кулака ≈ 150–200 г):</strong> цельнозерновые крупы, картофель в мундире, бобовые, фрукты.</li>
+                        <li><strong>Овощи (5–6 горстей ≈ 400 г):</strong> полтарелки некрахмалистых овощей на каждый приём + фрукты в течение дня.</li>
+                        <li><strong>Жиры (3–4 небольшие порции ≈ 50–70 г):</strong> 1 ст.л. масла, 20 г орехов, ¼ авокадо, жирная рыба.</li>
+                    </ul>
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                        💡 Метод ладоней и кулаков даёт до 95% точности по сравнению с взвешиванием, а Гарвардская «тарелка здорового питания» советует: ½ тарелки овощей, ¼ белка, ¼ цельных углеводов + немного полезных масел.
+                    </p>
+                </div>
+                <div class="info-section">
+                    <h3 style="color: #1B2B4A; margin-top: 0;">🍽️ Как распределять приёмы пищи</h3>
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0 0 12px 0;">
+                        🍳 <strong>Завтрак:</strong> 1 белок + 1 сложный углевод + 2 порции овощей + 1 порция полезного жира. Пример: омлет, овсянка/хлеб, овощи и немного орехов или авокадо.
+                    </p>
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0 0 12px 0;">
+                        🥗 <strong>Обед:</strong> белок + гарнир из крупы/картофеля + много овощей + масло или семечки. Например, курица с гречкой и салатом с ложкой оливкового масла.
+                    </p>
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0 0 12px 0;">
+                        🌙 <strong>Ужин:</strong> белок + 2 порции овощей, углевод по желанию (до половины стандартной порции) + немного жира. Хороший вариант — рыба с овощами гриль и чайная ложка масла.
+                    </p>
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0 0 12px 0;">
+                        🍏 <strong>Перекусы:</strong> сочетай фрукт/ягоды с белком или полезным жиром: яблоко + горсть орехов, йогурт без сахара + ягоды, творог + фрукты.
+                    </p>
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                        🥑 Полезные жиры — всего 3–4 небольших источника в день. Добавляй их в разные приёмы пищи, не обязательно съедать всё сразу.
+                    </p>
+                </div>
+                <div class="info-section">
                     <h3 style="color: #1B2B4A; margin-top: 0;">Как готовить полезнее?</h3>
                     <p style="color: #2A2A2A; line-height: 1.8; margin: 0 0 12px 0;">
                         <strong>Готовка на пару.</strong> Самый диетический метод: сохраняет максимум витаминов и не требует масла.
@@ -1640,6 +1673,7 @@
                     <div class="step-title" id="constructor-title">Завтрак</div>
                     <div class="step-subtitle" id="constructor-subtitle">Выбери источник белка</div>
                 </div>
+                <p id="constructor-hint" style="font-size: 13px; color: #6B7280; margin-bottom: 16px;"></p>
                 <div id="options-container" class="options-grid"></div>
                 <button class="btn btn-primary" id="next-step-btn" onclick="nextStep()" disabled>Далее</button>
                 <button class="btn btn-primary" id="save-meal-btn" onclick="saveMeal()" style="display: none; margin-top: 12px;">Сохранить приём пищи</button>
@@ -2522,13 +2556,13 @@
         // Функция для получения текста тоста
         function getToastText(trackXP) {
             const parts = [];
-            if (trackXP.muscles > 0) parts.push(`+${trackXP.muscles} ${getPointsWord(trackXP.muscles)} к мышцам`);
-            if (trackXP.energy > 0) parts.push(`+${trackXP.energy} ${getPointsWord(trackXP.energy)} к энергии`);
-            if (trackXP.immunity > 0) parts.push(`+${trackXP.immunity} ${getPointsWord(trackXP.immunity)} к иммунитету`);
-            if (trackXP.hormones > 0) parts.push(`+${trackXP.hormones} ${getPointsWord(trackXP.hormones)} к гормонам`);
-            if (trackXP.gut > 0) parts.push(`+${trackXP.gut} ${getPointsWord(trackXP.gut)} для ЖКТ`);
-            if (trackXP.skin > 0) parts.push(`+${trackXP.skin} ${getPointsWord(trackXP.skin)} к коже/волосам`);
-            if (trackXP.brain > 0) parts.push(`+${trackXP.brain} ${getPointsWord(trackXP.brain)} к мозгу`);
+            if (trackXP.muscles > 0) parts.push(`+${formatPoints(trackXP.muscles)} к мышцам`);
+            if (trackXP.energy > 0) parts.push(`+${formatPoints(trackXP.energy)} к энергии`);
+            if (trackXP.immunity > 0) parts.push(`+${formatPoints(trackXP.immunity)} к иммунитету`);
+            if (trackXP.hormones > 0) parts.push(`+${formatPoints(trackXP.hormones)} к гормонам`);
+            if (trackXP.gut > 0) parts.push(`+${formatPoints(trackXP.gut)} для ЖКТ`);
+            if (trackXP.skin > 0) parts.push(`+${formatPoints(trackXP.skin)} к коже/волосам`);
+            if (trackXP.brain > 0) parts.push(`+${formatPoints(trackXP.brain)} к мозгу`);
             return parts.join(' • ') || '+очки';
         }
         
@@ -2787,6 +2821,10 @@
             if (num1 > 1 && num1 < 5) return 'очка';
             if (num1 === 1) return 'очко';
             return 'очков';
+        }
+        
+        function formatPoints(count) {
+            return `${count} ${getPointsWord(count)}`;
         }
 
         // Функция для получения текста порции белка
@@ -3143,12 +3181,13 @@
             
             tracksList.innerHTML = tracks.map(track => {
                 const xp = todayTracks[track.trackKey] || 0;
+                const xpLabel = formatPoints(xp);
                 const percent = totalTracksXP > 0 ? (xp / totalTracksXP) * 100 : 0;
                 return `
                     <div style="margin-bottom: 10px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
                             <span style="color: ${track.color}; font-size: 14px; font-weight: 500;">${track.icon} ${track.name}</span>
-                            <span style="color: #1B2B4A; font-weight: 600; font-size: 13px;">${xp} XP</span>
+                            <span style="color: #1B2B4A; font-weight: 600; font-size: 13px;">${xpLabel}</span>
                         </div>
                         <div style="background: rgba(0, 0, 0, 0.06); border-radius: 999px; height: 6px; overflow: hidden;">
                             <div style="background: linear-gradient(90deg, ${track.color}, ${track.color}dd); height: 100%; width: ${percent}%; transition: width 0.3s; border-radius: 999px;"></div>
@@ -3528,6 +3567,8 @@
             const targetCarbs = Math.round(targetCalories * 0.45 / 4);
             const targetFats = Math.round(targetCalories * 0.30 / 9);
             
+            const dayPointsLabel = formatPoints(dayData.xp || 0);
+            
             // Формируем контент
             let content = `
                 <div style="margin-bottom: 16px;">
@@ -3550,8 +3591,8 @@
                 </div>
                 
                 <div style="margin-bottom: 16px;">
-                    <div style="font-weight: 600; color: #1B2B4A; margin-bottom: 8px;">XP и уровень:</div>
-                    <div style="color: #2A2A2A;">${dayData.xp} XP / Уровень ${dayData.level}</div>
+                    <div style="font-weight: 600; color: #1B2B4A; margin-bottom: 8px;">Очки и уровень:</div>
+                    <div style="color: #2A2A2A;">Очки: ${dayPointsLabel} • Уровень ${dayData.level}</div>
                 </div>
                 
                 <div style="margin-bottom: 16px;">
@@ -3575,7 +3616,7 @@
                     content += `
                         <div style="display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 14px;">
                             <span style="color: ${track.color};">${track.icon} ${track.name}</span>
-                            <span style="color: #1B2B4A;">${xp} XP</span>
+                            <span style="color: #1B2B4A;">${formatPoints(xp)}</span>
                         </div>
                     `;
                 }
@@ -4153,7 +4194,7 @@
                 updateLevel();
                 updateSelfRegulationProgress();
             }
-            showToast('✨ +10 XP за осознанный выбор');
+                showToast(`✨ +${formatPoints(10)} за осознанный выбор`);
             showMainMenu();
         }
 
@@ -4386,8 +4427,18 @@
                 dinner: 'Ужин',
                 snack: 'Перекус'
             };
+            const mealHints = {
+                breakfast: '🍳 Завтрак: белок + сложные углеводы + 2 порции овощей + полезный жир.',
+                lunch: '🥗 Обед: белок + гарнир из сложных углеводов + овощи + ложка полезных жиров.',
+                dinner: '🌙 Ужин: белок + много овощей, углеводы по желанию (до ½ порции) + немного жиров.',
+                snack: '🍏 Перекус: фрукт или ягоды + белок или горсть орехов для сытости.'
+            };
 
             document.getElementById('constructor-title').textContent = mealNames[mealType];
+            const hintEl = document.getElementById('constructor-hint');
+            if (hintEl) {
+                hintEl.textContent = mealHints[mealType] || '';
+            }
             showConstructorStep();
             showSection('constructor');
             
@@ -4719,7 +4770,7 @@
             if (hasProtein && hasCarbs && hasFats && hasVeg) {
                 synergyXP = 15;
                 kairosState.today.xp += synergyXP;
-                showToast(`🎯 Сбалансированная тарелка! +${synergyXP} XP`);
+                showToast(`🎯 Сбалансированная тарелка! +${formatPoints(synergyXP)}`);
             }
 
             const mealData = {
@@ -5473,7 +5524,7 @@
                 updateStreak();
                 updateHeroDisplay();
                 
-                showToast('✅ Сон зафиксирован • +10 XP к гормонам • +5 к иммунитету');
+                showToast(`✅ Сон зафиксирован • +${formatPoints(10)} к гормонам • +${formatPoints(5)} к иммунитету`);
             } else {
                 showToast('✅ Сон зафиксирован');
             }
@@ -5501,13 +5552,14 @@
             updateStreak();
             updateHeroDisplay();
             
-            showToast('💧 +3 XP к энергии • +1 к мозгу');
+            showToast(`💧 +${formatPoints(3)} к энергии • +${formatPoints(1)} к мозгу`);
         }
 
         initApp();
     </script>
 </body>
 </html>
+
 
 
 
