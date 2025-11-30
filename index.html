@@ -4559,7 +4559,10 @@
                     document.getElementById('app-main').classList.add('hidden');
                     document.getElementById('onboarding-step2').classList.add('hidden');
                     document.getElementById('mode-selection').classList.add('hidden');
-                    document.getElementById('hero-selection').classList.add('hidden');
+                    const heroSelectionSection = document.getElementById('hero-selection');
+                    if (heroSelectionSection) {
+                        heroSelectionSection.classList.add('hidden');
+                    }
                     document.getElementById('main-menu').classList.add('hidden');
                     ['plate-guide', 'constructor', 'activity', 'problems', 'sleep', 'calendar'].forEach(id => {
                         const el = document.getElementById(id);
@@ -5807,6 +5810,49 @@
             
             showToast('Молодец! Вода — это основа энергии и ясности ума! Продолжай пить! 💧✨');
         }
+
+        // Делаем ключевые функции доступными для inline-обработчиков
+        Object.assign(window, {
+            showMainMenu,
+            showSection,
+            startConstructor,
+            openSnackHelper,
+            openActivityModule,
+            showSnackIntro,
+            showSnackQuestion,
+            selectSnackTrigger,
+            selectSnackAction,
+            showSnackPractice,
+            goBackFromPractice,
+            selectSwitchOption,
+            snackSwitchResult,
+            selectEmotion,
+            snackEmotionResult,
+            selectBodyMovement,
+            snackBodyResult,
+            showSnackConsciousSnack,
+            selectSnackType,
+            snackConsciousDone,
+            nextStep,
+            saveMeal,
+            cancelConstructor,
+            showActivityIntro,
+            selectActivityLevel,
+            toggleActivityPreference,
+            toggleActivityGoal,
+            selectHealthLimitations,
+            completeActivityIntro,
+            showActivityMain,
+            showActivityToday,
+            showActivityInstruction,
+            completeActivity,
+            showActivityEducation,
+            selectSleepHours,
+            addWater,
+            resetDailyProgress,
+            resetAllData,
+            showDayDetails
+        });
 
         initApp();
     </script>
