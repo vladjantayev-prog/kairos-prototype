@@ -310,6 +310,7 @@
 
         .hero-text {
             max-width: 70%;
+            text-align: right;
         }
 
         .hero-title {
@@ -521,13 +522,15 @@
 
         .progress-grid {
             display: grid;
-            grid-template-columns: 1.1fr 1fr;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 12px;
             margin-bottom: 12px;
         }
 
         .progress-grid.secondary {
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 0;
         }
 
         .health-score-card {
@@ -571,35 +574,38 @@
         }
 
         .progress-small-card {
-            border-radius: 18px;
-            border: 1px solid rgba(0, 0, 0, 0.04);
+            border-radius: 20px;
+            border: 1px solid rgba(15, 23, 42, 0.06);
             background: #FFFFFF;
-            padding: 12px 12px 10px;
+            padding: 14px;
             text-align: left;
             cursor: pointer;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 6px;
+            min-height: 110px;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
         }
 
         .progress-small-title {
             font-size: 13px;
             font-weight: 600;
             color: #1B2B4A;
+            line-height: 1.3;
         }
 
         .progress-small-subtitle {
             font-size: 12px;
             color: #6B7280;
+            line-height: 1.4;
         }
 
         .progress-small-bar {
             width: 100%;
-            height: 6px;
+            height: 5px;
             border-radius: 999px;
             background: #E5E7EB;
             overflow: hidden;
-            margin-top: 4px;
         }
 
         .progress-small-bar #self-regulation-progress {
@@ -613,7 +619,34 @@
         .progress-small-caption {
             font-size: 11px;
             color: #6B7280;
-            margin-top: 2px;
+        }
+
+        .progress-mini-card {
+            border-radius: 22px;
+            border: 1px solid rgba(15, 23, 42, 0.05);
+            background: #FFFFFF;
+            box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-height: 120px;
+        }
+
+        .progress-mini-icon {
+            font-size: 18px;
+        }
+
+        .progress-mini-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1B2B4A;
+        }
+
+        .progress-mini-subtitle {
+            font-size: 12px;
+            color: #6B7280;
+            line-height: 1.4;
         }
 
         .tracks-wrapper {
@@ -786,149 +819,58 @@
             z-index: 1;
         }
 
-        /* Минималистичные глаза */
+        /* Лицо орба – как на референсе: улыбка и закрытые глаза */
         .orb-eye {
             position: absolute;
-            width: 10px;
-            height: 10px;
-            background: rgba(27, 43, 74, 0.7);
-            border-radius: 50%;
-            z-index: 3;
-            top: 40%;
-        }
-
-        .orb-eye.left {
-            left: 38%;
-        }
-
-        .orb-eye.right {
-            right: 38%;
-        }
-
-        /* Calm - закрытые глаза (полумесяцы вверх) */
-        #health-orb.emotion-calm .orb-eye {
             width: 18px;
             height: 9px;
             background: transparent;
             border: 2.5px solid rgba(27, 43, 74, 0.65);
             border-bottom: none;
             border-radius: 18px 18px 0 0;
-            top: 38%;
+            z-index: 3;
+            top: 40%;
         }
 
-        /* Satisfied - слегка округленные */
-        #health-orb.emotion-satisfied .orb-eye {
-            width: 11px;
-            height: 11px;
-            background: rgba(27, 43, 74, 0.65);
+        .orb-eye.left {
+            left: 32%;
         }
 
-        /* Focus - точки */
-        #health-orb.emotion-focus .orb-eye {
-            width: 8px;
-            height: 8px;
-            background: rgba(27, 43, 74, 0.7);
+        .orb-eye.right {
+            right: 32%;
         }
 
-        /* Sleepy - горизонтальные линии */
-        #health-orb.emotion-sleepy .orb-eye {
-            width: 12px;
-            height: 2px;
-            background: rgba(27, 43, 74, 0.5);
-            border-radius: 2px;
-        }
-
-        /* Overloaded - ближе друг к другу */
-        #health-orb.emotion-overloaded .orb-eye.left {
-            left: 40%;
-        }
-        #health-orb.emotion-overloaded .orb-eye.right {
-            right: 40%;
-        }
-
-        /* Рот орба - минималистичный */
         .orb-mouth {
             position: absolute;
-            width: 24px;
-            height: 2px;
-            border: none;
-            border-top: 2px solid rgba(27, 43, 74, 0.6);
-            bottom: 35%;
+            width: 30px;
+            height: 12px;
+            border: 2.5px solid rgba(27, 43, 74, 0.6);
+            border-top: none;
+            border-radius: 0 0 30px 30px;
+            bottom: 32%;
             left: 50%;
             transform: translateX(-50%);
             z-index: 3;
-            transition: all 0.4s ease;
-            border-radius: 0;
         }
 
-        /* Calm - легкая улыбка (изогнутая вверх) */
-        #health-orb.emotion-calm .orb-mouth {
-            width: 28px;
-            height: 10px;
-            border: 2.5px solid rgba(27, 43, 74, 0.6);
-            border-top: none;
-            border-radius: 0 0 28px 28px;
-            transform: translateX(-50%) translateY(-0.5px);
-        }
-
-        /* Румянец на щеках для Calm */
         .orb-blush {
             position: absolute;
-            width: 24px;
-            height: 16px;
+            width: 26px;
+            height: 18px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(255, 200, 220, 0.5), transparent 75%);
+            background: radial-gradient(circle, rgba(255, 192, 203, 0.55), transparent 75%);
             filter: blur(5px);
             z-index: 2;
-            top: 48%;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            top: 50%;
+            opacity: 0.9;
         }
 
         .orb-blush.left {
-            left: 28%;
+            left: 24%;
         }
 
         .orb-blush.right {
-            right: 28%;
-        }
-
-        #health-orb.emotion-calm .orb-blush {
-            opacity: 1;
-        }
-
-        /* Satisfied - легкая улыбка */
-        #health-orb.emotion-satisfied .orb-mouth {
-            width: 28px;
-            height: 8px;
-            border: 2px solid rgba(27, 43, 74, 0.6);
-            border-top: none;
-            border-radius: 0 0 28px 28px;
-            transform: translateX(-50%) translateY(-1px);
-        }
-
-        /* Focus - прямая уверенная линия */
-        #health-orb.emotion-focus .orb-mouth {
-            width: 24px;
-            height: 2px;
-            border-top: 2px solid rgba(27, 43, 74, 0.7);
-        }
-
-        /* Sleepy - тонкая нейтральная линия */
-        #health-orb.emotion-sleepy .orb-mouth {
-            width: 20px;
-            height: 1px;
-            border-top: 1px solid rgba(27, 43, 74, 0.4);
-        }
-
-        /* Overloaded - слегка опущенная линия */
-        #health-orb.emotion-overloaded .orb-mouth {
-            width: 24px;
-            height: 6px;
-            border: 2px solid rgba(27, 43, 74, 0.5);
-            border-bottom: none;
-            border-radius: 24px 24px 0 0;
-            transform: translateX(-50%) translateY(1px);
+            right: 24%;
         }
 
 
@@ -1280,7 +1222,7 @@
                     <div class="hero-row">
                         <div class="hero-text">
                             <h1 class="hero-title">Твой ассистент<br>по здоровью<br>рядом</h1>
-                        </div>
+                </div>
                         <div class="hero-orb-wrapper">
                             <div id="health-orb" class="state-calm emotion-calm">
                                 <div class="orb-eye left"></div>
@@ -1288,8 +1230,8 @@
                                 <div class="orb-mouth"></div>
                                 <div class="orb-blush left"></div>
                                 <div class="orb-blush right"></div>
-                            </div>
-                        </div>
+                    </div>
+                    </div>
                     </div>
 
                     <!-- Карточка дневного бюджета -->
@@ -1300,38 +1242,38 @@
                             <div class="budget-amount-line">
                                 <span id="remaining-calories">1800</span>
                                 <span class="budget-amount-unit">калорий</span>
-                            </div>
-                        </div>
+                    </div>
+                    </div>
                         <div class="budget-body">
                             <div class="budget-plate">
                                 <img src="Plate.png" alt="Тарелка" class="budget-plate-img">
-                            </div>
+                    </div>
                             <div class="budget-macros">
                                 <div class="macro-row">
                                     <span class="macro-row-label">Белки</span>
                                     <span class="macro-row-value"><span id="used-protein">0</span> г</span>
-                                </div>
+                </div>
                                 <div class="macro-progress macro-progress--protein">
                                     <div class="macro-progress-fill macro-progress-fill--protein"></div>
-                                </div>
+            </div>
 
                                 <div class="macro-row">
                                     <span class="macro-row-label">Углеводы</span>
                                     <span class="macro-row-value"><span id="used-carbs">0</span> г</span>
-                                </div>
+                    </div>
                                 <div class="macro-progress macro-progress--carbs">
                                     <div class="macro-progress-fill macro-progress-fill--carbs"></div>
-                                </div>
+                </div>
 
                                 <div class="macro-row">
                                     <span class="macro-row-label">Жиры</span>
                                     <span class="macro-row-value"><span id="used-fats">0</span> г</span>
-                                </div>
+                    </div>
                                 <div class="macro-progress macro-progress--fats">
                                     <div class="macro-progress-fill macro-progress-fill--fats"></div>
-                                </div>
-                            </div>
-                        </div>
+                    </div>
+                    </div>
+                </div>
                         <div class="budget-footer">
                             <div class="budget-ai-text">ИИ-анализ: калории, белки, жиры и углеводы по фото</div>
                             <button id="scan-plate-button" class="btn btn-primary budget-scan-button" type="button" onclick="scanPlate()">
@@ -1339,7 +1281,7 @@
                             </button>
                         </div>
                     </section>
-                </header>
+            </header>
 
                 <!-- Основной контент главного экрана -->
                 <main id="main-menu">
@@ -1351,28 +1293,28 @@
                         <div class="scroll-card" onclick="showSection('getting-started')">
                             <div class="scroll-card-icon blue">📝</div>
                             <div class="scroll-card-title">С чего<br>начать</div>
-                        </div>
+                </div>
                         <div class="scroll-card" onclick="showSection('plate-guide')">
                             <div class="scroll-card-icon green">🍽️</div>
                             <div class="scroll-card-title">Как собирать<br>тарелку</div>
-                        </div>
+                </div>
                         <div class="scroll-card" onclick="startConstructor('breakfast')">
                             <div class="scroll-card-icon green">🥣</div>
                             <div class="scroll-card-title">Завтрак</div>
-                        </div>
+                </div>
                         <div class="scroll-card" onclick="startConstructor('lunch')">
                             <div class="scroll-card-icon yellow">🍲</div>
                             <div class="scroll-card-title">Обед</div>
-                        </div>
+                </div>
                         <div class="scroll-card" onclick="startConstructor('dinner')">
                             <div class="scroll-card-icon purple">🍽️</div>
                             <div class="scroll-card-title">Ужин</div>
-                        </div>
+                </div>
                         <div class="scroll-card" onclick="startConstructor('snack')">
                             <div class="scroll-card-icon red">🍎</div>
                             <div class="scroll-card-title">Перекусы</div>
-                        </div>
-                    </div>
+                </div>
+                </div>
                 </section>
 
                 <!-- Блок «Прогресс здоровья» -->
@@ -1384,11 +1326,11 @@
                         <div class="health-score-card">
                             <div class="health-score-circle">
                                 <span id="health-score-value">88</span>
-                            </div>
+                </div>
                             <div class="health-score-text">
                                 <div id="health-score-label">Отлично</div>
                                 <div id="health-score-description">Классный день по основным привычкам. Сохраняй этот курс.</div>
-                            </div>
+                </div>
                         </div>
 
                         <button class="progress-small-card" type="button" onclick="openSnackHelper()">
@@ -1396,32 +1338,35 @@
                             <div class="progress-small-subtitle">Осознанный выбор</div>
                             <div class="progress-small-bar">
                                 <div id="self-regulation-progress"></div>
-                            </div>
+                </div>
                             <div class="progress-small-caption" id="self-regulation-text">0 из 10 использований</div>
                         </button>
-                    </div>
+                </div>
 
                     <div class="progress-grid secondary">
-                        <button class="progress-small-card" type="button" onclick="addWater()">
-                            <div class="progress-small-title">💧 Вода</div>
-                            <div class="progress-small-subtitle"><span id="water-display">0</span> л / 2.5 л</div>
+                        <button class="progress-mini-card" type="button" onclick="addWater()">
+                            <div class="progress-mini-icon">💧</div>
+                            <div class="progress-mini-title">Вода</div>
+                            <div class="progress-mini-subtitle"><span id="water-display">0</span> л / 2.5 л</div>
                         </button>
-                        <button class="progress-small-card" type="button" onclick="showSection('sleep')">
-                            <div class="progress-small-title">😴 Сон</div>
-                            <div class="progress-small-subtitle">Отметить продолжительность сна</div>
+                        <button class="progress-mini-card" type="button" onclick="showSection('sleep')">
+                            <div class="progress-mini-icon">😴</div>
+                            <div class="progress-mini-title">Сон</div>
+                            <div class="progress-mini-subtitle" id="sleep-card-value">Отметить продолжительность сна</div>
                         </button>
-                        <button class="progress-small-card" type="button" onclick="openActivityModule()">
-                            <div class="progress-small-title">🏃 Активность</div>
-                            <div class="progress-small-subtitle" id="activity-menu-subtitle">Движение: 0 из 4 дней</div>
+                        <button class="progress-mini-card" type="button" onclick="openActivityModule()">
+                            <div class="progress-mini-icon">🏃</div>
+                            <div class="progress-mini-title">Активность</div>
+                            <div class="progress-mini-subtitle" id="activity-card-value">Движение: 0 из 4 дней</div>
                         </button>
                     </div>
 
                     <div class="tracks-wrapper">
                         <div class="tracks-title">Направления развития</div>
-                        <div id="tracks-list">
+                    <div id="tracks-list">
                             <div style="color: #6B7280; font-style: italic; font-size: 13px;">Добавляй продукты для прокачки</div>
-                        </div>
                     </div>
+                </div>
                 </section>
 
                 <!-- Действия дня -->
@@ -1439,22 +1384,22 @@
                             <div class="progress-small-title">📊 Итог дня</div>
                             <div class="progress-small-subtitle">Посмотреть, как прошёл день</div>
                         </button>
-                    </div>
+            </div>
                 </section>
 
                 <!-- Итог дня -->
-                <div class="daily-summary">
-                    <div class="summary-title">📊 Итог дня</div>
-                    <div id="daily-meals">
-                        <div class="empty-cart">Пока нет приёмов пищи</div>
-                    </div>
-                    <div class="summary-totals" id="summary-totals" style="display: none;">
-                        <div class="total-row"><span>Калории:</span> <strong><span id="summary-total-calories">0</span> ккал</strong></div>
-                        <div class="total-row"><span>Белки:</span> <strong><span id="summary-total-protein">0</span> г</strong></div>
-                        <div class="total-row"><span>Углеводы:</span> <strong><span id="summary-total-carbs">0</span> г</strong></div>
-                        <div class="total-row"><span>Жиры:</span> <strong><span id="summary-total-fats">0</span> г</strong></div>
-                    </div>
+            <div class="daily-summary">
+                <div class="summary-title">📊 Итог дня</div>
+                <div id="daily-meals">
+                    <div class="empty-cart">Пока нет приёмов пищи</div>
                 </div>
+                <div class="summary-totals" id="summary-totals" style="display: none;">
+                    <div class="total-row"><span>Калории:</span> <strong><span id="summary-total-calories">0</span> ккал</strong></div>
+                    <div class="total-row"><span>Белки:</span> <strong><span id="summary-total-protein">0</span> г</strong></div>
+                    <div class="total-row"><span>Углеводы:</span> <strong><span id="summary-total-carbs">0</span> г</strong></div>
+                    <div class="total-row"><span>Жиры:</span> <strong><span id="summary-total-fats">0</span> г</strong></div>
+                </div>
+            </div>
 
                 </main>
 
@@ -3392,27 +3337,27 @@
         // Обновить подзаголовок активности в меню
         function updateActivityMenuSubtitle() {
             const subtitleEl = document.getElementById('activity-menu-subtitle');
-            if (!subtitleEl) return;
+            const utilityEl = document.getElementById('activity-card-value');
+            let text = 'Движение: 0 из 4 дней';
             
-            if (!kairosState.today || !kairosState.today.activityProgress) {
-                subtitleEl.textContent = 'Движение: 0 из 4 дней';
-                return;
+            if (kairosState.today && kairosState.today.activityProgress) {
+                const progress = kairosState.today.activityProgress;
+                const level = kairosState.profile?.activity_level || 'beginner';
+                const targets = ACTIVITY_TARGETS[level] || ACTIVITY_TARGETS.beginner;
+                const hasActivityToday = progress.baseMovementMinutesTodayDone >= 10;
+                
+                if (progress.cardioMinutesWeekDone > 0) {
+                    text = `Кардио: ${progress.cardioMinutesWeekDone} / ${targets.cardioMinutesPerWeek} мин·нед`;
+                } else if (hasActivityToday) {
+                    text = 'Движение: 1 из 4 дней';
+                }
             }
             
-            const progress = kairosState.today.activityProgress;
-            const level = kairosState.profile?.activity_level || 'beginner';
-            const targets = ACTIVITY_TARGETS[level] || ACTIVITY_TARGETS.beginner;
-            
-            // Считаем дни с активностью (если есть хотя бы 10 минут базового движения)
-            const hasActivityToday = progress.baseMovementMinutesTodayDone >= 10;
-            
-            // Показываем прогресс кардио или дней
-            if (progress.cardioMinutesWeekDone > 0) {
-                subtitleEl.textContent = `Кардио: ${progress.cardioMinutesWeekDone} / ${targets.cardioMinutesPerWeek} мин·нед`;
-            } else if (hasActivityToday) {
-                subtitleEl.textContent = 'Движение: 1 из 4 дней';
-            } else {
-                subtitleEl.textContent = 'Движение: 0 из 4 дней';
+            if (subtitleEl) {
+                subtitleEl.textContent = text;
+            }
+            if (utilityEl) {
+                utilityEl.textContent = text;
             }
         }
         
@@ -3542,6 +3487,13 @@
                 waterDisplay.textContent = waterLiters;
             }
 
+            // Обновляем карточку сна
+            const sleepValueEl = document.getElementById('sleep-card-value');
+            if (sleepValueEl) {
+                const sleepHours = kairosState.today?.sleepHours;
+                sleepValueEl.textContent = sleepHours ? `${sleepHours} ч` : 'Ещё не отмечено';
+            }
+            
             // Обновляем индекс здоровья
             updateHealthScore();
 
@@ -5892,6 +5844,7 @@
             } else {
                 showToast('✅ Сон зафиксирован');
             }
+            updateDailyTotals();
             updateHealthOrbState();
         }
         
