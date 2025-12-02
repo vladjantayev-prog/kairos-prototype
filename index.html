@@ -540,6 +540,7 @@
             display: flex;
             gap: 12px;
             align-items: center;
+            min-height: 110px;
         }
 
         .health-score-circle {
@@ -622,15 +623,17 @@
         }
 
         .progress-mini-card {
-            border-radius: 22px;
-            border: 1px solid rgba(15, 23, 42, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(15, 23, 42, 0.06);
             background: #FFFFFF;
-            box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
             padding: 14px;
             display: flex;
             flex-direction: column;
             gap: 6px;
-            min-height: 120px;
+            min-height: 110px;
+            cursor: pointer;
+            text-align: left;
         }
 
         .progress-mini-icon {
@@ -770,19 +773,18 @@
 
         #health-orb {
             width: 80px;
-            max-width: 80px;
-            aspect-ratio: 1 / 1;
+            height: 80px;
             margin: 0;
             border-radius: 50%;
             position: relative;
-            /* Calm baseline - терапевтический градиент */
+            /* Светлый голубой с розовым оттенком, как на референсе */
             background:
-                radial-gradient(circle at 50% 50%, #FFFFFF 0%, rgba(235, 220, 251, 0.4) 40%, rgba(220, 235, 255, 0.6) 70%, rgba(246, 232, 239, 0.5) 100%);
+                radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.95) 0%, rgba(200, 230, 255, 0.6) 40%, rgba(220, 200, 255, 0.5) 70%, rgba(240, 220, 250, 0.4) 100%);
             box-shadow:
-                0 0 40px rgba(235, 220, 251, 0.3),
-                0 0 80px rgba(220, 235, 255, 0.2),
-                inset 0 0 35px rgba(255, 255, 255, 0.6),
-                inset 0 -25px 50px rgba(235, 220, 251, 0.25);
+                0 0 30px rgba(200, 230, 255, 0.4),
+                0 0 60px rgba(220, 200, 255, 0.3),
+                inset 0 0 30px rgba(255, 255, 255, 0.7),
+                inset 0 -20px 40px rgba(240, 220, 250, 0.3);
             animation: orbBreathe 4s ease-in-out infinite, orbFloat 3s ease-in-out infinite;
             display: flex;
             align-items: center;
@@ -819,35 +821,33 @@
             z-index: 1;
         }
 
-        /* Лицо орба – как на референсе: улыбка и закрытые глаза */
+        /* Лицо орба – как на референсе: улыбка и глаза-точки */
         .orb-eye {
             position: absolute;
-            width: 18px;
-            height: 9px;
-            background: transparent;
-            border: 2.5px solid rgba(27, 43, 74, 0.65);
-            border-bottom: none;
-            border-radius: 18px 18px 0 0;
+            width: 8px;
+            height: 8px;
+            background: rgba(27, 43, 74, 0.7);
+            border-radius: 50%;
             z-index: 3;
-            top: 40%;
+            top: 38%;
         }
 
         .orb-eye.left {
-            left: 32%;
+            left: 35%;
         }
 
         .orb-eye.right {
-            right: 32%;
+            right: 35%;
         }
 
         .orb-mouth {
             position: absolute;
-            width: 30px;
+            width: 24px;
             height: 12px;
-            border: 2.5px solid rgba(27, 43, 74, 0.6);
+            border: 2px solid rgba(27, 43, 74, 0.6);
             border-top: none;
-            border-radius: 0 0 30px 30px;
-            bottom: 32%;
+            border-radius: 0 0 24px 24px;
+            bottom: 30%;
             left: 50%;
             transform: translateX(-50%);
             z-index: 3;
@@ -855,22 +855,22 @@
 
         .orb-blush {
             position: absolute;
-            width: 26px;
-            height: 18px;
+            width: 28px;
+            height: 20px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(255, 192, 203, 0.55), transparent 75%);
-            filter: blur(5px);
+            background: radial-gradient(circle, rgba(255, 182, 193, 0.6), transparent 80%);
+            filter: blur(6px);
             z-index: 2;
-            top: 50%;
-            opacity: 0.9;
+            top: 52%;
+            opacity: 1;
         }
 
         .orb-blush.left {
-            left: 24%;
+            left: 22%;
         }
 
         .orb-blush.right {
-            right: 24%;
+            right: 22%;
         }
 
 
