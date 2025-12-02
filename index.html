@@ -14,7 +14,7 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(180deg, #E8F4FD 0%, #F8E8F8 30%, #FDF8E8 60%, #E8F4FD 100%);
+            background: #F5F7FA;
             min-height: 100vh;
             color: #1B2B4A;
             position: relative;
@@ -29,93 +29,10 @@
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(circle at 30% 20%, rgba(130, 196, 255, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 70% 60%, rgba(255, 200, 220, 0.12) 0%, transparent 40%),
-                radial-gradient(circle at 20% 80%, rgba(255, 230, 180, 0.10) 0%, transparent 40%);
+                radial-gradient(circle at 20% 50%, rgba(130, 196, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(199, 212, 255, 0.02) 0%, transparent 50%);
             pointer-events: none;
             z-index: 0;
-        }
-
-        /* Floating Orb */
-        .floating-orb {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 70px;
-            height: 70px;
-            z-index: 100;
-            animation: orbFloat 3s ease-in-out infinite;
-        }
-
-        .floating-orb-body {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #7DD3FC 0%, #60A5FA 50%, #A78BFA 100%);
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            position: relative;
-            box-shadow: 
-                0 8px 32px rgba(96, 165, 250, 0.4),
-                inset 0 -8px 16px rgba(167, 139, 250, 0.3),
-                inset 0 8px 16px rgba(255, 255, 255, 0.4);
-        }
-
-        .floating-orb-body::before {
-            content: '';
-            position: absolute;
-            top: 12px;
-            left: 15px;
-            width: 12px;
-            height: 12px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-        }
-
-        .floating-orb-body::after {
-            content: '';
-            position: absolute;
-            top: 18px;
-            right: 18px;
-            width: 6px;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.6);
-            border-radius: 50%;
-        }
-
-        .orb-face {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .orb-eyes {
-            display: flex;
-            gap: 12px;
-        }
-
-        .orb-eye {
-            width: 8px;
-            height: 10px;
-            background: #1B2B4A;
-            border-radius: 50%;
-        }
-
-        .orb-smile {
-            width: 14px;
-            height: 7px;
-            border: 2px solid #1B2B4A;
-            border-top: none;
-            border-radius: 0 0 14px 14px;
-            margin-top: 2px;
-        }
-
-        @keyframes orbFloat {
-            0%, 100% { transform: translateY(0) rotate(-2deg); }
-            50% { transform: translateY(-8px) rotate(2deg); }
         }
 
         .container {
@@ -383,94 +300,44 @@
             color: #1B2B4A;
         }
 
-        /* Budget Card - New Design */
-        .budget-card-new {
-            background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,245,255,0.9) 100%);
+        .budget-display {
+            background: linear-gradient(135deg, #82C4FF, #4A6BC8);
             border-radius: 24px;
             padding: 20px;
+            text-align: center;
             margin-bottom: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-            display: flex;
-            gap: 16px;
-            align-items: flex-start;
+            box-shadow: none;
         }
 
-        .budget-left {
-            flex: 1;
-        }
-
-        .budget-label-new {
-            font-size: 14px;
-            font-weight: 500;
-            color: #1B2B4A;
-            margin-bottom: 4px;
+        .budget-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 6px;
             line-height: 1.4;
         }
 
-        .budget-amount-new {
-            font-size: 32px;
+        .budget-amount {
+            font-size: 46px;
             font-weight: 800;
-            color: #1B2B4A;
+            color: #FFFFFF;
             line-height: 1.1;
-        }
-
-        .budget-plate-img {
-            width: 100px;
-            height: 100px;
-            object-fit: contain;
-            border-radius: 50%;
-        }
-
-        .budget-right {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            min-width: 110px;
-        }
-
-        .macro-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: inline-flex;
+            align-items: baseline;
             gap: 8px;
         }
 
-        .macro-row-label {
-            font-size: 13px;
-            color: #6B7280;
-        }
-
-        .macro-row-value {
-            font-size: 13px;
+        .budget-unit {
+            font-size: 18px;
             font-weight: 600;
-            color: #1B2B4A;
-        }
-
-        .macro-row-bar {
-            flex: 1;
-            height: 4px;
-            background: #E5E7EB;
-            border-radius: 2px;
-            overflow: hidden;
-            min-width: 40px;
-        }
-
-        .macro-row-bar-fill {
-            height: 100%;
-            border-radius: 2px;
-            transition: width 0.3s ease;
-        }
-
-        .macro-row-bar-fill.protein { background: linear-gradient(90deg, #EF4444, #F87171); }
-        .macro-row-bar-fill.carbs { background: linear-gradient(90deg, #F59E0B, #FBBF24); }
-        .macro-row-bar-fill.fats { background: linear-gradient(90deg, #10B981, #34D399); }
-
-        .budget-display {
-            display: none;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .macros-grid {
-            display: none;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 16px;
         }
 
         .macro-card {
@@ -515,186 +382,10 @@
             color: #6B7280;
         }
 
-        /* Horizontal scroll menu */
-        .section-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1B2B4A;
-            margin-bottom: 12px;
-            padding-left: 4px;
-        }
-
-        .horizontal-scroll {
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            padding-bottom: 8px;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            margin: 0 -20px;
-            padding-left: 20px;
-            padding-right: 20px;
-        }
-
-        .horizontal-scroll::-webkit-scrollbar {
-            display: none;
-        }
-
-        .scroll-card {
-            flex: 0 0 auto;
-            width: 80px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            scroll-snap-align: start;
-            cursor: pointer;
-        }
-
-        .scroll-card-icon {
-            width: 64px;
-            height: 64px;
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            transition: transform 0.2s ease;
-        }
-
-        .scroll-card-icon.blue { background: linear-gradient(135deg, #DBEAFE, #BFDBFE); }
-        .scroll-card-icon.green { background: linear-gradient(135deg, #D1FAE5, #A7F3D0); }
-        .scroll-card-icon.yellow { background: linear-gradient(135deg, #FEF3C7, #FDE68A); }
-        .scroll-card-icon.purple { background: linear-gradient(135deg, #EDE9FE, #DDD6FE); }
-        .scroll-card-icon.pink { background: linear-gradient(135deg, #FCE7F3, #FBCFE8); }
-        .scroll-card-icon.red { background: linear-gradient(135deg, #FEE2E2, #FECACA); }
-        .scroll-card-icon.orange { background: linear-gradient(135deg, #FFEDD5, #FED7AA); }
-
-        .scroll-card:active .scroll-card-icon {
-            transform: scale(0.95);
-        }
-
-        .scroll-card-title {
-            font-size: 11px;
-            font-weight: 500;
-            color: #1B2B4A;
-            text-align: center;
-            line-height: 1.2;
-        }
-
-        /* Grid cards for other items */
-        .grid-cards {
+        .main-menu {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-top: 16px;
-        }
-
-        .grid-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(248,250,252,0.9) 100%);
-            border: 1px solid rgba(0, 0, 0, 0.04);
-            border-radius: 20px;
-            padding: 16px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .grid-card:active {
-            transform: scale(0.98);
-        }
-
-        .grid-card-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            flex-shrink: 0;
-        }
-
-        .grid-card-content {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .grid-card-icon.blue { background: linear-gradient(135deg, #DBEAFE, #BFDBFE); }
-        .grid-card-icon.green { background: linear-gradient(135deg, #D1FAE5, #A7F3D0); }
-        .grid-card-icon.yellow { background: linear-gradient(135deg, #FEF3C7, #FDE68A); }
-        .grid-card-icon.purple { background: linear-gradient(135deg, #EDE9FE, #DDD6FE); }
-        .grid-card-icon.pink { background: linear-gradient(135deg, #FCE7F3, #FBCFE8); }
-        .grid-card-icon.red { background: linear-gradient(135deg, #FEE2E2, #FECACA); }
-        .grid-card-icon.orange { background: linear-gradient(135deg, #FFEDD5, #FED7AA); }
-
-        .grid-card-title {
-            font-size: 13px;
-            font-weight: 600;
-            color: #1B2B4A;
-            line-height: 1.3;
-        }
-
-        .grid-card-subtitle {
-            font-size: 11px;
-            color: #6B7280;
-            margin-top: 2px;
-        }
-
-        /* Bottom Navigation */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            display: flex;
-            justify-content: space-around;
-            padding: 12px 20px 24px;
-            border-top: 1px solid rgba(0, 0, 0, 0.06);
-            z-index: 1000;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            cursor: pointer;
-            padding: 8px 16px;
-            border-radius: 12px;
-            transition: all 0.2s ease;
-        }
-
-        .nav-item.active {
-            color: #4A6BC8;
-        }
-
-        .nav-item:not(.active) {
-            color: #6B7280;
-        }
-
-        .nav-icon {
-            font-size: 22px;
-        }
-
-        .nav-label {
-            font-size: 11px;
-            font-weight: 500;
-        }
-
-        /* Add padding for bottom nav */
-        .container {
-            padding-bottom: 100px;
-        }
-
-        /* Legacy support */
-        .main-menu {
-            display: none;
+            gap: 16px;
         }
 
         .menu-card {
@@ -1051,12 +742,12 @@
 
 
         .daily-summary {
-            background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.9) 100%);
-            border: 1px solid rgba(0, 0, 0, 0.04);
-            border-radius: 24px;
-            padding: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-            margin-top: 24px;
+            background: #FFFFFF;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: none;
+            margin-top: 16px;
         }
 
         .summary-title {
@@ -1067,37 +758,36 @@
         }
 
         .meal-entry {
-            background: rgba(130, 196, 255, 0.08);
-            border: none;
-            border-radius: 16px;
-            padding: 14px;
-            margin-bottom: 10px;
-            position: relative;
+            background: #F5F7FA;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 18px;
+            padding: 16px;
+            margin-bottom: 12px;
         }
 
         .meal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
         .meal-name {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
             color: #1B2B4A;
         }
 
         .meal-calories {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
-            color: #4A6BC8;
+            color: #1B2B4A;
         }
 
         .meal-items {
-            font-size: 12px;
+            font-size: 13px;
             color: #6B7280;
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
         .summary-totals {
@@ -1369,170 +1059,131 @@
         <!-- Main App -->
         <div id="app-main" class="hidden">
             <div class="container">
-
-            <!-- Floating Orb -->
-            <div class="floating-orb">
-                <div class="floating-orb-body">
-                    <div class="orb-face">
-                        <div class="orb-eyes">
-                            <div class="orb-eye"></div>
-                            <div class="orb-eye"></div>
+            <!-- Main App Header -->
+            <header id="app-header" class="card">
+                <h1>Конструктор питания</h1>
+                <div class="budget-display">
+                    <div class="budget-label">Твой дневной «бюджет» • Осталось:</div>
+                    <div class="budget-amount">
+                        <span id="remaining-calories">1800</span>
+                        <span style="font-size: 16px; color: #6B7280; margin-left: 8px;">калорий</span>
+                    </div>
+                </div>
+                <div class="macros-grid">
+                    <div class="macro-card">
+                        <div class="macro-label">Белки</div>
+                        <div class="macro-value"><span id="used-protein">0</span></div>
+                        <div class="macro-total">из <span id="total-protein">90</span> г</div>
+                        <div class="macro-portions" id="protein-portions" style="font-size: 12px; color: #6B7280; margin-top: 4px;">≈ 0 ладоней из 4 ладоней</div>
+                        <div class="macro-progress">
+                            <div class="macro-progress-fill macro-progress-fill--protein"></div>
                         </div>
-                        <div class="orb-smile"></div>
+                    </div>
+                    <div class="macro-card">
+                        <div class="macro-label">Углеводы</div>
+                        <div class="macro-value"><span id="used-carbs">0</span></div>
+                        <div class="macro-total">из <span id="total-carbs">200</span> г</div>
+                        <div class="macro-portions" id="carbs-portions" style="font-size: 12px; color: #6B7280; margin-top: 4px;">≈ 0 кулаков из 3 кулаков</div>
+                        <div class="macro-progress">
+                            <div class="macro-progress-fill macro-progress-fill--carbs"></div>
+                        </div>
+                    </div>
+                    <div class="macro-card">
+                        <div class="macro-label">Жиры</div>
+                        <div class="macro-value"><span id="used-fats">0</span></div>
+                        <div class="macro-total">из <span id="total-fats">60</span> г</div>
+                        <div class="macro-progress">
+                            <div class="macro-progress-fill macro-progress-fill--fats"></div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </header>
 
-            <!-- Hero Title -->
-            <div style="margin-bottom: 20px; padding-right: 80px;">
-                <h1 style="font-size: 24px; font-weight: 700; color: #1B2B4A; margin: 0; line-height: 1.3;">Твой ассистент<br>по здоровью<br>рядом</h1>
-            </div>
-
-            <!-- Budget Card New Design -->
-            <div class="budget-card-new">
-                <div class="budget-left">
-                    <div class="budget-label-new">Твой дневной «бюджет»<br>Осталось:</div>
-                    <div class="budget-amount-new"><span id="remaining-calories">1800</span> калорий</div>
-                    <img src="Plate.png" alt="Тарелка" class="budget-plate-img" style="margin-top: 12px;">
+            <!-- Progress Widget -->
+            <section id="progress-widget" class="card">
+                <div style="text-align: center; margin-bottom: 16px;">
+                    <div style="font-size: 18px; font-weight: 700; color: #1B2B4A; margin-bottom: 4px;">Прогресс здоровья</div>
+                    <div style="font-size: 14px; color: #6B7280;" id="progress-subtitle">Уровень 1 • Серия: 0 дней</div>
                 </div>
-                <div class="budget-right">
-                    <div class="macro-row">
-                        <span class="macro-row-label">Белки</span>
-                        <span class="macro-row-value"><span id="used-protein">0</span>г</span>
+                <div style="margin-top: 8px; margin-bottom: 20px;">
+                    <div style="font-size: 14px; font-weight: 600; color: #1B2B4A; margin-bottom: 4px;">🧘 Осознанный выбор</div>
+                    <div style="font-size: 13px; color: #6B7280; margin-bottom: 8px;">Использование функции «Хочу чего-нибудь пожевать» для понимания своих импульсов</div>
+                    <div style="background: rgba(0, 0, 0, 0.06); border-radius: 999px; height: 8px; overflow: hidden; margin-bottom: 4px;">
+                        <div id="self-regulation-progress" style="background: linear-gradient(135deg, #82C4FF, #4A6BC8); height: 100%; border-radius: 999px; transition: width 0.3s ease; width: 0%;"></div>
                     </div>
-                    <div class="macro-row-bar"><div class="macro-row-bar-fill protein" id="protein-bar-fill" style="width: 0%;"></div></div>
-                    <div class="macro-row">
-                        <span class="macro-row-label">Углеводы</span>
-                        <span class="macro-row-value"><span id="used-carbs">0</span>г</span>
-                    </div>
-                    <div class="macro-row-bar"><div class="macro-row-bar-fill carbs" id="carbs-bar-fill" style="width: 0%;"></div></div>
-                    <div class="macro-row">
-                        <span class="macro-row-label">Жиры</span>
-                        <span class="macro-row-value"><span id="used-fats">0</span>г</span>
-                    </div>
-                    <div class="macro-row-bar"><div class="macro-row-bar-fill fats" id="fats-bar-fill" style="width: 0%;"></div></div>
-                    
-                    <div style="margin-top: 12px; font-size: 11px; color: #6B7280; line-height: 1.4;">
-                        ИИ-анализ: калории,<br>белки, жиры<br>и углеводы по фото
-                    </div>
-                    <button class="btn btn-primary" style="margin-top: 8px; padding: 10px 14px; font-size: 12px; display: flex; align-items: center; gap: 6px; justify-content: center;">
-                        📷 СКАНИРОВАТЬ ТАРЕЛКУ
-                    </button>
-                </div>
-            </div>
-
-            <!-- Hidden elements for compatibility -->
-            <div style="display: none;">
-                <span id="total-protein">90</span>
-                <span id="total-carbs">200</span>
-                <span id="total-fats">60</span>
-                <div id="protein-portions"></div>
-                <div id="carbs-portions"></div>
-            </div>
-
-            <!-- Constructor Section Title -->
-            <div class="section-title">Конструктор питания</div>
-
-            <!-- Horizontal Scroll Menu -->
-            <div class="horizontal-scroll">
-                <div class="scroll-card" onclick="showSection('getting-started')">
-                    <div class="scroll-card-icon blue">💧</div>
-                    <div class="scroll-card-title">С чего<br>начать</div>
-                </div>
-                <div class="scroll-card" onclick="showSection('plate-guide')">
-                    <div class="scroll-card-icon green">🥗</div>
-                    <div class="scroll-card-title">Как собирать<br>тарелку</div>
-                </div>
-                <div class="scroll-card" onclick="startConstructor('breakfast')">
-                    <div class="scroll-card-icon green">🥣</div>
-                    <div class="scroll-card-title">Завтрак</div>
-                </div>
-                <div class="scroll-card" onclick="startConstructor('lunch')">
-                    <div class="scroll-card-icon yellow">🍲</div>
-                    <div class="scroll-card-title">Обед</div>
-                </div>
-                <div class="scroll-card" onclick="startConstructor('dinner')">
-                    <div class="scroll-card-icon purple">🍽️</div>
-                    <div class="scroll-card-title">Ужин</div>
-                </div>
-                <div class="scroll-card" onclick="startConstructor('snack')">
-                    <div class="scroll-card-icon red">🍎</div>
-                    <div class="scroll-card-title">Перекусы</div>
-                </div>
-            </div>
-
-            <!-- Progress Section Title -->
-            <div class="section-title" style="margin-top: 24px;">Прогресс здоровья</div>
-
-            <!-- Progress Grid -->
-            <div class="grid-cards">
-                <div class="grid-card" onclick="showSection('health-score')" style="background: linear-gradient(135deg, #E0F2FE, #BAE6FD);">
-                    <div class="grid-card-icon" style="background: linear-gradient(135deg, #22C55E, #16A34A); color: white; font-size: 18px; font-weight: 700;">
-                        <span id="health-score-value">88</span>
-                    </div>
-                    <div class="grid-card-content">
-                        <div class="grid-card-title">Оценка здоровья</div>
-                        <div class="grid-card-subtitle">Отлично</div>
+                    <div style="font-size: 12px; color: #6B7280; text-align: center;">
+                        <span id="self-regulation-text">0 из 10 использований</span>
                     </div>
                 </div>
-                <div class="grid-card" onclick="openSnackHelper()">
-                    <div class="grid-card-icon pink">🍫</div>
-                    <div class="grid-card-content">
-                        <div class="grid-card-title">Хочу что-нибудь пожевать</div>
-                        <div class="grid-card-subtitle">Осознанный выбор</div>
+                <div style="margin-top: 8px;">
+                    <div style="font-size: 14px; font-weight: 600; color: #1B2B4A; margin-bottom: 4px;">💎 Направления развития</div>
+                    <div style="font-size: 13px; color: #6B7280; margin-bottom: 12px;">Прокачивай разные аспекты здоровья, добавляя полезные продукты</div>
+                    <div id="tracks-list">
+                        <div style="color: #6B7280; font-style: italic; font-size: 13px;">Добавляй продукты для прокачки</div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Water & Activity Row -->
-            <div class="grid-cards" style="margin-top: 12px;">
-                <div class="grid-card" onclick="addWater()" style="grid-column: span 1;">
-                    <div class="grid-card-icon blue">💧</div>
-                    <div class="grid-card-content">
-                        <div class="grid-card-title"><span id="water-display">0</span>л / 2.5л</div>
-                    </div>
-                </div>
-                <div class="grid-card" onclick="showSection('sleep')">
-                    <div class="grid-card-icon purple">🌙</div>
-                    <div class="grid-card-content">
-                        <div class="grid-card-title">Сон</div>
-                    </div>
-                </div>
-                <div class="grid-card" onclick="openActivityModule()">
-                    <div class="grid-card-icon green">🏃</div>
-                    <div class="grid-card-content">
-                        <div class="grid-card-title">Активность</div>
-                        <div class="grid-card-subtitle" id="activity-menu-subtitle">0 из 4 дней</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Bottom Actions -->
-            <div class="grid-cards" style="margin-top: 24px;">
-                <div class="grid-card" onclick="resetDailyProgress()">
-                    <div class="grid-card-icon orange">🔄</div>
-                    <div class="grid-card-content">
-                        <div class="grid-card-title">Сбросить день</div>
-                    </div>
-                </div>
-                <div class="grid-card" onclick="resetAllData()">
-                    <div class="grid-card-icon red">🏠</div>
-                    <div class="grid-card-content">
-                        <div class="grid-card-title">Начать сначала</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Hidden Progress Widget for compatibility -->
-            <section id="progress-widget" style="display: none;">
-                <div id="progress-subtitle">Уровень 1 • Серия: 0 дней</div>
-                <div id="self-regulation-progress" style="width: 0%;"></div>
-                <span id="self-regulation-text">0 из 10 использований</span>
-                <div id="tracks-list"></div>
             </section>
 
-            <!-- Legacy Main Menu (hidden) -->
-            <main id="main-menu" class="main-menu" style="display: none;"></main>
+            <!-- Main Menu -->
+            <main id="main-menu" class="main-menu">
+                <div class="menu-card" onclick="showSection('getting-started')">
+                    <div class="menu-icon">📝</div>
+                    <div class="menu-title">С чего начать?</div>
+                </div>
+                <div class="menu-card" onclick="showSection('plate-guide')">
+                    <div class="menu-icon">🍽️</div>
+                    <div class="menu-title">Как собирать тарелку</div>
+                </div>
+                <div class="menu-card" onclick="startConstructor('breakfast')">
+                    <div class="menu-icon">🌅</div>
+                    <div class="menu-title">Завтрак</div>
+                </div>
+                <div class="menu-card" onclick="startConstructor('lunch')">
+                    <div class="menu-icon">☀️</div>
+                    <div class="menu-title">Обед</div>
+                </div>
+                <div class="menu-card" onclick="startConstructor('dinner')">
+                    <div class="menu-icon">🌙</div>
+                    <div class="menu-title">Ужин</div>
+                </div>
+                <div class="menu-card" onclick="startConstructor('snack')">
+                    <div class="menu-icon">🍎</div>
+                    <div class="menu-title">Перекус</div>
+                </div>
+                <div class="menu-card" onclick="openSnackHelper()">
+                    <div class="menu-icon">🍫</div>
+                    <div class="menu-title">Хочу чего-нибудь пожевать</div>
+                </div>
+                <div class="menu-card" onclick="openActivityModule()">
+                    <div class="menu-icon">🏃‍♂️</div>
+                    <div class="menu-title">Активность</div>
+                    <div class="menu-subtitle" id="activity-menu-subtitle" style="font-size: 12px; color: #6B7280; margin-top: 4px;">Движение: 0 из 4 дней</div>
+                </div>
+                <div class="menu-card" onclick="showSection('problems')">
+                    <div class="menu-icon">💡</div>
+                    <div class="menu-title">Частые проблемы</div>
+                </div>
+                <div class="menu-card" onclick="showSection('sleep')">
+                    <div class="menu-icon">😴</div>
+                    <div class="menu-title">Сон</div>
+                </div>
+                <div class="menu-card" onclick="addWater()">
+                    <div class="menu-icon">💧</div>
+                    <div class="menu-title">Вода 300 мл</div>
+                </div>
+                <div class="menu-card" onclick="resetDailyProgress()">
+                    <div class="menu-icon">🔄</div>
+                    <div class="menu-title">Сбросить день</div>
+                </div>
+                <div class="menu-card" onclick="resetAllData()">
+                    <div class="menu-icon">🏠</div>
+                    <div class="menu-title">Начать сначала</div>
+                </div>
+                <div class="menu-card" onclick="showSection('calendar')">
+                    <div class="menu-icon">📅</div>
+                    <div class="menu-title">Календарь</div>
+                    </div>
+            </main>
 
             <!-- Daily Summary -->
             <div class="daily-summary">
@@ -2302,63 +1953,6 @@
                 <button class="btn btn-secondary" onclick="showMainMenu()">← Назад в меню</button>
             </section>
 
-            <!-- Useful Section (Полезное) -->
-            <section id="useful" class="card hidden">
-                <div class="step-header">
-                    <div class="step-title">⭐ Полезное</div>
-                    <div class="step-subtitle">Подсказки, теория и полезные инструменты</div>
-                </div>
-                
-                <div class="grid-cards" style="margin-bottom: 20px;">
-                    <div class="grid-card" onclick="showSection('problems')">
-                        <div class="grid-card-icon yellow">💡</div>
-                        <div class="grid-card-content">
-                            <div class="grid-card-title">Частые проблемы</div>
-                            <div class="grid-card-subtitle">Решения для типичных ситуаций</div>
-                        </div>
-                    </div>
-                    <div class="grid-card" onclick="showSection('ai-analysis')">
-                        <div class="grid-card-icon purple">🔬</div>
-                        <div class="grid-card-content">
-                            <div class="grid-card-title">ИИ-расшифровка анализов</div>
-                            <div class="grid-card-subtitle">Понять результаты</div>
-                        </div>
-                    </div>
-                    <div class="grid-card" onclick="showSection('plate-guide')">
-                        <div class="grid-card-icon green">🍽️</div>
-                        <div class="grid-card-content">
-                            <div class="grid-card-title">Как собирать тарелку</div>
-                            <div class="grid-card-subtitle">Гарвардская тарелка</div>
-                        </div>
-                    </div>
-                    <div class="grid-card" onclick="showSection('getting-started')">
-                        <div class="grid-card-icon blue">📝</div>
-                        <div class="grid-card-content">
-                            <div class="grid-card-title">С чего начать</div>
-                            <div class="grid-card-subtitle">Базовые советы</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <button class="btn btn-secondary" onclick="showMainMenu()">← Назад в меню</button>
-            </section>
-
-            <!-- AI Analysis Section -->
-            <section id="ai-analysis" class="card hidden">
-                <div class="step-header">
-                    <div class="step-title">🔬 ИИ-расшифровка анализов</div>
-                    <div class="step-subtitle">Помощь в понимании результатов</div>
-                </div>
-                <div class="info-section blue-accent">
-                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
-                        🚧 <strong>Функция в разработке</strong><br><br>
-                        Скоро здесь можно будет загрузить фото анализов крови, и ИИ поможет понять, что означают показатели и на что обратить внимание.<br><br>
-                        <em>Важно: это не замена консультации врача, а помощь в понимании терминов.</em>
-                    </p>
-                </div>
-                <button class="btn btn-secondary" onclick="showSection('useful')">← Назад</button>
-            </section>
-
             <!-- Problems Section -->
             <section id="problems" class="card hidden">
                 <div class="step-header">
@@ -2389,7 +1983,7 @@
                         Пей больше воды, добавь ферментированные продукты, уменьши бобовые и капусту, ешь медленнее.
                     </p>
                 </div>
-                <button class="btn btn-secondary" onclick="showSection('useful')">← Назад</button>
+                <button class="btn btn-secondary" onclick="showMainMenu()">← Назад в меню</button>
             </section>
 
             <!-- Calendar Section -->
@@ -2407,43 +2001,6 @@
                 </div>
                 <button class="btn btn-secondary" onclick="showMainMenu()">← Назад в меню</button>
             </section>
-
-            <!-- Health Score Section -->
-            <section id="health-score" class="card hidden">
-                <div class="step-header">
-                    <div class="step-title">💚 Оценка здоровья</div>
-                    <div class="step-subtitle">Твой текущий показатель</div>
-        </div>
-                <div style="text-align: center; margin: 24px 0;">
-                    <div style="width: 120px; height: 120px; margin: 0 auto; background: linear-gradient(135deg, #22C55E, #16A34A); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 32px rgba(34, 197, 94, 0.3);">
-                        <span style="font-size: 42px; font-weight: 800; color: white;" id="health-score-big">88</span>
-                    </div>
-                    <div style="margin-top: 16px; font-size: 20px; font-weight: 600; color: #1B2B4A;">Отлично!</div>
-                    <div style="margin-top: 8px; font-size: 14px; color: #6B7280;">Детали: опит, спецало налиг а ппциитг/иоф...</div>
-                </div>
-                <div class="info-section">
-                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
-                        Оценка здоровья рассчитывается на основе твоего питания, активности, сна и водного баланса. Чем ближе к 100 — тем лучше!
-                    </p>
-                </div>
-                <button class="btn btn-secondary" onclick="showMainMenu()">← Назад в меню</button>
-            </section>
-
-            <!-- Bottom Navigation -->
-            <nav class="bottom-nav">
-                <div class="nav-item active" onclick="showTab('today')">
-                    <div class="nav-icon">🏠</div>
-                    <div class="nav-label">Сегодня</div>
-                </div>
-                <div class="nav-item" onclick="showTab('useful')">
-                    <div class="nav-icon">⭐</div>
-                    <div class="nav-label">Полезное</div>
-                </div>
-                <div class="nav-item" onclick="showTab('profile')">
-                    <div class="nav-icon">👤</div>
-                    <div class="nav-label">Профиль</div>
-                </div>
-            </nav>
         </div>
     </div>
 
@@ -3694,7 +3251,7 @@
                 carbsPortionsEl.textContent = `≈ ${usedCarbFists} ${getFistWord(usedCarbFists)} из ${targetCarbFists} ${getFistWord(targetCarbFists)}`;
             }
             
-            // Обновляем прогресс-бары БЖУ (старые)
+            // Обновляем прогресс-бары БЖУ
             const proteinProgress = document.querySelector('.macro-progress-fill--protein');
             if (proteinProgress && dailyTargets.protein > 0) {
                 const proteinPercent = Math.min(100, (dailyUsed.protein / dailyTargets.protein) * 100);
@@ -3709,30 +3266,6 @@
             if (fatsProgress && dailyTargets.fats > 0) {
                 const fatsPercent = Math.min(100, (dailyUsed.fats / dailyTargets.fats) * 100);
                 fatsProgress.style.width = fatsPercent + '%';
-            }
-            
-            // Обновляем новые прогресс-бары БЖУ
-            const proteinBarFill = document.getElementById('protein-bar-fill');
-            if (proteinBarFill && dailyTargets.protein > 0) {
-                const proteinPercent = Math.min(100, (dailyUsed.protein / dailyTargets.protein) * 100);
-                proteinBarFill.style.width = proteinPercent + '%';
-            }
-            const carbsBarFill = document.getElementById('carbs-bar-fill');
-            if (carbsBarFill && dailyTargets.carbs > 0) {
-                const carbsPercent = Math.min(100, (dailyUsed.carbs / dailyTargets.carbs) * 100);
-                carbsBarFill.style.width = carbsPercent + '%';
-            }
-            const fatsBarFill = document.getElementById('fats-bar-fill');
-            if (fatsBarFill && dailyTargets.fats > 0) {
-                const fatsPercent = Math.min(100, (dailyUsed.fats / dailyTargets.fats) * 100);
-                fatsBarFill.style.width = fatsPercent + '%';
-            }
-            
-            // Обновляем отображение воды
-            const waterDisplay = document.getElementById('water-display');
-            if (waterDisplay && kairosState.today) {
-                const waterLiters = ((kairosState.today.water || 0) * 0.3).toFixed(1);
-                waterDisplay.textContent = waterLiters;
             }
             
             // Обновляем состояние орба
@@ -4148,7 +3681,6 @@
         function showSection(sectionId) {
             document.getElementById('main-menu').classList.add('hidden');
             ['plate-guide', 'getting-started', 'constructor', 'activity', 'problems', 'sleep', 
-             'useful', 'ai-analysis', 'calendar', 'health-score',
              'snack-intro-1', 'snack-intro-2', 'snack-intro-3', 'snack-question', 
              'snack-action-choice', 'snack-recommendation', 'snack-practice',
              'snack-switch', 'snack-emotion', 'snack-body', 'snack-conscious-snack',
@@ -4732,7 +4264,6 @@
         function showMainMenu() {
             document.getElementById('main-menu').classList.remove('hidden');
             ['plate-guide', 'getting-started', 'constructor', 'activity', 'problems', 'sleep',
-             'useful', 'ai-analysis', 'calendar', 'health-score',
              'snack-intro-1', 'snack-intro-2', 'snack-intro-3', 'snack-question', 
              'snack-action-choice', 'snack-recommendation', 'snack-practice',
              'snack-switch', 'snack-emotion', 'snack-body', 'snack-conscious-snack',
@@ -4754,37 +4285,10 @@
                 snack5MinTimerInterval = null;
             }
             
-            // Обновляем нижнюю навигацию
-            updateBottomNav('today');
-            
             // Скрываем главную кнопку и кнопку "Назад" в главном меню
             if (tg) {
                 tg.MainButton.hide();
                 tg.BackButton.hide();
-            }
-        }
-        
-        function showTab(tab) {
-            // Обновляем нижнюю навигацию
-            updateBottomNav(tab);
-            
-            if (tab === 'today') {
-                showMainMenu();
-            } else if (tab === 'useful') {
-                showSection('useful');
-            } else if (tab === 'profile') {
-                showSection('calendar'); // Временно показываем календарь как профиль
-            }
-        }
-        
-        function updateBottomNav(activeTab) {
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            const tabs = ['today', 'useful', 'profile'];
-            const index = tabs.indexOf(activeTab);
-            if (index >= 0) {
-                document.querySelectorAll('.nav-item')[index]?.classList.add('active');
             }
         }
 
