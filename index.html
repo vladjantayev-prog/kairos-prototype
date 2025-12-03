@@ -382,248 +382,50 @@
             color: #6B7280;
         }
 
-        /* Блок «Конструктор питания» — горизонтальный скролл как в iOS */
-        .section-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1B2B4A;
-            margin-bottom: 10px;
+        .main-menu {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
         }
 
-        .horizontal-scroll {
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            padding-bottom: 4px;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-        }
-
-        .horizontal-scroll::-webkit-scrollbar {
-            display: none;
-        }
-
-        .scroll-card {
-            flex: 0 0 auto;
-            width: 96px;
+        .menu-card {
+            background: #FFFFFF;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 20px;
+            padding: 20px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 6px;
-            cursor: pointer;
-        }
-
-        .scroll-card-icon {
-            width: 68px;
-            height: 68px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            font-size: 28px;
-            box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12);
-        }
-
-        .scroll-card-icon.blue { background: linear-gradient(135deg, #DBEAFE, #BFDBFE); }
-        .scroll-card-icon.green { background: linear-gradient(135deg, #D1FAE5, #A7F3D0); }
-        .scroll-card-icon.yellow { background: linear-gradient(135deg, #FEF3C7, #FDE68A); }
-        .scroll-card-icon.purple { background: linear-gradient(135deg, #EDE9FE, #DDD6FE); }
-        .scroll-card-icon.red { background: linear-gradient(135deg, #FEE2E2, #FECACA); }
-
-        .scroll-card-title {
-            font-size: 11px;
-            font-weight: 500;
-            color: #1B2B4A;
-            text-align: center;
-            line-height: 1.2;
-        }
-
-        /* Прогресс здоровья — макет с большой оценкой и вспомогательными карточками */
-        #progress-widget {
-            margin-top: 16px;
-        }
-
-        .progress-header-subtitle {
-            font-size: 13px;
-            color: #6B7280;
-            margin-bottom: 12px;
-        }
-
-        .progress-grid {
-            display: grid;
-            grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.4fr);
             gap: 12px;
-            margin-bottom: 12px;
         }
 
-        .progress-grid.secondary {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 12px;
-            margin-bottom: 0;
+        .menu-card:hover {
+            transform: translateY(-2px);
+            background: rgba(130, 196, 255, 0.04);
+            border-color: rgba(130, 196, 255, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
         }
 
-        .health-score-card {
-            background: #F9FAFB;
-            border-radius: 20px;
-            padding: 14px;
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            min-height: 120px;
+        .menu-icon {
+            display: block;
+            font-size: 32px;
+            line-height: 1;
+            margin: 0;
         }
 
-        .health-score-circle {
-            width: 68px;
-            height: 68px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 20%, #FFFFFF, #BBF7D0);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 20px rgba(22, 163, 74, 0.25);
-            font-size: 24px;
-            font-weight: 800;
-            color: #166534;
-        }
-
-        .health-score-text {
-            flex: 1;
-        }
-
-        #health-score-label {
+        .menu-title {
             font-size: 14px;
             font-weight: 600;
             color: #1B2B4A;
-            margin-bottom: 4px;
-        }
-
-        #health-score-description {
-            font-size: 12px;
-            color: #6B7280;
-            line-height: 1.4;
-            margin-bottom: 8px;
-        }
-
-        .tracks-wrapper {
-            margin-top: 2px;
-        }
-
-        .tracks-title {
-            font-size: 12px;
-            font-weight: 600;
-            color: #1B2B4A;
-            margin-bottom: 4px;
-        }
-
-        .progress-small-card {
-            border-radius: 20px;
-            border: 1px solid rgba(15, 23, 42, 0.06);
-            background: #FFFFFF;
-            padding: 14px;
-            text-align: left;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            min-height: 120px;
-            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
-        }
-
-        .progress-small-title {
-            font-size: 13px;
-            font-weight: 600;
-            color: #1B2B4A;
             line-height: 1.3;
-        }
-
-        .progress-small-subtitle {
-            font-size: 12px;
-            color: #6B7280;
-            line-height: 1.4;
-        }
-
-        .progress-small-caption {
-            font-size: 11px;
-            color: #6B7280;
-        }
-
-        .progress-mini-card {
-            border-radius: 20px;
-            border: 1px solid rgba(15, 23, 42, 0.06);
-            background: #FFFFFF;
-            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
-            padding: 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            min-height: 110px;
-            cursor: pointer;
-            text-align: left;
-        }
-
-        .progress-mini-icon {
-            font-size: 18px;
-        }
-
-        .progress-mini-title {
-            font-size: 13px;
-            font-weight: 600;
-            color: #1B2B4A;
-        }
-
-        .progress-mini-subtitle {
-            font-size: 12px;
-            color: #6B7280;
-            line-height: 1.4;
-        }
-
-        /* Прогресс воды */
-        .water-bar {
-            width: 100%;
-            height: 5px;
-            border-radius: 999px;
-            background: #E5E7EB;
-            overflow: hidden;
-        }
-
-        #water-progress-fill {
-            height: 100%;
-            width: 0%;
-            border-radius: inherit;
-            background: linear-gradient(90deg, #82C4FF, #4A6BC8);
-            transition: width 0.25s ease-out;
-        }
-
-        /* Действия дня */
-        .actions-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .action-card {
-            border-radius: 20px;
-            border: 1px solid rgba(15, 23, 42, 0.06);
-            background: #FFFFFF;
-            padding: 14px;
-            text-align: left;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .action-title {
-            font-size: 13px;
-            font-weight: 600;
-            color: #1B2B4A;
-        }
-
-        .action-subtitle {
-            font-size: 12px;
-            color: #6B7280;
-            line-height: 1.4;
+            margin: 0;
         }
 
         .step-header {
@@ -1297,108 +1099,91 @@
                 </div>
             </header>
 
-            <!-- Блок «Конструктор питания» с горизонтальными карточками -->
-            <section class="card">
-                <div class="section-title">Конструктор питания</div>
-                <div class="horizontal-scroll">
-                    <div class="scroll-card" onclick="showSection('getting-started')">
-                        <div class="scroll-card-icon blue">📝</div>
-                        <div class="scroll-card-title">С чего<br>начать</div>
-                    </div>
-                    <div class="scroll-card" onclick="showSection('plate-guide')">
-                        <div class="scroll-card-icon green">🍽️</div>
-                        <div class="scroll-card-title">Как<br>собирать тарелку</div>
-                    </div>
-                    <div class="scroll-card" onclick="startConstructor('breakfast')">
-                        <div class="scroll-card-icon green">🌅</div>
-                        <div class="scroll-card-title">Завтрак</div>
-                    </div>
-                    <div class="scroll-card" onclick="startConstructor('lunch')">
-                        <div class="scroll-card-icon yellow">☀️</div>
-                        <div class="scroll-card-title">Обед</div>
-                    </div>
-                    <div class="scroll-card" onclick="startConstructor('snack')">
-                        <div class="scroll-card-icon red">🍎</div>
-                        <div class="scroll-card-title">Перекус</div>
-                    </div>
-                    <div class="scroll-card" onclick="startConstructor('dinner')">
-                        <div class="scroll-card-icon purple">🌙</div>
-                        <div class="scroll-card-title">Ужин</div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Блок «Прогресс здоровья» -->
+            <!-- Progress Widget -->
             <section id="progress-widget" class="card">
-                <div class="section-title">Прогресс здоровья</div>
-                <div class="progress-header-subtitle" id="progress-subtitle">Уровень 1 • Серия: 0 дней</div>
-
-                <div class="progress-grid">
-                    <div class="health-score-card">
-                        <div class="health-score-circle">
-                            <span id="health-score-value">75</span>
-                        </div>
-                        <div class="health-score-text">
-                            <div id="health-score-label">Неплохо</div>
-                            <div id="health-score-description">
-                                Балл учитывает питание, воду, движение и сон. Чем стабильнее привычки, тем выше оценка.
-                            </div>
-                            <div class="tracks-wrapper">
-                                <div class="tracks-title">Направления развития</div>
-                                <div id="tracks-list">
-                                    <div style="color: #6B7280; font-style: italic; font-size: 13px;">Добавляй продукты для прокачки</div>
-                                </div>
-                            </div>
-                        </div>
+                <div style="text-align: center; margin-bottom: 16px;">
+                    <div style="font-size: 18px; font-weight: 700; color: #1B2B4A; margin-bottom: 4px;">Прогресс здоровья</div>
+                    <div style="font-size: 14px; color: #6B7280;" id="progress-subtitle">Уровень 1 • Серия: 0 дней</div>
+                </div>
+                <div style="margin-top: 8px; margin-bottom: 20px;">
+                    <div style="font-size: 14px; font-weight: 600; color: #1B2B4A; margin-bottom: 4px;">🧘 Осознанный выбор</div>
+                    <div style="font-size: 13px; color: #6B7280; margin-bottom: 8px;">Использование функции «Хочу чего-нибудь пожевать» для понимания своих импульсов</div>
+                    <div style="background: rgba(0, 0, 0, 0.06); border-radius: 999px; height: 8px; overflow: hidden; margin-bottom: 4px;">
+                        <div id="self-regulation-progress" style="background: linear-gradient(135deg, #82C4FF, #4A6BC8); height: 100%; border-radius: 999px; transition: width 0.3s ease; width: 0%;"></div>
                     </div>
-
-                    <button class="progress-small-card" type="button" onclick="openSnackHelper()">
-                        <div class="progress-small-title">🍫 Хочу что-нибудь пожевать</div>
-                        <div class="progress-small-subtitle">Осознанный выбор</div>
-                        <div class="progress-small-caption" id="self-regulation-text">0 из 10 использований</div>
-                        <div class="water-bar" style="margin-top: 4px;">
-                            <div id="self-regulation-progress"></div>
-                        </div>
-                    </button>
+                    <div style="font-size: 12px; color: #6B7280; text-align: center;">
+                        <span id="self-regulation-text">0 из 10 использований</span>
+                    </div>
                 </div>
-
-                <div class="progress-grid secondary">
-                    <button class="progress-mini-card" type="button" onclick="addWater()">
-                        <div class="progress-mini-icon">💧</div>
-                        <div class="progress-mini-title">Вода</div>
-                        <div class="progress-mini-subtitle">
-                            <span id="water-display">0</span> л / 2.5 л
-                        </div>
-                        <div class="water-bar">
-                            <div id="water-progress-fill"></div>
-                        </div>
-                    </button>
-                    <button class="progress-mini-card" type="button" onclick="showSection('sleep')">
-                        <div class="progress-mini-icon">😴</div>
-                        <div class="progress-mini-title">Сон</div>
-                        <div class="progress-mini-subtitle" id="sleep-card-value">Ещё не отмечено</div>
-                    </button>
-                    <button class="progress-mini-card" type="button" onclick="openActivityModule()">
-                        <div class="progress-mini-icon">🏃‍♂️</div>
-                        <div class="progress-mini-title">Активность</div>
-                        <div class="progress-mini-subtitle" id="activity-card-value">Движение: 0 из 4 дней</div>
-                    </button>
+                <div style="margin-top: 8px;">
+                    <div style="font-size: 14px; font-weight: 600; color: #1B2B4A; margin-bottom: 4px;">💎 Направления развития</div>
+                    <div style="font-size: 13px; color: #6B7280; margin-bottom: 12px;">Прокачивай разные аспекты здоровья, добавляя полезные продукты</div>
+                    <div id="tracks-list">
+                        <div style="color: #6B7280; font-style: italic; font-size: 13px;">Добавляй продукты для прокачки</div>
+                    </div>
                 </div>
             </section>
 
-            <!-- Действия дня -->
-            <section class="card">
-                <div class="actions-grid">
-                    <button class="action-card" type="button" onclick="resetDailyProgress()">
-                        <div class="action-title">🔄 Сбросить день</div>
-                        <div class="action-subtitle">Удалить данные за сегодня</div>
-                    </button>
-                    <button class="action-card" type="button" onclick="resetAllData()">
-                        <div class="action-title">🏠 Начать сначала</div>
-                        <div class="action-subtitle">Пересчитать план и начать с нуля</div>
-                    </button>
+            <!-- Main Menu -->
+            <main id="main-menu" class="main-menu">
+                <div class="menu-card" onclick="showSection('getting-started')">
+                    <div class="menu-icon">📝</div>
+                    <div class="menu-title">С чего начать?</div>
                 </div>
-            </section>
+                <div class="menu-card" onclick="showSection('plate-guide')">
+                    <div class="menu-icon">🍽️</div>
+                    <div class="menu-title">Как собирать тарелку</div>
+                </div>
+                <div class="menu-card" onclick="startConstructor('breakfast')">
+                    <div class="menu-icon">🌅</div>
+                    <div class="menu-title">Завтрак</div>
+                </div>
+                <div class="menu-card" onclick="startConstructor('lunch')">
+                    <div class="menu-icon">☀️</div>
+                    <div class="menu-title">Обед</div>
+                </div>
+                <div class="menu-card" onclick="startConstructor('dinner')">
+                    <div class="menu-icon">🌙</div>
+                    <div class="menu-title">Ужин</div>
+                </div>
+                <div class="menu-card" onclick="startConstructor('snack')">
+                    <div class="menu-icon">🍎</div>
+                    <div class="menu-title">Перекус</div>
+                </div>
+                <div class="menu-card" onclick="openSnackHelper()">
+                    <div class="menu-icon">🍫</div>
+                    <div class="menu-title">Хочу чего-нибудь пожевать</div>
+                </div>
+                <div class="menu-card" onclick="openActivityModule()">
+                    <div class="menu-icon">🏃‍♂️</div>
+                    <div class="menu-title">Активность</div>
+                    <div class="menu-subtitle" id="activity-menu-subtitle" style="font-size: 12px; color: #6B7280; margin-top: 4px;">Движение: 0 из 4 дней</div>
+                </div>
+                <div class="menu-card" onclick="showSection('problems')">
+                    <div class="menu-icon">💡</div>
+                    <div class="menu-title">Частые проблемы</div>
+                </div>
+                <div class="menu-card" onclick="showSection('sleep')">
+                    <div class="menu-icon">😴</div>
+                    <div class="menu-title">Сон</div>
+                </div>
+                <div class="menu-card" onclick="addWater()">
+                    <div class="menu-icon">💧</div>
+                    <div class="menu-title">Вода 300 мл</div>
+                </div>
+                <div class="menu-card" onclick="resetDailyProgress()">
+                    <div class="menu-icon">🔄</div>
+                    <div class="menu-title">Сбросить день</div>
+                </div>
+                <div class="menu-card" onclick="resetAllData()">
+                    <div class="menu-icon">🏠</div>
+                    <div class="menu-title">Начать сначала</div>
+                </div>
+                <div class="menu-card" onclick="showSection('calendar')">
+                    <div class="menu-icon">📅</div>
+                    <div class="menu-title">Календарь</div>
+                    </div>
+            </main>
 
             <!-- Daily Summary -->
             <div class="daily-summary">
@@ -2425,7 +2210,6 @@
                 },
                 meals: [],
                 selfRegulationCount: 0, // Счётчик использования функции саморегуляции
-                water: 0, // мл воды за день
                 // Данные активности
                 activityProgress: {
                     cardioMinutesWeekDone: 0,
@@ -3484,139 +3268,10 @@
                 fatsProgress.style.width = fatsPercent + '%';
             }
             
-            // Обновляем отображение воды
-            const waterDisplay = document.getElementById('water-display');
-            const waterBarFill = document.getElementById('water-progress-fill');
-            if (kairosState.today && (waterDisplay || waterBarFill)) {
-                const waterMl = kairosState.today.water || 0;
-                const waterLiters = (waterMl / 1000).toFixed(1);
-                const waterPercent = Math.min(100, (waterMl / 2500) * 100);
-                if (waterDisplay) {
-                    waterDisplay.textContent = waterLiters;
-                }
-                if (waterBarFill) {
-                    waterBarFill.style.width = waterPercent + '%';
-                }
-            }
-
-            // Обновляем карточку сна
-            const sleepValueEl = document.getElementById('sleep-card-value');
-            if (sleepValueEl) {
-                const sleepHours = kairosState.today?.sleepHours;
-                sleepValueEl.textContent = sleepHours ? `${sleepHours} ч` : 'Ещё не отмечено';
-            }
-            
-            // Обновляем индекс здоровья
-            updateHealthScore();
-
             // Обновляем состояние орба
             updateHealthOrbState();
         }
         
-        // Расчёт и отображение оценки здоровья
-        function clamp(value, min, max) {
-            return Math.max(min, Math.min(max, value));
-        }
-
-        function updateHealthScore() {
-            // Базовый "человечный" старт
-            let healthScore = 75;
-
-            if (kairosState.today && dailyTargets && dailyTargets.protein) {
-                const proteinGrams = dailyUsed.protein || 0;
-                const proteinTargetGrams = dailyTargets.protein || 0;
-
-                const calories = dailyUsed.calories || 0;
-                const calorieTarget = dailyTargets.calories || 0;
-
-                const waterMl = kairosState.today.water || 0;
-                const waterTargetMl = 2500;
-
-                const activityProgress = kairosState.today.activityProgress || {};
-                const activeMinutes = activityProgress.baseMovementMinutesTodayDone || 0;
-                const activeTargetMinutes = 30;
-
-                const sleepHours = kairosState.today.sleepHours;
-
-                // Питание: белок + калории
-                const pRatio = (proteinGrams && proteinTargetGrams)
-                    ? clamp(proteinGrams / proteinTargetGrams, 0, 1.2)
-                    : 0.75;
-                const cRatio = (calories && calorieTarget)
-                    ? clamp(calories / calorieTarget, 0, 1.2)
-                    : 0.75;
-                const nutritionRatio = clamp(0.6 * pRatio + 0.4 * cRatio, 0, 1.2);
-
-                // Вода
-                const wRatio = (waterMl && waterTargetMl)
-                    ? clamp(waterMl / waterTargetMl, 0, 1.2)
-                    : 0.75;
-
-                // Активность
-                const aRatio = (activeMinutes && activeTargetMinutes)
-                    ? clamp(activeMinutes / activeTargetMinutes, 0, 1.2)
-                    : 0.75;
-
-                // Сон (если нет данных — считаем средним)
-                let sRatio = 0.75;
-                if (typeof sleepHours === 'number') {
-                    if (sleepHours >= 7 && sleepHours <= 9) {
-                        sRatio = 1.0;
-                    } else if (sleepHours >= 6 && sleepHours < 7) {
-                        sRatio = 0.85;
-                    } else if (sleepHours >= 5 && sleepHours < 6) {
-                        sRatio = 0.6;
-                    } else {
-                        sRatio = 0.4;
-                    }
-                }
-
-                // Итог с весами: питание 40%, вода 25%, активность 25%, сон 10%
-                const weighted =
-                    0.4 * nutritionRatio +
-                    0.25 * wRatio +
-                    0.25 * aRatio +
-                    0.10 * sRatio;
-
-                // Маппим в диапазон 50–100, чтобы почти не падать ниже 50
-                healthScore = Math.round(50 + clamp(weighted, 0, 1.2) * 50);
-                healthScore = clamp(healthScore, 50, 100);
-            }
-
-            const scoreEl = document.getElementById('health-score-value');
-            if (scoreEl) {
-                scoreEl.textContent = healthScore;
-            }
-
-            const labelEl = document.getElementById('health-score-label');
-            const descEl = document.getElementById('health-score-description');
-
-            let label = 'Неплохо';
-            let desc = 'Начать — уже прогресс. Давай мягко усилим одну привычку сегодня.';
-
-            if (healthScore >= 90) {
-                label = 'Отлично';
-                desc = 'Очень устойчивая база по питанию, воде и активности. Продолжай в том же духе.';
-            } else if (healthScore >= 80) {
-                label = 'Очень хорошо';
-                desc = 'Ты хорошо держишь курс. Можно слегка подкрутить один-два элемента для ещё лучшего результата.';
-            } else if (healthScore >= 70) {
-                label = 'Неплохо';
-                desc = 'Уже хороший старт. Пара простых шагов — и балл вырастет ещё выше.';
-            } else {
-                // 50–69 — «жёлтая» зона
-                label = 'Есть, что улучшить, но всё ок';
-                desc = 'Организм даёт сигналы усталости. Попробуем сегодня поддержать его чем-то одним — водой, сном или движением.';
-            }
-
-            if (labelEl) {
-                labelEl.textContent = label;
-            }
-            if (descEl) {
-                descEl.textContent = desc;
-            }
-        }
-
         function updateHealthOrbState() {
             const orb = document.getElementById('health-orb');
             if (!orb || !dailyTargets || !dailyTargets.calories) {
@@ -5872,7 +5527,6 @@
             } else {
                 showToast('✅ Сон зафиксирован');
             }
-            updateDailyTotals();
             updateHealthOrbState();
         }
         
@@ -5883,9 +5537,6 @@
                 kairosState.today = createEmptyDay(getTodayDate());
             }
             
-            // Сохраняем воду (мл, шаг по 300 мл)
-            kairosState.today.water = (kairosState.today.water || 0) + 300;
-
             // Начисляем XP за воду
             const waterXP = { muscles: 0, energy: 3, immune: 0, hormones: 0, gut: 0, skin: 0, brain: 1 };
             Object.keys(waterXP).forEach(key => {
@@ -5901,8 +5552,6 @@
             updateHeroDisplay();
             
             showToast(`💧 +${formatPoints(3)} к энергии • +${formatPoints(1)} к мозгу`);
-            updateDailyTotals();
-            updateHealthOrbState();
         }
 
         initApp();
