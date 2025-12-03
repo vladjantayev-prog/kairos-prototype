@@ -428,6 +428,94 @@
             margin: 0;
         }
 
+        /* Горизонтальный блок «Конструктор питания» */
+        .constructor-section {
+            margin-top: 16px;
+        }
+
+        .constructor-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1B2B4A;
+            margin-bottom: 10px;
+        }
+
+        .constructor-scroll {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .constructor-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .constructor-card {
+            flex: 0 0 auto;
+            width: 104px;
+            border-radius: 20px;
+            background: #FFFFFF;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            padding: 10px 8px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06);
+            transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease,
+                background 0.15s ease;
+        }
+
+        .constructor-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(15, 23, 42, 0.12);
+            border-color: rgba(130, 196, 255, 0.4);
+            background: rgba(130, 196, 255, 0.02);
+        }
+
+        .constructor-card-icon {
+            width: 68px;
+            height: 68px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12);
+        }
+
+        .constructor-card-icon.blue {
+            background: linear-gradient(135deg, #DBEAFE, #BFDBFE);
+        }
+
+        .constructor-card-icon.green {
+            background: linear-gradient(135deg, #D1FAE5, #A7F3D0);
+        }
+
+        .constructor-card-icon.yellow {
+            background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+        }
+
+        .constructor-card-icon.purple {
+            background: linear-gradient(135deg, #EDE9FE, #DDD6FE);
+        }
+
+        .constructor-card-icon.red {
+            background: linear-gradient(135deg, #FEE2E2, #FECACA);
+        }
+
+        .constructor-card-title {
+            font-size: 11px;
+            font-weight: 500;
+            color: #1B2B4A;
+            text-align: center;
+            line-height: 1.2;
+        }
+
         .step-header {
             text-align: center;
             margin-bottom: 24px;
@@ -1124,32 +1212,39 @@
                 </div>
             </section>
 
+            <!-- Блок «Конструктор питания» с горизонтальными карточками -->
+            <section class="card constructor-section">
+                <div class="constructor-title">Конструктор питания</div>
+                <div class="constructor-scroll">
+                    <div class="constructor-card" onclick="showSection('getting-started')">
+                        <div class="constructor-card-icon blue">📝</div>
+                        <div class="constructor-card-title">С чего<br>начать</div>
+                    </div>
+                    <div class="constructor-card" onclick="showSection('plate-guide')">
+                        <div class="constructor-card-icon green">🍽️</div>
+                        <div class="constructor-card-title">Как<br>собирать тарелку</div>
+                    </div>
+                    <div class="constructor-card" onclick="startConstructor('breakfast')">
+                        <div class="constructor-card-icon green">🌅</div>
+                        <div class="constructor-card-title">Завтрак</div>
+                    </div>
+                    <div class="constructor-card" onclick="startConstructor('lunch')">
+                        <div class="constructor-card-icon yellow">☀️</div>
+                        <div class="constructor-card-title">Обед</div>
+                    </div>
+                    <div class="constructor-card" onclick="startConstructor('snack')">
+                        <div class="constructor-card-icon red">🍎</div>
+                        <div class="constructor-card-title">Перекус</div>
+                    </div>
+                    <div class="constructor-card" onclick="startConstructor('dinner')">
+                        <div class="constructor-card-icon purple">🌙</div>
+                        <div class="constructor-card-title">Ужин</div>
+                    </div>
+                </div>
+            </section>
+
             <!-- Main Menu -->
             <main id="main-menu" class="main-menu">
-                <div class="menu-card" onclick="showSection('getting-started')">
-                    <div class="menu-icon">📝</div>
-                    <div class="menu-title">С чего начать?</div>
-                </div>
-                <div class="menu-card" onclick="showSection('plate-guide')">
-                    <div class="menu-icon">🍽️</div>
-                    <div class="menu-title">Как собирать тарелку</div>
-                </div>
-                <div class="menu-card" onclick="startConstructor('breakfast')">
-                    <div class="menu-icon">🌅</div>
-                    <div class="menu-title">Завтрак</div>
-                </div>
-                <div class="menu-card" onclick="startConstructor('lunch')">
-                    <div class="menu-icon">☀️</div>
-                    <div class="menu-title">Обед</div>
-                </div>
-                <div class="menu-card" onclick="startConstructor('dinner')">
-                    <div class="menu-icon">🌙</div>
-                    <div class="menu-title">Ужин</div>
-                </div>
-                <div class="menu-card" onclick="startConstructor('snack')">
-                    <div class="menu-icon">🍎</div>
-                    <div class="menu-title">Перекус</div>
-                </div>
                 <div class="menu-card" onclick="openSnackHelper()">
                     <div class="menu-icon">🍫</div>
                     <div class="menu-title">Хочу чего-нибудь пожевать</div>
@@ -1179,10 +1274,6 @@
                     <div class="menu-icon">🏠</div>
                     <div class="menu-title">Начать сначала</div>
                 </div>
-                <div class="menu-card" onclick="showSection('calendar')">
-                    <div class="menu-icon">📅</div>
-                    <div class="menu-title">Календарь</div>
-                    </div>
             </main>
 
             <!-- Daily Summary -->
@@ -5558,6 +5649,5 @@
     </script>
 </body>
 </html>
-
 
 
