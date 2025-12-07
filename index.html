@@ -853,6 +853,21 @@
             margin-bottom: 12px;
         }
 
+        .water-progress {
+            width: 100%;
+            height: 8px;
+            border-radius: 999px;
+            background: #E5E7EB;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        .water-progress-fill {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #82C4FF 0%, #4A6BC8 100%);
+            transition: width 0.25s ease;
+        }
+
         .meal-header {
             display: flex;
             justify-content: space-between;
@@ -1255,7 +1270,11 @@
                 </div>
                 <div class="menu-card" onclick="addWater()">
                     <div class="menu-icon">💧</div>
-                    <div class="menu-title">Вода 300 мл</div>
+                    <div class="menu-title">Вода +200 мл</div>
+                    <div id="water-progress-text" style="font-size: 12px; color: #6B7280; margin-top: 4px;">0.0 л / 2.5 л</div>
+                    <div class="water-progress">
+                        <div class="water-progress-fill"></div>
+                    </div>
                 </div>
                 <div class="menu-card" onclick="resetDailyProgress()">
                     <div class="menu-icon">🔄</div>
@@ -2279,6 +2298,7 @@
                 cUsed: 0,
                 fUsed: 0,
                 fiber: 0,
+                water: 0,
                 xp: 0,
                 xpMax: 100,
                 level: 1,
@@ -2866,6 +2886,12 @@
             return PAL_MAP[mappedLevel] || 1.2;
         }
 
+        function getWaterTargetMl() {
+            const weight = kairosState.profile?.weight;
+            if (weight && weight > 0) return Math.round(weight * 30);
+            return 2500; // дефолт 2.5 л
+        }
+
         function calculateTargetCalories(dailyCalories, goal) {
             if (goal === 'lose') {
                 return Math.round(dailyCalories * 0.8);
@@ -3002,6 +3028,7 @@
             const targetProteinPalms = Math.round(proteinGrams / proteinPerPalm);
             const targetCarbFists = Math.round(carbsGrams / PORTION_CONSTANTS.CARBS_PER_FIST);
             const targetVegPalms = PORTION_CONSTANTS.DEFAULT_VEG_PALMS;
+            const waterTargetMl = Math.round((weight || 0) * 30) || 2500;
 
             // Сохраняем профиль в kairosState
             kairosState.profile = {
@@ -3026,6 +3053,7 @@
                 protein_palms: targetProteinPalms,
                 carb_fists: targetCarbFists,
                 veg_palms: targetVegPalms,
+                water_target_ml: waterTargetMl,
                 mode: trackingMode || 'numbers',
                 hero: '',
                 snack_intro_completed: false,
@@ -3180,6 +3208,7 @@
             updateDailyTotals();
             updateDailySummary();
             updateSelfRegulationProgress();
+            updateWaterProgress();
         }
 
         function updateHeroDisplay() {
@@ -3362,8 +3391,24 @@
                 fatsProgress.style.width = fatsPercent + '%';
             }
             
+            updateWaterProgress();
+            
             // Обновляем состояние орба
             updateHealthOrbState();
+        }
+
+        function updateWaterProgress() {
+            const waterUsed = kairosState.today?.water || 0;
+            const target = getWaterTargetMl();
+            const textEl = document.getElementById('water-progress-text');
+            const fillEl = document.querySelector('.water-progress-fill');
+            if (textEl) {
+                textEl.textContent = `${(waterUsed / 1000).toFixed(1)} л / ${(target / 1000).toFixed(1)} л`;
+            }
+            if (fillEl) {
+                const percent = Math.min(100, (waterUsed / target) * 100);
+                fillEl.style.width = `${percent}%`;
+            }
         }
         
         function updateHealthOrbState() {
@@ -4709,28 +4754,27 @@
                 hapticFeedback('medium');
             }
 
-            const hasSelections = Object.keys(currentMeal.selections).length > 0 &&
-                Object.values(currentMeal.selections).some(items => items.length > 0);
+            // Требуем выбор на ТЕКУЩЕМ шаге, чтобы двигаться дальше
+            const currentStepHasSelections = (currentMeal.selections[stepKey] || []).length > 0;
+            const isLastStep = currentMeal.step >= steps.length - 1;
+
+            document.getElementById('next-step-btn').disabled = !currentStepHasSelections;
             
-            document.getElementById('next-step-btn').disabled = !hasSelections;
-            
-            // Показываем главную кнопку, если есть выбор
-            // НО НЕ на последнем шаге - там кнопка уже настроена на сохранение
+            // Показываем главную кнопку только если есть выбор на текущем шаге
             if (tg) {
-                const isLastStep = currentMeal.step >= steps.length - 1;
-                if (hasSelections && !isLastStep) {
-                    // Убираем старый обработчик перед установкой нового
-                    tg.MainButton.offClick();
-                    tg.MainButton.setText('Далее');
-                    tg.MainButton.onClick(() => {
-                        nextStep();
-                    });
+                tg.MainButton.offClick();
+                if (currentStepHasSelections) {
+                    if (isLastStep) {
+                        tg.MainButton.setText('Сохранить приём пищи');
+                        tg.MainButton.onClick(() => saveMeal());
+                    } else {
+                        tg.MainButton.setText('Далее');
+                        tg.MainButton.onClick(() => nextStep());
+                    }
                     tg.MainButton.show();
-                } else if (!hasSelections) {
-                    tg.MainButton.offClick();
+                } else {
                     tg.MainButton.hide();
                 }
-                // Если это последний шаг, не трогаем кнопку - она уже настроена на сохранение
             }
             
             updateOptionCards();
@@ -5631,6 +5675,8 @@
                 kairosState.today = createEmptyDay(getTodayDate());
             }
             
+            kairosState.today.water = (kairosState.today.water || 0) + 200;
+            
             // Начисляем XP за воду
             const waterXP = { muscles: 0, energy: 3, immune: 0, hormones: 0, gut: 0, skin: 0, brain: 1 };
             Object.keys(waterXP).forEach(key => {
@@ -5641,11 +5687,12 @@
             kairosState.today.xp += totalWaterXP;
             
             saveState();
+            updateWaterProgress();
             updateLevel();
             updateStreak();
             updateHeroDisplay();
             
-            showToast(`💧 +${formatPoints(3)} к энергии • +${formatPoints(1)} к мозгу`);
+            showToast(`💧 +200 мл • ${(kairosState.today.water / 1000).toFixed(1)} л из ${(getWaterTargetMl()/1000).toFixed(1)} л`);
         }
 
         initApp();
