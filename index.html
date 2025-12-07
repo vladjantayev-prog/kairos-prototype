@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kairos - Персональное питание</title>
+    <title>Персональное питание</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
@@ -967,7 +967,6 @@
     <div class="container">
         <!-- Onboarding Step 1 -->
         <section id="onboarding-step1" class="card">
-            <h1>Kairos</h1>
             <p class="subtitle">Рассчитаем вашу персональную норму калорий и БЖУ</p>
             <form id="onboarding-form">
                 <div class="form-group">
@@ -1019,14 +1018,6 @@
                         <option value="sedentary">Сижу весь день</option>
                         <option value="light">Немного двигаюсь</option>
                         <option value="active">Часто двигаюсь / тренировки</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Планируемая активность (необязательно)</label>
-                    <select id="planned-activity" name="planned_activity">
-                        <option value="none">Ничего не меняю</option>
-                        <option value="walking">Буду ходить</option>
-                        <option value="strength">Буду добавлять силовые</option>
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary" id="calculate-btn">Рассчитать мою норму</button>
@@ -2969,7 +2960,6 @@
             const weight = parseFloat(formData.get('weight'));
             const goal = formData.get('goal');
             const currentActivity = formData.get('current_activity');
-            const plannedActivity = formData.get('planned_activity');
 
             const bmr = calculateBMR(gender, age, height, weight);
             const activityMultiplier = getActivityMultiplier(currentActivity);
@@ -3062,7 +3052,6 @@
                 id: Date.now().toString(),
                 gender, age, height, weight, goal,
                 current_activity: currentActivity,
-                planned_activity: plannedActivity,
                 daily_calories: dailyCalories,
                 target_calories: targetCalories,
                 protein_min: proteinMin,
@@ -3113,9 +3102,10 @@
         }
 
         document.getElementById('continue-to-mode').addEventListener('click', () => {
-            document.getElementById('onboarding-step2').classList.add('hidden');
-            // Сразу переходим к plate-guide, минуя mode-selection
-            document.getElementById('plate-guide').classList.remove('hidden');
+            // Завершаем онбординг и открываем приложение
+            showApp();
+            // Переходим сразу к разделу "Как собирать тарелку"
+            showSection('plate-guide');
             updatePlateGuidePortions();
         });
         
