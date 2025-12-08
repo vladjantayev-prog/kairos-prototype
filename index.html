@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Персональное питание</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
     <style>
         * {
             margin: 0;
@@ -868,6 +869,21 @@
             transition: width 0.25s ease;
         }
 
+        /* Иллюстрация порций руки в онбординге и справке */
+        .onboarding-portion-image,
+        .daily-portion-image {
+            margin-top: 16px;
+            text-align: center;
+        }
+        .onboarding-portion-image img,
+        .daily-portion-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            display: block;
+            margin: 0 auto;
+        }
+
         .meal-header {
             display: flex;
             justify-content: space-between;
@@ -1095,6 +1111,9 @@
                     Это научно обоснованный метод, который используют диетологи по всему миру — твоя рука идеально подходит для измерения!
                     Не нужно взвешивать еду — просто смотри на размер ладони, кулака, пригоршни и большого пальца. 🖐️
                 </p>
+                <div class="onboarding-portion-image">
+                    <img src="Palms.png" alt="Пример порций по руке: белок, овощи, углеводы и жиры" />
+                </div>
             </div>
             <div class="info-section">
                 <h3>🍽️ Как собирать приёмы пищи?</h3>
@@ -1382,6 +1401,9 @@
                     <p style="color: #2A2A2A; line-height: 1.8; margin: 0 0 12px 0;">
                         Приложение уже перевело твою норму в порции «на глаз» — не нужно взвешивать еду, достаточно ориентироваться на ладони, кулаки, пригоршни и большой палец:
                     </p>
+                    <div class="daily-portion-image">
+                        <img src="Palms.png" alt="Пример порций по руке для белков, овощей, углеводов и жиров" />
+                    </div>
                     <ul style="color: #2A2A2A; line-height: 1.8; margin: 0 0 12px 20px; padding: 0;">
                         <li><strong>Белки (~4 ладони ≈ 80–120 г):</strong> мясо, птица, рыба, яйца, творог, бобовые.</li>
                         <li><strong>Углеводы (~3 пригоршни ≈ 150–200 г):</strong> цельнозерновые крупы, картофель в мундире, бобовые, фрукты.</li>
@@ -2296,7 +2318,12 @@
         
         // Получить сегодняшнюю дату в формате YYYY-MM-DD
         function getTodayDate() {
-            return new Date().toISOString().slice(0, 10);
+            // Локальная дата пользователя в формате YYYY-MM-DD
+            const d = new Date();
+            const yyyy = d.getFullYear();
+            const mm = String(d.getMonth() + 1).padStart(2, '0');
+            const dd = String(d.getDate()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd}`;
         }
 
         // Создать пустое состояние дня
@@ -2358,6 +2385,29 @@
                 today: null,
                 history: {}
             };
+        }
+
+        // === Supabase client ===
+        const SUPABASE_URL = "https://ipbeizkincbxotubakrz.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_kgjlFhZj-vbXToQdmMoWWw_rlaxY4mU";
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // Получить userId (из Telegram или локально с fallback)
+        function getUserId() {
+            try {
+                if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe?.user?.id) {
+                    return String(window.Telegram.WebApp.initDataUnsafe.user.id);
+                }
+            } catch (e) {
+                console.warn('Telegram user id недоступен, используем локальный id', e);
+            }
+            const KEY = 'kairos_user_id';
+            let stored = localStorage.getItem(KEY);
+            if (!stored) {
+                stored = crypto.randomUUID ? crypto.randomUUID() : `user_${Math.random().toString(36).slice(2, 10)}`;
+                localStorage.setItem(KEY, stored);
+            }
+            return stored;
         }
 
         // Сохранить состояние в localStorage
@@ -2468,6 +2518,62 @@
                 skin: kairosState.today.tracks.skin,
                 brain: kairosState.today.tracks.brain
             };
+        }
+
+        // Флаг, чтобы не триггерить запись в момент загрузки
+        let isLoadingStats = false;
+
+        // Загрузить статистику за сегодня из Supabase и обновить UI
+        async function loadTodayStats() {
+            try {
+                isLoadingStats = true;
+                const userId = getUserId();
+                const day = getTodayDate();
+                const { data, error } = await supabaseClient
+                    .from('daily_stats')
+                    .select('*')
+                    .eq('user_id', userId)
+                    .eq('day', day)
+                    .order('created_at', { ascending: false })
+                    .limit(1);
+                if (error) {
+                    console.error('Ошибка загрузки daily_stats:', error);
+                }
+                const stats = (data && data.length > 0)
+                    ? data[0]
+                    : { calories: 0, protein: 0, fat: 0, carbs: 0 };
+
+                if (!kairosState.today) {
+                    kairosState.today = createEmptyDay(getTodayDate());
+                }
+                kairosState.today.kcalUsed = stats.calories || 0;
+                kairosState.today.pUsed = stats.protein || 0;
+                kairosState.today.fUsed = stats.fat || 0;
+                kairosState.today.cUsed = stats.carbs || 0;
+
+                dailyUsed = getDailyUsed();
+                allMeals = getAllMeals();
+                updateDailyTotals();
+                updateDailySummary();
+            } finally {
+                isLoadingStats = false;
+            }
+        }
+
+        // Сохранить статистику за сегодня в Supabase
+        async function saveTodayStats(calories, protein, fat, carbs) {
+            try {
+                const userId = getUserId();
+                const day = getTodayDate();
+                const { error } = await supabaseClient
+                    .from('daily_stats')
+                    .insert({ user_id: userId, day, calories, protein, fat, carbs });
+                if (error) {
+                    console.error('Ошибка сохранения daily_stats:', error);
+                }
+            } catch (e) {
+                console.error('saveTodayStats exception', e);
+            }
         }
 
         function getUserXP() {
@@ -2801,12 +2907,14 @@
             snack: getMealSteps('snack')
         };
 
-        function initApp() {
+        async function initApp() {
+            // Инициализируем userId (Telegram или локальный)
+            getUserId();
             // Обновляем streak при запуске (если есть активность сегодня)
             if (kairosState.today && kairosState.today.meals.length > 0) {
-            updateStreak();
+                updateStreak();
             }
-            checkOnboardingStatus();
+            await checkOnboardingStatus();
             // Обновляем состояние орба при инициализации
             updateHealthOrbState();
             // Обновляем прогресс саморегуляции
@@ -2815,7 +2923,7 @@
             updateActivityMenuSubtitle();
         }
 
-        function checkOnboardingStatus() {
+        async function checkOnboardingStatus() {
             // Скрываем все секции сначала
             document.getElementById('onboarding-step1').classList.add('hidden');
             document.getElementById('onboarding-step2').classList.add('hidden');
@@ -2832,6 +2940,7 @@
                     fiber: 30
                 };
                 
+                await loadTodayStats();
                 showApp();
             } else {
                 // Нет профиля - показываем анкету
@@ -3405,6 +3514,16 @@
             
             // Обновляем состояние орба
             updateHealthOrbState();
+
+            // Сохраняем в Supabase (если это не первичная загрузка)
+            if (!isLoadingStats && dailyUsed) {
+                saveTodayStats(
+                    Math.round(dailyUsed.calories || 0),
+                    Math.round(dailyUsed.protein || 0),
+                    Math.round(dailyUsed.fats || 0),
+                    Math.round(dailyUsed.carbs || 0)
+                );
+            }
         }
 
         function updateWaterProgress() {
