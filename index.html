@@ -3180,16 +3180,11 @@
 
         // Функция для правильного склонения "очки"
         function getPointsWord(count) {
-            const num = Math.abs(count) % 100;
-            const num1 = num % 10;
-            if (num > 10 && num < 20) return 'очков';
-            if (num1 > 1 && num1 < 5) return 'очка';
-            if (num1 === 1) return 'очко';
-            return 'очков';
+            return '';
         }
         
         function formatPoints(count) {
-            return `${count} ${getPointsWord(count)}`;
+            return `${count}`;
         }
 
         // Функция для получения текста порции белка
@@ -5144,6 +5139,9 @@
             if (currentMeal.step < steps.length - 1) {
                 currentMeal.step++;
                 showConstructorStep();
+                // Гарантируем, что остаёмся в конструкторе
+                document.getElementById('constructor').classList.remove('hidden');
+                document.getElementById('main-menu').classList.add('hidden');
                 hapticFeedback('light');
             } else {
                 document.getElementById('next-step-btn').style.display = 'none';
