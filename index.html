@@ -1228,14 +1228,26 @@
                     <div style="font-size: 18px; font-weight: 700; color: #1B2B4A; margin-bottom: 4px;">Прогресс здоровья</div>
                     <div style="font-size: 14px; color: #6B7280;" id="progress-subtitle">Уровень 1 • Серия: 0 дней</div>
                 </div>
-                <div style="margin-top: 8px; margin-bottom: 20px;">
-                    <div style="font-size: 14px; font-weight: 600; color: #1B2B4A; margin-bottom: 4px;">🧘 Осознанный выбор</div>
-                    <div style="font-size: 13px; color: #6B7280; margin-bottom: 8px;">Использование функции «Хочу чего-нибудь пожевать» для понимания своих импульсов</div>
-                    <div style="background: rgba(0, 0, 0, 0.06); border-radius: 999px; height: 8px; overflow: hidden; margin-bottom: 4px;">
-                        <div id="self-regulation-progress" style="background: linear-gradient(135deg, #82C4FF, #4A6BC8); height: 100%; border-radius: 999px; transition: width 0.3s ease; width: 0%;"></div>
+                <div style="margin-top: 8px; margin-bottom: 18px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <div style="font-size: 14px; font-weight: 700; color: #1B2B4A;">Прогресс дня</div>
+                        <div id="day-progress-percent" style="font-size: 14px; font-weight: 700; color: #1B2B4A;">0%</div>
                     </div>
-                    <div style="font-size: 12px; color: #6B7280; text-align: center;">
-                        <span id="self-regulation-text">0 из 10 использований</span>
+                    <div style="background: rgba(0,0,0,0.06); border-radius: 12px; height: 12px; overflow: hidden;">
+                        <div id="day-progress-bar" style="height: 100%; width: 0%; background: linear-gradient(135deg, #82C4FF, #4A6BC8); transition: width 0.3s ease;"></div>
+                    </div>
+                    <div id="day-progress-comment" style="font-size: 12px; color: #6B7280; margin-top: 6px; line-height: 1.4;">
+                        Только начало дня — маленькие шаги тоже считаются 💪
+                    </div>
+                </div>
+                <div style="margin-top: 8px; margin-bottom: 18px;">
+                    <div style="font-size: 14px; font-weight: 600; color: #1B2B4A; margin-bottom: 4px;">🧘 Осознанный выбор</div>
+                    <div style="font-size: 13px; color: #6B7280; margin-bottom: 8px;">Используй функцию «Хочу чего-нибудь пожевать», чтобы замечать свои импульсы перед едой.</div>
+                    <div style="background: rgba(0, 0, 0, 0.06); border-radius: 999px; height: 8px; overflow: hidden; margin-bottom: 4px;">
+                        <div id="mindful-progress-bar" style="background: linear-gradient(135deg, #82C4FF, #4A6BC8); height: 100%; border-radius: 999px; transition: width 0.3s ease; width: 0%;"></div>
+                    </div>
+                    <div style="font-size: 12px; color: #6B7280; text-align: center;" id="mindful-progress-text">
+                        Сегодня ещё не пробовали.
                     </div>
                 </div>
                 <div style="margin-top: 8px;">
@@ -2392,6 +2404,44 @@
         const SUPABASE_KEY = "sb_publishable_kgjlFhZj-vbXToQdmMoWWw_rlaxY4mU";
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+        // Глобальный объект дневной статистики
+        let dailyStats = {
+            userId: '',
+            day: '',
+            calories: 0,
+            protein: 0,
+            fat: 0,
+            carbs: 0,
+            waterMl: 0,
+            activityMin: 0,
+            mindfulChoice: false,
+            healthAreasRawScores: {
+                muscles: 0, energy: 0, immunity: 0, hormones: 0, gut: 0, skin: 0, brain: 0
+            }
+        };
+
+        function getTodayKey(userId) {
+            return `kairos_day_state_${userId}_${getTodayDate()}`;
+        }
+
+        function loadLocalDayCache(userId) {
+            try {
+                const raw = localStorage.getItem(getTodayKey(userId));
+                if (raw) return JSON.parse(raw);
+            } catch (e) {
+                console.warn('Не удалось прочитать локальный кэш дня', e);
+            }
+            return null;
+        }
+
+        function saveLocalDayCache(userId, cache) {
+            try {
+                localStorage.setItem(getTodayKey(userId), JSON.stringify(cache));
+            } catch (e) {
+                console.warn('Не удалось сохранить локальный кэш дня', e);
+            }
+        }
+
         // Получить userId (из Telegram или локально с fallback)
         function getUserId() {
             try {
@@ -2491,6 +2541,16 @@
             BRAIN: { id: 'brain', name: 'Мозг/фокус', icon: '🧠', color: '#A3E0FF' }
         };
 
+        const HEALTH_TARGETS = {
+            muscles: 30,
+            energy: 40,
+            immunity: 30,
+            hormones: 30,
+            gut: 30,
+            skin: 25,
+            brain: 25
+        };
+
         // Геттеры для обратной совместимости (читают из kairosState.today)
         function getDailyUsed() {
             if (!kairosState.today) return { calories: 0, protein: 0, carbs: 0, fats: 0, fiber: 0 };
@@ -2523,33 +2583,89 @@
         // Флаг, чтобы не триггерить запись в момент загрузки
         let isLoadingStats = false;
 
-        // Загрузить статистику за сегодня из Supabase и обновить UI
+        // Загрузить/инициализировать статистику за сегодня (Supabase + локальный кэш)
         async function loadTodayStats() {
             try {
                 isLoadingStats = true;
                 const userId = getUserId();
                 const day = getTodayDate();
+                dailyStats.userId = userId;
+                dailyStats.day = day;
+
+                const localCache = loadLocalDayCache(userId);
+
+                // Загружаем из Supabase или создаём дефолт
                 const { data, error } = await supabaseClient
                     .from('daily_stats')
                     .select('*')
                     .eq('user_id', userId)
                     .eq('day', day)
-                    .order('created_at', { ascending: false })
-                    .limit(1);
-                if (error) {
+                    .maybeSingle();
+
+                if (error && error.code !== 'PGRST116') {
                     console.error('Ошибка загрузки daily_stats:', error);
                 }
-                const stats = (data && data.length > 0)
-                    ? data[0]
-                    : { calories: 0, protein: 0, fat: 0, carbs: 0 };
 
+                const supaStats = data || {
+                    calories: 0, protein: 0, fat: 0, carbs: 0,
+                    water_ml: 0, activity_min: 0, mindful_choice: false
+                };
+
+                // Если записи не было — создаём нулевую строку
+                if (!data) {
+                    await supabaseClient
+                        .from('daily_stats')
+                        .upsert({
+                            user_id: userId,
+                            day,
+                            calories: 0,
+                            protein: 0,
+                            fat: 0,
+                            carbs: 0,
+                            water_ml: 0,
+                            activity_min: 0,
+                            mindful_choice: false
+                        }, { onConflict: 'user_id,day' });
+                }
+
+                // Собираем dailyStats из supabase + локального кэша (локальный приоритет для healthAreasRawScores)
+                dailyStats.calories = supaStats.calories || 0;
+                dailyStats.protein = supaStats.protein || 0;
+                dailyStats.fat = supaStats.fat || 0;
+                dailyStats.carbs = supaStats.carbs || 0;
+                dailyStats.waterMl = supaStats.water_ml || 0;
+                dailyStats.activityMin = supaStats.activity_min || 0;
+                dailyStats.mindfulChoice = !!supaStats.mindful_choice;
+                dailyStats.healthAreasRawScores = localCache?.healthAreasRawScores || dailyStats.healthAreasRawScores;
+
+                // Обновляем kairosState.today по макросам/воде/активности
                 if (!kairosState.today) {
                     kairosState.today = createEmptyDay(getTodayDate());
                 }
-                kairosState.today.kcalUsed = stats.calories || 0;
-                kairosState.today.pUsed = stats.protein || 0;
-                kairosState.today.fUsed = stats.fat || 0;
-                kairosState.today.cUsed = stats.carbs || 0;
+                kairosState.today.kcalUsed = dailyStats.calories;
+                kairosState.today.pUsed = dailyStats.protein;
+                kairosState.today.fUsed = dailyStats.fat;
+                kairosState.today.cUsed = dailyStats.carbs;
+                kairosState.today.water = dailyStats.waterMl;
+                if (!kairosState.today.activityProgress) {
+                    kairosState.today.activityProgress = {
+                        cardioMinutesWeekDone: 0,
+                        strengthSessionsWeekDone: 0,
+                        joySessionsWeekDone: 0,
+                        baseMovementMinutesTodayDone: dailyStats.activityMin || 0
+                    };
+                } else {
+                    kairosState.today.activityProgress.baseMovementMinutesTodayDone = dailyStats.activityMin || 0;
+                }
+                dailyStats.healthAreasRawScores = localCache?.healthAreasRawScores || {
+                    muscles: kairosState.today.tracks?.muscles || 0,
+                    energy: kairosState.today.tracks?.energy || 0,
+                    immunity: kairosState.today.tracks?.immune || 0,
+                    hormones: kairosState.today.tracks?.hormones || 0,
+                    gut: kairosState.today.tracks?.gut || 0,
+                    skin: kairosState.today.tracks?.skin || 0,
+                    brain: kairosState.today.tracks?.brain || 0
+                };
 
                 dailyUsed = getDailyUsed();
                 allMeals = getAllMeals();
@@ -2560,14 +2676,23 @@
             }
         }
 
-        // Сохранить статистику за сегодня в Supabase
-        async function saveTodayStats(calories, protein, fat, carbs) {
+        // Сохранить статистику за сегодня в Supabase (upsert по user_id+day)
+        async function saveTodayStats() {
             try {
-                const userId = getUserId();
-                const day = getTodayDate();
+                const payload = {
+                    user_id: dailyStats.userId,
+                    day: dailyStats.day,
+                    calories: Math.round(dailyStats.calories || 0),
+                    protein: Math.round(dailyStats.protein || 0),
+                    fat: Math.round(dailyStats.fat || 0),
+                    carbs: Math.round(dailyStats.carbs || 0),
+                    water_ml: Math.round(dailyStats.waterMl || 0),
+                    activity_min: Math.round(dailyStats.activityMin || 0),
+                    mindful_choice: !!dailyStats.mindfulChoice
+                };
                 const { error } = await supabaseClient
                     .from('daily_stats')
-                    .insert({ user_id: userId, day, calories, protein, fat, carbs });
+                    .upsert(payload, { onConflict: 'user_id,day' });
                 if (error) {
                     console.error('Ошибка сохранения daily_stats:', error);
                 }
@@ -3397,11 +3522,6 @@
             const tracksList = document.getElementById('tracks-list');
             if (!tracksList) return;
             
-            if (!kairosState.today) {
-                tracksList.innerHTML = '<div style="color: #6B7280; font-style: italic;">Добавляй продукты для прокачки</div>';
-                return;
-            }
-            
             const tracks = [
                 { key: 'muscles', trackKey: 'muscles', ...TRACKS.MUSCLES },
                 { key: 'energy', trackKey: 'energy', ...TRACKS.ENERGY },
@@ -3411,31 +3531,113 @@
                 { key: 'skin', trackKey: 'skin', ...TRACKS.SKIN },
                 { key: 'brain', trackKey: 'brain', ...TRACKS.BRAIN }
             ];
-            
-            const todayTracks = kairosState.today.tracks;
-            const totalTracksXP = Object.values(todayTracks).reduce((sum, xp) => sum + xp, 0);
-            
-            if (totalTracksXP === 0) {
+
+            if (!dailyStats || !dailyStats.healthAreasRawScores) {
                 tracksList.innerHTML = '<div style="color: #6B7280; font-style: italic;">Добавляй продукты для прокачки</div>';
                 return;
             }
-            
+
+            const getLevelText = (support) => {
+                if (support < 0.34) return 'Сегодня этому направлению ещё не хватает внимания.';
+                if (support < 0.67) return 'Уже есть вклад в это направление здоровья.';
+                return 'Сильная поддержка — так формируются устойчивые изменения.';
+            };
+
             tracksList.innerHTML = tracks.map(track => {
-                const xp = todayTracks[track.trackKey] || 0;
-                const xpLabel = formatPoints(xp);
-                const percent = totalTracksXP > 0 ? (xp / totalTracksXP) * 100 : 0;
+                const raw = dailyStats.healthAreasRawScores[track.key] || 0;
+                const target = HEALTH_TARGETS[track.key] || 30;
+                const support = Math.min(1, raw / target);
+                const percent = Math.round(support * 100);
+                const levelText = getLevelText(support);
                 return `
-                    <div style="margin-bottom: 10px;">
+                    <div style="margin-bottom: 14px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
                             <span style="color: ${track.color}; font-size: 14px; font-weight: 500;">${track.icon} ${track.name}</span>
-                            <span style="color: #1B2B4A; font-weight: 600; font-size: 13px;">${xpLabel}</span>
+                            <span style="color: #1B2B4A; font-weight: 600; font-size: 13px;">${percent}%</span>
                         </div>
-                        <div style="background: rgba(0, 0, 0, 0.06); border-radius: 999px; height: 6px; overflow: hidden;">
+                        <div style="background: rgba(0, 0, 0, 0.06); border-radius: 999px; height: 6px; overflow: hidden; margin-bottom: 6px;">
                             <div style="background: linear-gradient(90deg, ${track.color}, ${track.color}dd); height: 100%; width: ${percent}%; transition: width 0.3s; border-radius: 999px;"></div>
                         </div>
+                        <div style="font-size: 12px; color: #6B7280; line-height: 1.5;">${levelText}</div>
                     </div>
                 `;
             }).join('');
+        }
+
+        function computeNutritionScore() {
+            const targetCalories = dailyTargets?.calories || 0;
+            const targetProtein = dailyTargets?.protein || 0;
+            if (!targetCalories || !targetProtein) return 0;
+            const calRatio = dailyStats.calories / targetCalories;
+            const proteinRatio = dailyStats.protein / targetProtein;
+            let calScore = 0;
+            if (calRatio >= 0.9 && calRatio <= 1.1) calScore = 15;
+            else if ((calRatio >= 0.8 && calRatio < 0.9) || (calRatio > 1.1 && calRatio <= 1.2)) calScore = 10;
+            else if ((calRatio >= 0.7 && calRatio < 0.8) || (calRatio > 1.2 && calRatio <= 1.3)) calScore = 5;
+            let proteinScore = 0;
+            if (proteinRatio >= 0.9) proteinScore = 10;
+            else if (proteinRatio >= 0.7) proteinScore = 5;
+            return Math.min(25, calScore + proteinScore);
+        }
+
+        function computeWaterScore() {
+            const goal = getWaterTargetMl() || 2000;
+            const ratio = (dailyStats.waterMl || 0) / goal;
+            if (ratio >= 1.0) return 25;
+            if (ratio >= 0.75) return 18;
+            if (ratio >= 0.5) return 10;
+            return 0;
+        }
+
+        function computeActivityScore() {
+            const m = dailyStats.activityMin || 0;
+            if (m >= 40) return 25;
+            if (m >= 25) return 18;
+            if (m >= 10) return 10;
+            return 0;
+        }
+
+        function computeMindfulScore() {
+            return dailyStats.mindfulChoice ? 25 : 0;
+        }
+
+        function updateDayProgressUI() {
+            const total = computeNutritionScore() + computeWaterScore() + computeActivityScore() + computeMindfulScore();
+            const percent = Math.max(0, Math.min(100, Math.round(total)));
+            const bar = document.getElementById('day-progress-bar');
+            const label = document.getElementById('day-progress-percent');
+            const comment = document.getElementById('day-progress-comment');
+            if (bar) bar.style.width = `${percent}%`;
+            if (label) label.textContent = `${percent}%`;
+            if (comment) {
+                if (percent < 40) comment.textContent = 'Только начало дня — маленькие шаги тоже считаются 💪';
+                else if (percent < 80) comment.textContent = 'Отличный темп, продолжай в том же духе 🙌';
+                else comment.textContent = 'Почти идеальный день, можно немного доработать или просто сохранить результат ✨';
+            }
+        }
+
+        function updateMindfulBlock() {
+            const isDone = !!dailyStats.mindfulChoice;
+            const bar = document.getElementById('mindful-progress-bar');
+            const text = document.getElementById('mindful-progress-text');
+            if (bar) bar.style.width = isDone ? '100%' : '0%';
+            if (text) {
+                text.textContent = isDone
+                    ? 'Сегодня вы уже сделали осознанный выбор — это шаг к контролю.'
+                    : 'Сегодня ещё не пробовали.';
+            }
+        }
+
+        function setMindfulChoiceDone() {
+            dailyStats.mindfulChoice = true;
+            if (!kairosState.today) {
+                kairosState.today = createEmptyDay(getTodayDate());
+            }
+            kairosState.today.selfRegulationCount = (kairosState.today.selfRegulationCount || 0) + 1;
+            saveState();
+            updateDayProgressUI();
+            updateMindfulBlock();
+            updateDailyTotals();
         }
 
         function updateDailyTotals() {
@@ -3514,15 +3716,37 @@
             
             // Обновляем состояние орба
             updateHealthOrbState();
+            
+            // Синхронизируем dailyStats и кэш
+            dailyStats.calories = dailyUsed.calories || 0;
+            dailyStats.protein = dailyUsed.protein || 0;
+            dailyStats.carbs = dailyUsed.carbs || 0;
+            dailyStats.fat = dailyUsed.fats || 0;
+            dailyStats.waterMl = kairosState.today?.water || 0;
+            dailyStats.activityMin = kairosState.today?.activityProgress?.baseMovementMinutesTodayDone || 0;
+            dailyStats.healthAreasRawScores = {
+                muscles: kairosState.today?.tracks?.muscles || 0,
+                energy: kairosState.today?.tracks?.energy || 0,
+                immunity: kairosState.today?.tracks?.immune || 0,
+                hormones: kairosState.today?.tracks?.hormones || 0,
+                gut: kairosState.today?.tracks?.gut || 0,
+                skin: kairosState.today?.tracks?.skin || 0,
+                brain: kairosState.today?.tracks?.brain || 0
+            };
 
-            // Сохраняем в Supabase (если это не первичная загрузка)
-            if (!isLoadingStats && dailyUsed) {
-                saveTodayStats(
-                    Math.round(dailyUsed.calories || 0),
-                    Math.round(dailyUsed.protein || 0),
-                    Math.round(dailyUsed.fats || 0),
-                    Math.round(dailyUsed.carbs || 0)
-                );
+            updateDayProgressUI();
+            updateMindfulBlock();
+            updateTracksDisplay();
+
+            // Сохраняем в Supabase и локальный кэш (если это не первичная загрузка)
+            if (!isLoadingStats && dailyStats.userId) {
+                saveLocalDayCache(dailyStats.userId, {
+                    waterMl: dailyStats.waterMl,
+                    activityMin: dailyStats.activityMin,
+                    mindfulChoice: dailyStats.mindfulChoice,
+                    healthAreasRawScores: dailyStats.healthAreasRawScores
+                });
+                saveTodayStats();
             }
         }
 
@@ -3681,12 +3905,18 @@
                 const carbs = meal.carbs_g || 0;
                 const fats = meal.fats_g || 0;
                 const fiber = meal.fiber_g || 0;
+                const trackXP = meal.trackXP || {};
                 
                 kairosState.today.kcalUsed = Math.max(0, kairosState.today.kcalUsed - calories);
                 kairosState.today.pUsed = Math.max(0, kairosState.today.pUsed - protein);
                 kairosState.today.cUsed = Math.max(0, kairosState.today.cUsed - carbs);
                 kairosState.today.fUsed = Math.max(0, kairosState.today.fUsed - fats);
                 kairosState.today.fiber = Math.max(0, kairosState.today.fiber - fiber);
+                // Вычитаем «сырые очки» направлений
+                Object.keys(kairosState.today.tracks || {}).forEach(key => {
+                    const delta = trackXP[key] || 0;
+                    kairosState.today.tracks[key] = Math.max(0, (kairosState.today.tracks[key] || 0) - delta);
+                });
                 
                 saveState();
                 dailyUsed = getDailyUsed();
@@ -4306,7 +4536,7 @@
                     kairosState.today.selfRegulationCount = (kairosState.today.selfRegulationCount || 0) + 1;
                     saveState();
                     updateLevel();
-                    updateSelfRegulationProgress();
+                    setMindfulChoiceDone();
                 }
                 showToast('✨ +5 очков за осознанность');
                 showMainMenu();
@@ -4459,7 +4689,7 @@
                 kairosState.today.selfRegulationCount = (kairosState.today.selfRegulationCount || 0) + 1;
                 saveState();
                 updateLevel();
-                updateSelfRegulationProgress();
+                setMindfulChoiceDone();
             }
                 showToast(`✨ +${formatPoints(10)} за осознанный выбор`);
             showMainMenu();
@@ -5552,6 +5782,7 @@
             showToast('Супер, ты сделал(а) шаг для себя сегодня 💪');
             updateActivityMenuSubtitle();
             showActivityMain();
+            updateDailyTotals();
         }
 
         // Показать образовательные карточки
@@ -5820,6 +6051,7 @@
             updateLevel();
             updateStreak();
             updateHeroDisplay();
+            updateDailyTotals();
             
             showToast(`💧 +200 мл • ${(kairosState.today.water / 1000).toFixed(1)} л из ${(getWaterTargetMl()/1000).toFixed(1)} л`);
         }
