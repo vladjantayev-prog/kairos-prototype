@@ -2906,7 +2906,7 @@
             if (trackXP.gut > 0) parts.push(`+${formatPoints(trackXP.gut)} для ЖКТ`);
             if (trackXP.skin > 0) parts.push(`+${formatPoints(trackXP.skin)} к коже/волосам`);
             if (trackXP.brain > 0) parts.push(`+${formatPoints(trackXP.brain)} к мозгу`);
-            return parts.join(' • ') || '+очки';
+            return parts.join(' • ') || '+';
         }
         
         // Функция для обновления уровня
@@ -4533,7 +4533,7 @@
                     updateLevel();
                     setMindfulChoiceDone();
                 }
-                showToast('✨ +5 очков за осознанность');
+                showToast('✨ +5 за осознанность');
                 showMainMenu();
             }
         }
@@ -4573,7 +4573,7 @@
                     updateLevel();
                     updateSelfRegulationProgress();
                 }
-                showToast('✨ +5 очков за осознанность');
+                showToast('✨ +5 за осознанность');
                 showMainMenu();
             }
         }
@@ -4613,7 +4613,7 @@
                     updateLevel();
                     updateSelfRegulationProgress();
                 }
-                showToast('✨ +5 очков за осознанность');
+                showToast('✨ +5 за осознанность');
                 showMainMenu();
             }
         }
@@ -4738,7 +4738,7 @@
                     updateLevel();
                     updateSelfRegulationProgress();
                 }
-                showToast('✨ +5 очков за осознанность');
+                showToast('✨ +5 за осознанность');
                 showMainMenu();
             }
         }
@@ -5114,21 +5114,10 @@
 
             document.getElementById('next-step-btn').disabled = !currentStepHasSelections;
             
-            // Показываем главную кнопку только если есть выбор на текущем шаге
+            // Не используем Telegram MainButton в конструкторе, скрываем
             if (tg) {
                 tg.MainButton.offClick();
-                if (currentStepHasSelections) {
-                    if (isLastStep) {
-                        tg.MainButton.setText('Сохранить приём пищи');
-                        tg.MainButton.onClick(() => saveMeal());
-                    } else {
-                        tg.MainButton.setText('Далее');
-                        tg.MainButton.onClick(() => nextStep());
-                    }
-                    tg.MainButton.show();
-                } else {
-                    tg.MainButton.hide();
-                }
+                tg.MainButton.hide();
             }
             
             updateOptionCards();
@@ -5146,16 +5135,10 @@
             } else {
                 document.getElementById('next-step-btn').style.display = 'none';
                 document.getElementById('save-meal-btn').style.display = 'block';
-                
-                // Показываем главную кнопку для сохранения
+                // Телеграм MainButton не используем
                 if (tg) {
-                    // Убираем старый обработчик перед установкой нового
                     tg.MainButton.offClick();
-                    tg.MainButton.setText('Сохранить приём пищи');
-                    tg.MainButton.show();
-                    tg.MainButton.onClick(() => {
-                        saveMeal();
-                    });
+                    tg.MainButton.hide();
                 }
             }
         }
