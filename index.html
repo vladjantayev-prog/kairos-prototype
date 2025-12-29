@@ -869,6 +869,47 @@
             transition: width 0.25s ease;
         }
 
+        /* AI modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            z-index: 9999;
+        }
+        .modal-overlay.hidden {
+            display: none;
+        }
+        .modal-card {
+            width: 100%;
+            max-width: 520px;
+            background: #FFFFFF;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 20px;
+            box-shadow: 0 12px 40px rgba(15, 23, 42, 0.18);
+            padding: 20px;
+        }
+        .modal-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #1B2B4A;
+            margin: 0 0 10px 0;
+        }
+        .modal-list {
+            margin: 0 0 14px 0;
+            padding-left: 18px;
+            color: #2A2A2A;
+            line-height: 1.6;
+        }
+        .modal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
         /* Иллюстрация порций руки в онбординге и справке */
         .onboarding-portion-image,
         .daily-portion-image {
@@ -1063,6 +1104,9 @@
                 <p style="font-size: 26px; font-weight: 700; color: #1B2B4A; margin: 0;">
                     <span id="target-calories">1800</span> ккал и <span id="protein-range">110–130</span> г белка в день
                 </p>
+                <div id="calorie-min-note" style="display:none; margin-top: 10px; font-size: 13px; color: #6B7280; line-height: 1.5;">
+                    Это стартовая настройка. Дальше можно уточнить по прогрессу.
+                </div>
             </div>
             <div class="info-section blue-accent">
                 <h3 style="color: #1B2B4A; margin-top: 0;">🎯 Это твой персональный план!</h3>
@@ -1217,9 +1261,9 @@
                 <div style="font-size: 16px; font-weight: 700; color: #1B2B4A; margin-bottom: 8px;">
                     ИИ-анализ: калории, белки, жиры и углеводы по фото
                 </div>
-                <a class="btn btn-primary" href="https://t.me/kairos_coach_bot" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; max-width: 360px; margin: 0 auto;">
-                    📷 Сканировать тарелку
-                </a>
+                <button class="btn btn-primary" type="button" onclick="openAiFoodModal()" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; max-width: 360px; margin: 0 auto;">
+                    📷 ИИ-анализ блюда
+                </button>
             </section>
 
             <!-- Progress Widget -->
@@ -1298,8 +1342,9 @@
                 </div>
                 <div class="menu-card" onclick="openActivityModule()">
                     <div class="menu-icon">🏃‍♂️</div>
-                    <div class="menu-title">Активность</div>
-                    <div class="menu-subtitle" id="activity-menu-subtitle" style="font-size: 12px; color: #6B7280; margin-top: 4px;">Движение: 0 из 4 дней</div>
+                    <div class="menu-title">🏃 Активность</div>
+                    <div class="menu-subtitle" id="activity-menu-subtitle" style="font-size: 12px; color: #6B7280; margin-top: 4px;">0 / 150 мин за неделю</div>
+                    <div class="menu-subtitle" id="activity-menu-note" style="font-size: 11px; color: #9CA3AF; margin-top: 2px;">Рекомендованный минимум для здоровья</div>
                 </div>
                 <div class="menu-card" onclick="showSection('problems')">
                     <div class="menu-icon">💡</div>
@@ -1338,6 +1383,23 @@
                     <div class="total-row"><span>Белки:</span> <strong><span id="summary-total-protein">0</span> г</strong></div>
                     <div class="total-row"><span>Углеводы:</span> <strong><span id="summary-total-carbs">0</span> г</strong></div>
                     <div class="total-row"><span>Жиры:</span> <strong><span id="summary-total-fats">0</span> г</strong></div>
+                </div>
+            </div>
+
+            <!-- AI Food Analysis Modal -->
+            <div id="ai-food-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="ai-food-modal-title" onclick="closeAiFoodModal(event)">
+                <div class="modal-card">
+                    <div class="modal-title" id="ai-food-modal-title">ИИ-анализ блюда</div>
+                    <ul class="modal-list">
+                        <li>Приложение скроется и вы вернетесь к чату ТГ-бота.</li>
+                        <li>Нажмите скрепку 📎 → Фото → отправьте блюдо.</li>
+                        <li>ИИ пришлёт разбор: ккал / БЖУ / Вывод + совет.</li>
+                        <li>Фото лучше делать сверху, при хорошем свете, без лишнего фона.</li>
+                    </ul>
+                    <div class="modal-actions">
+                        <button class="btn btn-primary" type="button" onclick="goToAiFoodChat()">Перейти в чат и отправить фото</button>
+                        <button class="btn btn-secondary" type="button" onclick="closeAiFoodModal()">Отмена</button>
+                    </div>
                 </div>
             </div>
 
@@ -1389,6 +1451,32 @@
                     </p>
                 </div>
                 <button class="btn btn-secondary" onclick="showMainMenu()">← Назад в меню</button>
+            </section>
+
+            <!-- Activity (MVP) -->
+            <section id="activity" class="card hidden">
+                <div class="step-header">
+                    <div class="step-title">🏃 Активность</div>
+                    <div class="step-subtitle" id="activity-weekly-subtitle">0 / 150 мин за неделю</div>
+                </div>
+                <div class="info-section" style="margin-top: 12px;">
+                    <div style="font-size: 12px; color: #6B7280; margin-bottom: 12px;">Рекомендованный минимум для здоровья</div>
+                    <div class="form-group" style="margin-bottom: 14px;">
+                        <label style="margin-bottom: 8px; display: block;">Тип активности</label>
+                        <select id="activity-type" style="width: 100%;">
+                            <option value="walk">Ходьба</option>
+                            <option value="cardio">Кардио</option>
+                            <option value="strength">Силовая</option>
+                            <option value="other">Другое</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 14px;">
+                        <label style="margin-bottom: 8px; display: block;">⏱ Минуты</label>
+                        <input id="activity-minutes" type="number" inputmode="numeric" min="1" step="1" placeholder="Например, 20" style="width: 100%;" />
+                    </div>
+                    <button class="btn btn-primary" type="button" onclick="addActivityMinutes()">➕ Добавить</button>
+                    <button class="btn btn-secondary" type="button" onclick="showMainMenu()" style="margin-top: 12px;">← Назад в меню</button>
+                </div>
             </section>
 
             <section id="getting-started" class="card hidden">
@@ -2338,6 +2426,19 @@
             return `${yyyy}-${mm}-${dd}`;
         }
 
+        function formatLocalDate(d) {
+            const yyyy = d.getFullYear();
+            const mm = String(d.getMonth() + 1).padStart(2, '0');
+            const dd = String(d.getDate()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd}`;
+        }
+
+        function getYesterdayDateLocal() {
+            const d = new Date();
+            d.setDate(d.getDate() - 1);
+            return formatLocalDate(d);
+        }
+
         // Создать пустое состояние дня
         function createEmptyDay(date) {
             return {
@@ -2442,6 +2543,43 @@
             }
         }
 
+        // ===== Activity MVP (weekly 7d) =====
+        let weeklyActivityMinutes = 0;
+        const WEEKLY_ACTIVITY_TARGET = 150;
+
+        function getStartDateLast7Days() {
+            const d = new Date();
+            d.setDate(d.getDate() - 6);
+            return formatLocalDate(d);
+        }
+
+        async function refreshWeeklyActivityMinutes() {
+            if (!dailyStats.userId) return 0;
+            const start = getStartDateLast7Days();
+            const end = getTodayDate();
+            try {
+                const { data, error } = await supabaseClient
+                    .from('daily_stats')
+                    .select('day,activity_min')
+                    .eq('user_id', dailyStats.userId)
+                    .gte('day', start)
+                    .lte('day', end);
+                if (error) {
+                    console.error('Ошибка загрузки weekly activity:', error);
+                    return weeklyActivityMinutes;
+                }
+                weeklyActivityMinutes = (data || []).reduce((sum, row) => sum + (row.activity_min || 0), 0);
+                return weeklyActivityMinutes;
+            } catch (e) {
+                console.error('refreshWeeklyActivityMinutes exception', e);
+                return weeklyActivityMinutes;
+            } finally {
+                updateActivityMenuSubtitle();
+                const weeklyEl = document.getElementById('activity-weekly-subtitle');
+                if (weeklyEl) weeklyEl.textContent = `${weeklyActivityMinutes} / ${WEEKLY_ACTIVITY_TARGET} мин за неделю`;
+            }
+        }
+
         // Получить userId (из Telegram или локально с fallback)
         function getUserId() {
             try {
@@ -2495,9 +2633,7 @@
         // Обновить streak
         function updateStreak(state, lastDate) {
             const todayStr = getTodayDate();
-            const yesterday = new Date(todayStr);
-            yesterday.setDate(yesterday.getDate() - 1);
-            const yesterdayStr = yesterday.toISOString().slice(0, 10);
+            const yesterdayStr = getYesterdayDateLocal();
             
             if (lastDate === yesterdayStr) {
                 // Продолжаем серию
@@ -2667,10 +2803,24 @@
                     brain: kairosState.today.tracks?.brain || 0
                 };
 
+                // Важно для MVP: восстанавливаем “сырые очки” направлений в kairosState.today.tracks,
+                // иначе при первом updateDailyTotals() они затираются нулями и теряются в течение дня.
+                kairosState.today.tracks = {
+                    muscles: dailyStats.healthAreasRawScores.muscles || 0,
+                    energy: dailyStats.healthAreasRawScores.energy || 0,
+                    immune: dailyStats.healthAreasRawScores.immunity || 0,
+                    hormones: dailyStats.healthAreasRawScores.hormones || 0,
+                    gut: dailyStats.healthAreasRawScores.gut || 0,
+                    skin: dailyStats.healthAreasRawScores.skin || 0,
+                    brain: dailyStats.healthAreasRawScores.brain || 0
+                };
+
                 dailyUsed = getDailyUsed();
                 allMeals = getAllMeals();
                 updateDailyTotals();
                 updateDailySummary();
+                // Обновляем активность за последние 7 дней
+                refreshWeeklyActivityMinutes();
             } finally {
                 isLoadingStats = false;
             }
@@ -2699,6 +2849,35 @@
             } catch (e) {
                 console.error('saveTodayStats exception', e);
             }
+        }
+
+        // Дешёвый debounce, чтобы не спамить Supabase при каждом мелком обновлении UI
+        let dailyStatsSaveTimer = null;
+        let lastSavedDailyStatsJson = '';
+        function scheduleDailyStatsPersist() {
+            if (isLoadingStats || !dailyStats.userId) return;
+            if (dailyStatsSaveTimer) clearTimeout(dailyStatsSaveTimer);
+            dailyStatsSaveTimer = setTimeout(() => {
+                const snapshot = {
+                    calories: Math.round(dailyStats.calories || 0),
+                    protein: Math.round(dailyStats.protein || 0),
+                    fat: Math.round(dailyStats.fat || 0),
+                    carbs: Math.round(dailyStats.carbs || 0),
+                    waterMl: Math.round(dailyStats.waterMl || 0),
+                    activityMin: Math.round(dailyStats.activityMin || 0),
+                    mindfulChoice: !!dailyStats.mindfulChoice
+                };
+                const json = JSON.stringify(snapshot);
+                if (json === lastSavedDailyStatsJson) return;
+                lastSavedDailyStatsJson = json;
+                saveLocalDayCache(dailyStats.userId, {
+                    waterMl: dailyStats.waterMl,
+                    activityMin: dailyStats.activityMin,
+                    mindfulChoice: dailyStats.mindfulChoice,
+                    healthAreasRawScores: dailyStats.healthAreasRawScores
+                });
+                saveTodayStats();
+            }, 600);
         }
 
         function getUserXP() {
@@ -2927,9 +3106,7 @@
         // Функция для обновления streak (вызывается при добавлении еды/активности)
         function updateStreak() {
             const todayStr = getTodayDate();
-            const yesterday = new Date(todayStr);
-                yesterday.setDate(yesterday.getDate() - 1);
-            const yesterdayStr = yesterday.toISOString().slice(0, 10);
+            const yesterdayStr = getYesterdayDateLocal();
             
             if (kairosState.streak.lastCompletedDate === yesterdayStr) {
                 // Продолжаем серию
@@ -3037,7 +3214,7 @@
             getUserId();
             // Обновляем streak при запуске (если есть активность сегодня)
             if (kairosState.today && kairosState.today.meals.length > 0) {
-                updateStreak();
+            updateStreak();
             }
             await checkOnboardingStatus();
             // Обновляем состояние орба при инициализации
@@ -3075,9 +3252,9 @@
 
         function calculateBMR(gender, age, height, weight) {
             if (gender === 'male') {
-                return 10 * weight + 6.25 * height - 5 * age + 5;
+                return Math.round(10 * weight + 6.25 * height - 5 * age + 5);
             } else {
-                return 10 * weight + 6.25 * height - 5 * age - 161;
+                return Math.round(10 * weight + 6.25 * height - 5 * age - 161);
             }
         }
 
@@ -3241,30 +3418,63 @@
 
             const bmr = calculateBMR(gender, age, height, weight);
             const activityMultiplier = getActivityMultiplier(currentActivity);
-            const dailyCalories = Math.round(bmr * activityMultiplier);
-            const targetCalories = calculateTargetCalories(dailyCalories, goal);
-            
-            // Расчёт БЖУ согласно ТЗ
-            const proteinPerKg = goal === 'lose' ? 1.8 : 1.6;
-            const proteinGrams = Math.round(proteinPerKg * weight);
-            const fatGramsMin = Math.round(0.8 * weight);
-            
-            const proteinCalories = proteinGrams * 4;
-            const fatCalories = fatGramsMin * 9;
-            const carbsCalories = Math.max(0, targetCalories - proteinCalories - fatCalories);
-            const carbsGrams = Math.round(carbsCalories / 4);
-            const carbsMin = Math.max(0, Math.round(carbsGrams * 0.9));
+            const tdee = Math.round(bmr * activityMultiplier);
+
+            // Целевые калории (по цели)
+            let targetCalories = Math.round(tdee * (goal === 'lose' ? 0.8 : goal === 'gain' ? 1.15 : 1.0));
+
+            // Защита: минимальные калории
+            const minKcal = gender === 'female' ? 1200 : 1500;
+            const minApplied = targetCalories < minKcal;
+            if (minApplied) targetCalories = minKcal;
+
+            // БЖУ: стартовый расчёт
+            const carbsMinTarget = 80; // г
+            const proteinMin = Math.round(1.6 * weight);
+            let proteinRec = Math.round((goal === 'lose' ? 1.8 : 1.6) * weight);
+            const fatMin = Math.max(Math.round(0.6 * weight), 30);
+            // Жиры не должны опускаться ниже fatMin даже если углеводы и так "влезли"
+            let fatsGrams = Math.max(Math.round(0.8 * weight), fatMin);
+
+            function calcCarbsFloor(kcal, proteinG, fatG) {
+                return Math.floor((kcal - proteinG * 4 - fatG * 9) / 4);
+            }
+
+            let carbsGrams = calcCarbsFloor(targetCalories, proteinRec, fatsGrams);
+            if (carbsGrams < carbsMinTarget) {
+                // Шаг 1: уменьшаем жиры до минимума
+                fatsGrams = fatMin;
+                carbsGrams = calcCarbsFloor(targetCalories, proteinRec, fatsGrams);
+
+                // Шаг 2: если не хватает — уменьшаем белок до минимума
+                if (carbsGrams < carbsMinTarget) {
+                    proteinRec = proteinMin;
+                    carbsGrams = calcCarbsFloor(targetCalories, proteinRec, fatsGrams);
+                }
+
+                // Шаг 3: если всё равно не помещается — поднимаем калории, чтобы “влезли” углеводы 80 г
+                if (carbsGrams < carbsMinTarget) {
+                    carbsGrams = carbsMinTarget;
+                    targetCalories = proteinRec * 4 + fatsGrams * 9 + carbsGrams * 4;
+                }
+            }
+
+            // Границы для отображения (не показываем "112–112")
+            const proteinMax = proteinRec;
+            const proteinDisplayMin = goal === 'lose' ? proteinMin : proteinRec;
+            const proteinDisplayMax = proteinRec;
+
+            // Диапазоны для вторичных подсказок (если нужны)
+            const carbsMin = Math.max(carbsMinTarget, Math.round(carbsGrams * 0.9));
             const carbsMax = Math.round(carbsGrams * 1.1);
-            const fatGramsMax = Math.round(fatGramsMin * 1.2);
-            
-            const proteinMin = Math.round(weight * 1.6);
-            const proteinMax = proteinGrams;
+            const fatGramsMin = fatsGrams;
+            const fatGramsMax = fatsGrams;
 
             // Расчёт порций (ладонь/кулак/пригоршня) - ДО сохранения профиля
             const proteinPerPalm = gender === 'female' 
                 ? PORTION_CONSTANTS.FEMALE_PROTEIN_PER_PALM 
                 : PORTION_CONSTANTS.MALE_PROTEIN_PER_PALM;
-            const targetProteinPalms = Math.round(proteinGrams / proteinPerPalm);
+            const targetProteinPalms = Math.round(proteinRec / proteinPerPalm);
             const targetCarbFists = Math.round(carbsGrams / PORTION_CONSTANTS.CARBS_PER_FIST);
             const targetVegPalms = PORTION_CONSTANTS.DEFAULT_VEG_PALMS;
             const waterTargetMl = Math.round((weight || 0) * 30) || 2500;
@@ -3281,9 +3491,9 @@
                 protein_min: proteinMin,
                 protein_max: proteinMax,
                 // БЖУ в граммах
-                protein_grams: proteinGrams,
+                protein_grams: proteinRec,
                 carbs_grams: carbsGrams,
-                fats_grams: fatGramsMin,
+                fats_grams: fatsGrams,
                 carbs_min: carbsMin,
                 carbs_max: carbsMax,
                 fats_min: fatGramsMin,
@@ -3317,7 +3527,7 @@
                 calories: targetCalories,
                 protein: proteinMax,
                 carbs: carbsGrams,
-                fats: fatGramsMin,
+                fats: fatsGrams,
                 fiber: 30,
                 // Порции
                 proteinPalms: targetProteinPalms,
@@ -3343,23 +3553,32 @@
             };
 
             document.getElementById('target-calories').textContent = targetCalories;
-            document.getElementById('protein-range').textContent = `${proteinMin}–${proteinMax}`;
-            document.getElementById('budget-explanation').textContent = `${targetCalories} калорий`;
+            const proteinRangeText = proteinDisplayMin === proteinDisplayMax
+                ? `${proteinDisplayMax}`
+                : `${proteinDisplayMin}–${proteinDisplayMax}`;
+            document.getElementById('protein-range').textContent = proteinRangeText;
+            document.getElementById('budget-explanation').textContent = `${targetCalories} ккал`;
+            const minNote = document.getElementById('calorie-min-note');
+            if (minNote) minNote.style.display = minApplied ? 'block' : 'none';
             const proteinRangeExplanationEl = document.getElementById('protein-range-explanation');
             if (proteinRangeExplanationEl) {
-                proteinRangeExplanationEl.textContent = `${proteinMin}–${proteinMax} г`;
+                proteinRangeExplanationEl.textContent = proteinDisplayMin === proteinDisplayMax
+                    ? `${proteinDisplayMax} г`
+                    : `${proteinDisplayMin}–${proteinDisplayMax} г`;
             }
             const macroProteinRangeEl = document.getElementById('macro-protein-range');
             if (macroProteinRangeEl) {
-                macroProteinRangeEl.textContent = `${proteinMin}–${proteinMax} г`;
+                macroProteinRangeEl.textContent = proteinDisplayMin === proteinDisplayMax
+                    ? `${proteinDisplayMax} г`
+                    : `${proteinDisplayMin}–${proteinDisplayMax} г`;
             }
             const macroFatRangeEl = document.getElementById('macro-fat-range');
             if (macroFatRangeEl) {
-                macroFatRangeEl.textContent = `${fatGramsMin}–${fatGramsMax} г`;
+                macroFatRangeEl.textContent = `${fatsGrams} г`;
             }
             const macroCarbRangeEl = document.getElementById('macro-carb-range');
             if (macroCarbRangeEl) {
-                macroCarbRangeEl.textContent = `${carbsMin}–${carbsMax} г`;
+                macroCarbRangeEl.textContent = `${carbsGrams} г`;
             }
             
             document.getElementById('onboarding-step1').classList.add('hidden');
@@ -3486,31 +3705,11 @@
             progressText.textContent = `${count} из ${target} использований`;
         }
 
-        // Обновить подзаголовок активности в меню
+        // Обновить подзаголовок активности (MVP): минуты за последние 7 дней / 150
         function updateActivityMenuSubtitle() {
             const subtitleEl = document.getElementById('activity-menu-subtitle');
             if (!subtitleEl) return;
-            
-            if (!kairosState.today || !kairosState.today.activityProgress) {
-                subtitleEl.textContent = 'Движение: 0 из 4 дней';
-                return;
-            }
-            
-            const progress = kairosState.today.activityProgress;
-            const level = kairosState.profile?.activity_level || 'beginner';
-            const targets = ACTIVITY_TARGETS[level] || ACTIVITY_TARGETS.beginner;
-            
-            // Считаем дни с активностью (если есть хотя бы 10 минут базового движения)
-            const hasActivityToday = progress.baseMovementMinutesTodayDone >= 10;
-            
-            // Показываем прогресс кардио или дней
-            if (progress.cardioMinutesWeekDone > 0) {
-                subtitleEl.textContent = `Кардио: ${progress.cardioMinutesWeekDone} / ${targets.cardioMinutesPerWeek} мин·нед`;
-            } else if (hasActivityToday) {
-                subtitleEl.textContent = 'Движение: 1 из 4 дней';
-            } else {
-                subtitleEl.textContent = 'Движение: 0 из 4 дней';
-            }
+            subtitleEl.textContent = `${weeklyActivityMinutes} / ${WEEKLY_ACTIVITY_TARGET} мин за неделю`;
         }
         
         function updateTracksDisplay() {
@@ -3526,7 +3725,7 @@
                 { key: 'skin', trackKey: 'skin', ...TRACKS.SKIN },
                 { key: 'brain', trackKey: 'brain', ...TRACKS.BRAIN }
             ];
-
+            
             if (!dailyStats || !dailyStats.healthAreasRawScores) {
                 tracksList.innerHTML = '<div style="color: #6B7280; font-style: italic;">Добавляй продукты для прокачки</div>';
                 return;
@@ -3537,7 +3736,7 @@
                 if (support < 0.67) return 'Уже есть вклад в это направление здоровья.';
                 return 'Сильная поддержка — так формируются устойчивые изменения.';
             };
-
+            
             tracksList.innerHTML = tracks.map(track => {
                 const raw = dailyStats.healthAreasRawScores[track.key] || 0;
                 const target = HEALTH_TARGETS[track.key] || 30;
@@ -3735,13 +3934,7 @@
 
             // Сохраняем в Supabase и локальный кэш (если это не первичная загрузка)
             if (!isLoadingStats && dailyStats.userId) {
-                saveLocalDayCache(dailyStats.userId, {
-                    waterMl: dailyStats.waterMl,
-                    activityMin: dailyStats.activityMin,
-                    mindfulChoice: dailyStats.mindfulChoice,
-                    healthAreasRawScores: dailyStats.healthAreasRawScores
-                });
-                saveTodayStats();
+                scheduleDailyStatsPersist();
             }
         }
 
@@ -5111,13 +5304,13 @@
             // Требуем выбор на ТЕКУЩЕМ шаге, чтобы двигаться дальше
             const currentStepHasSelections = (currentMeal.selections[stepKey] || []).length > 0;
             const isLastStep = currentMeal.step >= steps.length - 1;
-
+            
             document.getElementById('next-step-btn').disabled = !currentStepHasSelections;
             
             // Не используем Telegram MainButton в конструкторе, скрываем
             if (tg) {
-                tg.MainButton.offClick();
-                tg.MainButton.hide();
+                    tg.MainButton.offClick();
+                    tg.MainButton.hide();
             }
             
             updateOptionCards();
@@ -5379,15 +5572,68 @@
             hasLimitations: false
         };
 
-        // Открыть модуль активности
+        // Открыть модуль активности (MVP)
         function openActivityModule() {
-            if (!kairosState.profile || !kairosState.profile.activity_intro_completed) {
-                // Показываем онбординг
-                showActivityIntro(1);
-            } else {
-                // Показываем главный экран
-                showActivityMain();
+            // Скрываем старые экраны активности и показываем простой экран добавления
+            [
+                'activity-intro-1', 'activity-intro-2', 'activity-intro-3', 'activity-intro-4',
+                'activity-intro-5', 'activity-intro-6', 'activity-main', 'activity-today',
+                'activity-instruction', 'activity-education'
+            ].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+            document.getElementById('main-menu').classList.add('hidden');
+            const screen = document.getElementById('activity');
+            if (screen) screen.classList.remove('hidden');
+            const weeklyEl = document.getElementById('activity-weekly-subtitle');
+            if (weeklyEl) weeklyEl.textContent = `${weeklyActivityMinutes} / ${WEEKLY_ACTIVITY_TARGET} мин за неделю`;
+            refreshWeeklyActivityMinutes();
+            if (tg) {
+                tg.BackButton.show();
+                tg.MainButton.hide();
             }
+        }
+
+        function addActivityMinutes() {
+            const minutesEl = document.getElementById('activity-minutes');
+            const typeEl = document.getElementById('activity-type');
+            const minutes = minutesEl ? parseInt(minutesEl.value, 10) : 0;
+            if (!minutes || minutes < 1) {
+                showToast('Введите минуты активности');
+                return;
+            }
+            // Тип пока не влияет на расчёт (MVP), но сохраняем для будущего расширения
+            const _type = typeEl ? typeEl.value : 'other';
+            void _type;
+
+            // Обновляем дневные минуты
+            dailyStats.activityMin = (dailyStats.activityMin || 0) + minutes;
+            if (!kairosState.today) {
+                kairosState.today = createEmptyDay(getTodayDate());
+            }
+            if (!kairosState.today.activityProgress) {
+                kairosState.today.activityProgress = {
+                    cardioMinutesWeekDone: 0,
+                    strengthSessionsWeekDone: 0,
+                    joySessionsWeekDone: 0,
+                    baseMovementMinutesTodayDone: 0
+                };
+            }
+            kairosState.today.activityProgress.baseMovementMinutesTodayDone =
+                (kairosState.today.activityProgress.baseMovementMinutesTodayDone || 0) + minutes;
+
+            // Оптимистично обновляем недельный прогресс (последующая синхронизация подтянет точное)
+            weeklyActivityMinutes += minutes;
+            updateActivityMenuSubtitle();
+            const weeklyEl = document.getElementById('activity-weekly-subtitle');
+            if (weeklyEl) weeklyEl.textContent = `${weeklyActivityMinutes} / ${WEEKLY_ACTIVITY_TARGET} мин за неделю`;
+
+            // Триггерим сохранение в Supabase/кэш через общую систему дневной статистики
+            updateDailyTotals();
+
+            if (minutesEl) minutesEl.value = '';
+            showToast('Активность добавлена');
         }
 
         // Показать экран онбординга
@@ -6037,9 +6283,38 @@
             showToast(`💧 +200 мл • ${(kairosState.today.water / 1000).toFixed(1)} л из ${(getWaterTargetMl()/1000).toFixed(1)} л`);
         }
 
+        function openAiFoodModal() {
+            const modal = document.getElementById('ai-food-modal');
+            if (!modal) return;
+            modal.classList.remove('hidden');
+        }
+
+        function closeAiFoodModal(event) {
+            const modal = document.getElementById('ai-food-modal');
+            if (!modal) return;
+            // Если кликнули по затемнению — закрываем; клики внутри карточки не закрывают
+            if (event && event.target && event.target !== modal) return;
+            modal.classList.add('hidden');
+        }
+
+        function goToAiFoodChat() {
+            // По ТЗ: если доступен Telegram.WebApp — закрываем мини-апп и возвращаемся в чат
+            if (window.Telegram && window.Telegram.WebApp) {
+                try {
+                    window.Telegram.WebApp.close();
+                    return;
+                } catch (e) {
+                    console.error('Telegram.WebApp.close() error', e);
+                }
+            }
+            // Локальный запуск/браузер: открываем бота для проверки
+            window.open('https://t.me/kairos_coach_bot', '_blank', 'noopener,noreferrer');
+        }
+
         initApp();
     </script>
 </body>
 </html>
+
 
 
