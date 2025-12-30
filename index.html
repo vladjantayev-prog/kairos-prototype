@@ -302,36 +302,35 @@
         }
 
         .budget-display {
-            background: linear-gradient(135deg, #82C4FF, #4A6BC8);
+            background: #FFFFFF;
+            border: 1px solid rgba(0, 0, 0, 0.06);
             border-radius: 24px;
-            padding: 20px;
+            padding: 18px 16px;
             text-align: center;
-            margin-bottom: 20px;
-            box-shadow: none;
+            margin-bottom: 16px;
+            box-shadow: 0 12px 34px rgba(17, 24, 39, 0.10);
         }
 
         .budget-label {
-            font-size: 15px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.95);
-            margin-bottom: 6px;
-            line-height: 1.4;
+            font-size: 18px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 10px;
+            line-height: 1.2;
+            letter-spacing: -0.2px;
         }
 
         .budget-amount {
-            font-size: 46px;
+            font-size: 56px;
             font-weight: 800;
-            color: #FFFFFF;
-            line-height: 1.1;
-            display: inline-flex;
-            align-items: baseline;
-            gap: 8px;
+            color: #2F80ED;
+            line-height: 1.05;
         }
 
-        .budget-unit {
-            font-size: 18px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.9);
+        .budget-caption {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #6B7280;
         }
 
         .macros-grid {
@@ -347,6 +346,32 @@
             border-radius: 18px;
             padding: 12px;
             text-align: center;
+            box-shadow: 0 12px 34px rgba(17, 24, 39, 0.10);
+        }
+
+        .cta-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+        @media (max-width: 360px) {
+            .cta-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .cta-card-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: #1B2B4A;
+            margin-bottom: 6px;
+            line-height: 1.25;
+        }
+        .cta-card-subtitle {
+            font-size: 12px;
+            color: #6B7280;
+            margin-bottom: 10px;
+            line-height: 1.4;
         }
 
         .macro-progress {
@@ -1220,11 +1245,9 @@
             <header id="app-header" class="card">
                 <h1 style="display: none;"></h1>
                 <div class="budget-display">
-                    <div class="budget-label">Твой дневной «бюджет» • Осталось:</div>
-                    <div class="budget-amount">
-                        <span id="remaining-calories">1800</span>
-                        <span style="font-size: 16px; color: #ffffff; margin-left: 8px;">ккал</span>
-                    </div>
+                    <div class="budget-label">Дневной план</div>
+                    <div class="budget-amount"><span id="remaining-calories">1800</span></div>
+                    <div class="budget-caption">ккал осталось</div>
                 </div>
                 <div class="macros-grid">
                     <div class="macro-card">
@@ -1256,14 +1279,49 @@
                 </div>
             </header>
 
-            <!-- AI Scan CTA -->
-            <section class="card" style="margin-top: 12px; text-align: center;">
-                <div style="font-size: 16px; font-weight: 700; color: #1B2B4A; margin-bottom: 8px;">
-                    ИИ-анализ: калории, белки, жиры и углеводы по фото
+            <!-- Блок «Конструктор питания» с горизонтальными карточками (ниже БЖУ) -->
+            <section class="card constructor-section">
+                <div class="constructor-title">Конструктор питания</div>
+                <div class="constructor-scroll">
+                    <div class="constructor-card" onclick="showSection('getting-started')">
+                        <div class="constructor-card-icon blue">📝</div>
+                        <div class="constructor-card-title">С чего<br>начать</div>
+                    </div>
+                    <div class="constructor-card" onclick="showSection('plate-guide')">
+                        <div class="constructor-card-icon green">🍽️</div>
+                        <div class="constructor-card-title">Как<br>собирать тарелку</div>
+                    </div>
+                    <div class="constructor-card" onclick="startConstructor('breakfast')">
+                        <div class="constructor-card-icon green">🌅</div>
+                        <div class="constructor-card-title">Завтрак</div>
+                    </div>
+                    <div class="constructor-card" onclick="startConstructor('lunch')">
+                        <div class="constructor-card-icon yellow">☀️</div>
+                        <div class="constructor-card-title">Обед</div>
+                    </div>
+                    <div class="constructor-card" onclick="startConstructor('snack')">
+                        <div class="constructor-card-icon red">🍎</div>
+                        <div class="constructor-card-title">Перекус</div>
+                    </div>
+                    <div class="constructor-card" onclick="startConstructor('dinner')">
+                        <div class="constructor-card-icon purple">🌙</div>
+                        <div class="constructor-card-title">Ужин</div>
+                    </div>
                 </div>
-                <button class="btn btn-primary" type="button" onclick="openAiFoodModal()" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; max-width: 360px; margin: 0 auto;">
-                    📷 ИИ-анализ блюда
-                </button>
+            </section>
+
+            <!-- 2 карточки в ряд: ИИ-анализ блюда + Добавить вручную -->
+            <section class="cta-grid">
+                <div class="card" style="text-align: left;">
+                    <div class="cta-card-title">ИИ-анализ блюда</div>
+                    <div class="cta-card-subtitle">Калории и БЖУ по фото</div>
+                    <button class="btn btn-primary" type="button" onclick="openAiFoodModal()" style="width: 100%;">📷 ИИ-анализ блюда</button>
+                </div>
+                <div class="card" style="text-align: left;">
+                    <div class="cta-card-title">Добавить вручную</div>
+                    <div class="cta-card-subtitle">Внести КБЖУ в план</div>
+                    <button class="btn btn-secondary" type="button" onclick="openManualAddModal()" style="width: 100%;">✍️ Добавить</button>
+                </div>
             </section>
 
             <!-- Progress Widget -->
@@ -1303,36 +1361,7 @@
                 </div>
             </section>
 
-            <!-- Блок «Конструктор питания» с горизонтальными карточками -->
-            <section class="card constructor-section">
-                <div class="constructor-title">Конструктор питания</div>
-                <div class="constructor-scroll">
-                    <div class="constructor-card" onclick="showSection('getting-started')">
-                        <div class="constructor-card-icon blue">📝</div>
-                        <div class="constructor-card-title">С чего<br>начать</div>
-                    </div>
-                    <div class="constructor-card" onclick="showSection('plate-guide')">
-                        <div class="constructor-card-icon green">🍽️</div>
-                        <div class="constructor-card-title">Как<br>собирать тарелку</div>
-                    </div>
-                    <div class="constructor-card" onclick="startConstructor('breakfast')">
-                        <div class="constructor-card-icon green">🌅</div>
-                        <div class="constructor-card-title">Завтрак</div>
-                    </div>
-                    <div class="constructor-card" onclick="startConstructor('lunch')">
-                        <div class="constructor-card-icon yellow">☀️</div>
-                        <div class="constructor-card-title">Обед</div>
-                    </div>
-                    <div class="constructor-card" onclick="startConstructor('snack')">
-                        <div class="constructor-card-icon red">🍎</div>
-                        <div class="constructor-card-title">Перекус</div>
-                    </div>
-                    <div class="constructor-card" onclick="startConstructor('dinner')">
-                        <div class="constructor-card-icon purple">🌙</div>
-                        <div class="constructor-card-title">Ужин</div>
-                    </div>
-                </div>
-            </section>
+            
 
             <!-- Main Menu -->
             <main id="main-menu" class="main-menu">
@@ -1403,53 +1432,84 @@
                 </div>
             </div>
 
+            <!-- Manual Add Modal -->
+            <div id="manual-add-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="manual-add-modal-title" onclick="closeManualAddModal(event)">
+                <div class="modal-card">
+                    <div class="modal-title" id="manual-add-modal-title">Добавить вручную</div>
+                    <div class="form-group">
+                        <label>Калории (ккал)</label>
+                        <input id="manual-kcal" type="number" inputmode="numeric" min="0" step="1" class="form-control" placeholder="Например, 450" />
+                    </div>
+                    <div class="form-group">
+                        <label>Белки (г)</label>
+                        <input id="manual-protein" type="number" inputmode="numeric" min="0" step="1" class="form-control" placeholder="Например, 30" />
+                    </div>
+                    <div class="form-group">
+                        <label>Углеводы (г)</label>
+                        <input id="manual-carbs" type="number" inputmode="numeric" min="0" step="1" class="form-control" placeholder="Например, 50" />
+                    </div>
+                    <div class="form-group">
+                        <label>Жиры (г)</label>
+                        <input id="manual-fats" type="number" inputmode="numeric" min="0" step="1" class="form-control" placeholder="Например, 15" />
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn btn-primary" type="button" onclick="submitManualAdd()">Добавить</button>
+                        <button class="btn btn-secondary" type="button" onclick="closeManualAddModal()">Отмена</button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Plate Guide Section -->
             <section id="plate-guide" class="card hidden">
                 <div class="step-header">
-                    <div class="step-title">🍽️ Как собирать тарелку</div>
-                    <div class="step-subtitle">Твой ориентир на день в порциях</div>
+                    <div class="step-title">Как собирать тарелку</div>
+                    <div class="step-subtitle">Два научно обоснованных способа оценки порций</div>
                 </div>
-                <div class="info-section blue-accent" id="plate-guide-targets">
-                    <h3>📊 Твой дневной план в порциях:</h3>
-                    <p id="plate-guide-text" style="color: #2A2A2A; line-height: 1.8; margin: 0;">
-                        Мы уже посчитали твой дневной бюджет калорий и БЖУ.<br>
-                        Чтобы тебе не пришлось считать граммы каждый раз, мы перевели их в порции «на глаз»:<br><br>
-                        • <strong>Белок</strong> — <span id="guide-protein-palms">4</span> <span id="guide-protein-palms-word">ладоней</span> в день<br>
-                        • <strong>Углеводы</strong> — <span id="guide-carb-fists">3</span> <span id="guide-carb-fists-word">пригоршни</span> в день<br>
-                        • <strong>Овощи</strong> — <span id="guide-veg-palms">6</span> <span id="guide-veg-palms-word">кулаков</span> в день<br><br>
-                        1 ладонь белка ≈ 20–30 г белка<br>
-                        1 пригоршня углеводов ≈ 25–30 г<br>
-                        1 кулак овощей ≈ 70–90 г
-                    </p>
+
+                <div class="tab-switch" style="display:flex; gap: 10px; margin-top: 14px; margin-bottom: 14px;">
+                    <button type="button" class="btn btn-secondary" id="plate-tab-btn-plate" onclick="openPlateGuideTab('plate')" style="flex:1;">Тарелка</button>
+                    <button type="button" class="btn btn-secondary" id="plate-tab-btn-hand" onclick="openPlateGuideTab('hand')" style="flex:1;">Порции по руке</button>
                 </div>
-                <div class="info-section">
-                    <h3>🍽️ Правило тарелки (Гарвардская тарелка):</h3>
-                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
-                        <strong>½ тарелки</strong> — овощи (сырые или приготовленные)<br>
-                        <strong>¼ тарелки</strong> — белок<br>
-                        <strong>¼ тарелки</strong> — углеводы (гарнир)<br>
-                        <strong>+ 1 источник</strong> — полезные жиры (масло, орехи, авокадо)
-                    </p>
+
+                <div id="plate-tab-plate">
+                    <div class="info-section">
+                        <p style="color: #2A2A2A; line-height: 1.8; margin: 0 0 12px 0;">
+                            Чтобы собирать рацион без постоянных подсчётов, можно использовать один из двух подходов.<br>
+                            Оба метода широко применяются в нутрициологии как простые и устойчивые ориентиры.
+                        </p>
+                        <div style="font-weight: 700; color: #1B2B4A; margin-bottom: 8px;">Правило тарелки (Harvard plate)</div>
+                        <ul style="color: #2A2A2A; line-height: 1.8; margin: 0 0 12px 18px; padding: 0;">
+                            <li>½ тарелки — овощи (сырые или приготовленные)</li>
+                            <li>¼ тарелки — белковые продукты</li>
+                            <li>¼ тарелки — сложные углеводы (крупы/гарнир/хлеб)</li>
+                            <li>+ источник жиров в умеренном количестве (масло, орехи, авокадо)</li>
+                        </ul>
+                        <div style="font-weight: 700; color: #1B2B4A; margin-bottom: 6px;">Зачем это нужно:</div>
+                        <div style="color: #2A2A2A; line-height: 1.8;">
+                            метод помогает автоматически держать баланс клетчатки, белка и энергии, не привязываясь к весам и таблицам.
+                        </div>
+                    </div>
                 </div>
-                <div class="info-section">
-                    <h3>📅 Как распределять по приёмам пищи:</h3>
-                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
-                        <strong>Завтрак:</strong> 1 ладонь белка + 1 пригоршня углеводов + 2 кулака овощей<br>
-                        <strong>Обед:</strong> 1 ладонь белка + 1 пригоршня углеводов + 2 кулака овощей<br>
-                        <strong>Ужин:</strong> 1 ладонь белка + 2 кулака овощей, углеводы по самочувствию (0–½ пригоршни)<br>
-                        <strong>Перекусы:</strong> фрукт + немного орехов / йогурт<br><br>
-                        Приложение считает граммы, а тебе показывает — сколько порций собрать руками.
-                    </p>
+
+                <div id="plate-tab-hand" class="hidden">
+                    <div class="info-section">
+                        <div class="daily-portion-image" style="margin-top: 0;">
+                            <img src="Palms.png" alt="Пример порций по руке для белков, овощей, углеводов и жиров" />
+                        </div>
+                        <div style="font-weight: 700; color: #1B2B4A; margin-bottom: 8px;">Порции по руке (ладонь/кулак/пригоршня/палец)</div>
+                        <ul style="color: #2A2A2A; line-height: 1.8; margin: 0 0 12px 18px; padding: 0;">
+                            <li>Белок ≈ 1 ладонь</li>
+                            <li>Овощи ≈ 1 кулак</li>
+                            <li>Углеводы ≈ 1 пригоршня</li>
+                            <li>Жиры ≈ 1 большой палец</li>
+                        </ul>
+                        <div style="font-weight: 700; color: #1B2B4A; margin-bottom: 6px;">Короткое обоснование:</div>
+                        <div style="color: #2A2A2A; line-height: 1.8;">
+                            этот подход используют как практический эквивалент порций, потому что размер кисти коррелирует с общими размерами тела, а значит порции получаются “под человека” и обычно дают адекватный ориентир в быту.
+                        </div>
+                    </div>
                 </div>
-                <div class="info-section" style="background: linear-gradient(135deg, rgba(130, 196, 255, 0.08) 0%, rgba(74, 107, 200, 0.08) 100%); border-color: rgba(130, 196, 255, 0.2);">
-                    <h3 style="color: #1B2B4A; margin-top: 0;">✋ Научно обоснованный метод</h3>
-                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
-                        Метод визуальных порций (ладонь, кулак, пригоршня, большой палец) используется диетологами по всему миру и признан эффективным способом контроля питания без весов. 
-                        Наши внутренние расчёты показывают, что порции рук примерно на 95% так же точны, как и тщательное взвешивание, измерение и отслеживание пищи. 
-                        Со существенно меньшими усилиями и временем.<br><br>
-                        Твоя рука пропорциональна твоему телу — это идеальный инструмент для измерения порций! 🖐️
-                    </p>
-                </div>
+
                 <button class="btn btn-secondary" onclick="showMainMenu()">← Назад в меню</button>
             </section>
 
@@ -1481,67 +1541,34 @@
 
             <section id="getting-started" class="card hidden">
                 <div class="step-header">
-                    <div class="step-title">С чего начать?</div>
-                    <div class="step-subtitle">Короткий ориентир, чтобы быстро войти в ритм</div>
+                    <div class="step-title">С чего начать</div>
+                    <div class="step-subtitle">Короткая схема, чтобы быстро войти в ритм</div>
                 </div>
                 <div class="info-section">
-                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0 0 16px 0;">
-                        Планируй приёмы пищи заранее вместе с конструктором — это простой способ собрать меню на день из знакомых продуктов.
-                        Выбирай источники белка, углеводов, жиров и овощей — приложение покажет, сколько уже съел и что ещё стоит добавить.
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0 0 12px 0;">
+                        В приложении уже рассчитан дневной план: калории и БЖУ.<br>
+                        Дальше задача простая — собрать рацион так, чтобы приблизиться к этому ориентиру.
                     </p>
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0 0 12px 0;">
+                        Есть три способа добавить питание:
+                    </p>
+                    <ol style="color: #2A2A2A; line-height: 1.8; margin: 0 0 12px 18px; padding: 0;">
+                        <li style="margin-bottom: 10px;">
+                            <strong>Конструктор питания</strong><br>
+                            Подходит, когда планируется приём пищи заранее. Вы выбираете продукты — приложение автоматически считает калории и БЖУ и показывает остаток до дневного плана.
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>Добавить вручную</strong><br>
+                            Подходит для любого приёма пищи, когда нужно зафиксировать данные быстро. Вводятся калории и БЖУ — и они учитываются в дневном плане.
+                        </li>
+                        <li>
+                            <strong>ИИ-анализ по фото</strong><br>
+                            Это инструмент оценки блюда. Он помогает получить ориентировочные калории и БЖУ. При необходимости результат можно внести в дневной план через ручное добавление.
+                        </li>
+                    </ol>
                     <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
-                        Добавляй активность, следи за водой и сном — так ты видишь всю картину дня в одном месте и быстрее приближаешься к цели.
-                    </p>
-                    <p style="color: #2A2A2A; line-height: 1.8; margin: 16px 0 0 0;">
-                        Используй сковороду с антипригарным покрытием и минимум масла при жарке. Лучше выбирать масла, устойчивые к нагреву: рафинированное оливковое, масло авокадо или топлёное гхи. Попробуй готовить на овощном бульоне вместо масла — пища не пригорает и калорий меньше.
-                    </p>
-                </div>
-                <div class="info-section">
-                    <h3 style="color: #1B2B4A; margin-top: 0;">📅 Ежедневные ориентиры по БЖУ</h3>
-                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0 0 12px 0;">
-                        Приложение уже перевело твою норму в порции «на глаз» — не нужно взвешивать еду, достаточно ориентироваться на ладони, кулаки, пригоршни и большой палец:
-                    </p>
-                    <div class="daily-portion-image">
-                        <img src="Palms.png" alt="Пример порций по руке для белков, овощей, углеводов и жиров" />
-                    </div>
-                    <ul style="color: #2A2A2A; line-height: 1.8; margin: 0 0 12px 20px; padding: 0;">
-                        <li><strong>Белки (~4 ладони ≈ 80–120 г):</strong> мясо, птица, рыба, яйца, творог, бобовые.</li>
-                        <li><strong>Углеводы (~3 пригоршни ≈ 150–200 г):</strong> цельнозерновые крупы, картофель в мундире, бобовые, фрукты.</li>
-                        <li><strong>Овощи (~6 кулаков ≈ 400–500 г):</strong> полтарелки некрахмалистых овощей на каждый приём + фрукты в течение дня.</li>
-                        <li><strong>Жиры (3–4 больших пальца ≈ 50–70 г):</strong> 1 ст.л. масла, 20 г орехов, ¼ авокадо, жирная рыба.</li>
-                    </ul>
-                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
-                        💡 Метод ладони, кулака, пригоршни и большого пальца даёт до 95% точности по сравнению с взвешиванием, а Гарвардская «тарелка здорового питания» советует: ½ тарелки овощей, ¼ белка, ¼ цельных углеводов + немного полезных масел.
-                    </p>
-                </div>
-                <div class="info-section">
-                    <h3 style="color: #1B2B4A; margin-top: 0;">🍽️ Как распределять приёмы пищи</h3>
-                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0 0 12px 0;">
-                        🍳 <strong>Завтрак:</strong> 1 белок + 1 сложный углевод + 2 порции овощей + 1 порция полезного жира. Пример: омлет, овсянка/хлеб, овощи и немного орехов или авокадо.
-                    </p>
-                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0 0 12px 0;">
-                        🥗 <strong>Обед:</strong> белок + гарнир из крупы/картофеля + много овощей + масло или семечки. Например, курица с гречкой и салатом с ложкой оливкового масла.
-                    </p>
-                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0 0 12px 0;">
-                        🌙 <strong>Ужин:</strong> белок + 2 порции овощей, углевод по желанию (до половины стандартной порции) + немного жира. Хороший вариант — рыба с овощами гриль и чайная ложка масла.
-                    </p>
-                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0 0 12px 0;">
-                        🍏 <strong>Перекусы:</strong> сочетай фрукт/ягоды с белком или полезным жиром: яблоко + горсть орехов, йогурт без сахара + ягоды, творог + фрукты.
-                    </p>
-                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
-                        🥑 Полезные жиры — всего 3–4 небольших источника в день. Добавляй их в разные приёмы пищи, не обязательно съедать всё сразу.
-                    </p>
-                </div>
-                <div class="info-section">
-                    <h3 style="color: #1B2B4A; margin-top: 0;">Как готовить полезнее?</h3>
-                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0 0 12px 0;">
-                        <strong>Готовка на пару.</strong> Самый диетический метод: сохраняет максимум витаминов и не требует масла.
-                    </p>
-                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0 0 12px 0;">
-                        <strong>Запекание.</strong> Подходит для мяса, рыбы и овощей. В духовке можно обойтись несколькими каплями масла, при этом вкус остаётся насыщенным.
-                    </p>
-                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
-                        <strong>Жарка.</strong> Используй реже, жарь на среднем огне и с подходящим маслом. При жарке калорий больше и часть витаминов разрушается, поэтому это скорее вариант «для разнообразия».
+                        Практическая логика на старте:<br>
+                        в первую очередь контролируется белок, затем добавляются овощи, а углеводы и жиры корректируются под дневной план.
                     </p>
                 </div>
                 <button class="btn btn-secondary" onclick="showMainMenu()">← Назад в меню</button>
@@ -4043,7 +4070,8 @@
                 breakfast: '🌅 Завтрак',
                 lunch: '☀️ Обед',
                 dinner: '🌙 Ужин',
-                snack: '🍎 Перекус'
+                snack: '🍎 Перекус',
+                manual: '✍️ Добавлено вручную'
             };
 
             container.innerHTML = '';
@@ -4384,9 +4412,9 @@
             document.getElementById(sectionId).classList.remove('hidden');
             }
             
-            // Обновляем порции в "Как собирать тарелку"
+            // По умолчанию открываем таб "Тарелка"
             if (sectionId === 'plate-guide') {
-                updatePlateGuidePortions();
+                openPlateGuideTab('plate');
             }
             
             // Показываем кнопку "Назад" при переходе в секцию
@@ -4396,6 +4424,105 @@
             }
             
             hapticFeedback('light');
+        }
+
+        function openPlateGuideTab(tab) {
+            const plate = document.getElementById('plate-tab-plate');
+            const hand = document.getElementById('plate-tab-hand');
+            const btnPlate = document.getElementById('plate-tab-btn-plate');
+            const btnHand = document.getElementById('plate-tab-btn-hand');
+            if (!plate || !hand || !btnPlate || !btnHand) return;
+            if (tab === 'hand') {
+                plate.classList.add('hidden');
+                hand.classList.remove('hidden');
+                btnPlate.classList.remove('btn-primary');
+                btnPlate.classList.add('btn-secondary');
+                btnHand.classList.remove('btn-secondary');
+                btnHand.classList.add('btn-primary');
+            } else {
+                hand.classList.add('hidden');
+                plate.classList.remove('hidden');
+                btnHand.classList.remove('btn-primary');
+                btnHand.classList.add('btn-secondary');
+                btnPlate.classList.remove('btn-secondary');
+                btnPlate.classList.add('btn-primary');
+            }
+        }
+
+        function openManualAddModal() {
+            const modal = document.getElementById('manual-add-modal');
+            if (!modal) return;
+            modal.classList.remove('hidden');
+            const kcal = document.getElementById('manual-kcal');
+            const p = document.getElementById('manual-protein');
+            const c = document.getElementById('manual-carbs');
+            const f = document.getElementById('manual-fats');
+            if (kcal) kcal.value = '';
+            if (p) p.value = '';
+            if (c) c.value = '';
+            if (f) f.value = '';
+            hapticFeedback('light');
+        }
+
+        function closeManualAddModal(event) {
+            if (event && event.target && event.currentTarget && event.target !== event.currentTarget) return;
+            const modal = document.getElementById('manual-add-modal');
+            if (!modal) return;
+            modal.classList.add('hidden');
+            hapticFeedback('light');
+        }
+
+        function submitManualAdd() {
+            const kcalEl = document.getElementById('manual-kcal');
+            const pEl = document.getElementById('manual-protein');
+            const cEl = document.getElementById('manual-carbs');
+            const fEl = document.getElementById('manual-fats');
+            const kcal = Math.max(0, parseInt((kcalEl && kcalEl.value) ? kcalEl.value : '0', 10) || 0);
+            const protein = Math.max(0, parseInt((pEl && pEl.value) ? pEl.value : '0', 10) || 0);
+            const carbs = Math.max(0, parseInt((cEl && cEl.value) ? cEl.value : '0', 10) || 0);
+            const fats = Math.max(0, parseInt((fEl && fEl.value) ? fEl.value : '0', 10) || 0);
+
+            if (kcal === 0 && protein === 0 && carbs === 0 && fats === 0) {
+                showToast('Введите хотя бы одно значение');
+                return;
+            }
+
+            if (!kairosState.today) {
+                kairosState.today = createEmptyDay(getTodayDate());
+            }
+
+            // Добавляем запись в "Итог дня", чтобы можно было удалить
+            const mealData = {
+                id: Date.now().toString(),
+                meal_type: 'manual',
+                items: [],
+                protein: protein > 0 ? `Белки: ${protein} г` : '',
+                carbs: `Углеводы: ${carbs} г • Жиры: ${fats} г`,
+                fats: '',
+                veg: '',
+                calories: kcal,
+                protein_g: protein,
+                carbs_g: carbs,
+                fats_g: fats,
+                fiber_g: 0,
+                trackXP: {},
+                totalXP: 0,
+                created_at: new Date().toISOString(),
+                telegram_user_id: telegramUser?.id || null
+            };
+            kairosState.today.meals.push(mealData);
+
+            kairosState.today.kcalUsed += kcal;
+            kairosState.today.pUsed += protein;
+            kairosState.today.cUsed += carbs;
+            kairosState.today.fUsed += fats;
+
+            saveState();
+            updateDailyTotals();
+            updateDailySummary();
+            updateHeroDisplay();
+            closeManualAddModal();
+            showToast('Добавлено в дневной план');
         }
 
         // ========== SNACK HELPER ФУНКЦИИ ==========
@@ -5151,42 +5278,11 @@
                 card.dataset.foodId = option.foodId || '';
                 card.onclick = () => selectOption(option);
                 
-                // Добавляем подсказку о размере порции (только если порция не указана конкретно)
-                let portionHint = '';
-                const portion = String(option.portion || '').trim();
-                
-                // Убираем подсказки для продуктов с конкретными единицами измерения
-                // Если в порции есть: шт, порция, ч.л., ст.л., доли (¼, ½, ⅓), ломтик - не показываем подсказку
-                const hasSpecificPortion = portion && (
-                    portion.indexOf('шт') !== -1 || 
-                    portion.indexOf('порция') !== -1 || 
-                    portion.indexOf('ч.л.') !== -1 || 
-                    portion.indexOf('ст.л.') !== -1 || 
-                    portion.indexOf('¼') !== -1 || 
-                    portion.indexOf('½') !== -1 || 
-                    portion.indexOf('⅓') !== -1 ||
-                    portion.indexOf('ломтик') !== -1
-                );
-                
-                // Показываем подсказку с точным расчётом порций
-                // И только для групп protein, carb, fat
-                if (!hasSpecificPortion && (option.group === 'protein' || option.group === 'carb' || option.group === 'fat')) {
-                    const sex = kairosState.profile ? kairosState.profile.sex : 'female';
-                    if (option.group === 'protein' && option.protein) {
-                        const portionText = getProteinPortionLabel(option.protein, sex);
-                        portionHint = `<div style="font-size: 11px; color: #6B7280; margin-top: 4px;">≈ ${portionText}</div>`;
-                    } else if (option.group === 'carb' && option.carbs) {
-                        const portionText = getCarbPortionLabel(option.carbs);
-                        portionHint = `<div style="font-size: 11px; color: #6B7280; margin-top: 4px;">≈ ${portionText}</div>`;
-                } else if (option.group === 'fat') {
-                        portionHint = '<div style="font-size: 11px; color: #6B7280; margin-top: 4px;">≈ 1 порция</div>';
-                    }
-                }
+                // MVP: не показываем подсказки ладонь/кулак/пригоршня — оставляем только граммы/шт/порции из option.portion
                 
                 card.innerHTML = `
                     <div class="option-name">${option.name}</div>
                     ${option.portion ? `<div class="option-portion">${option.portion}</div>` : ''}
-                    ${portionHint}
                 `;
                 container.appendChild(card);
             });
@@ -5215,11 +5311,9 @@
                     item.name === optionName || item.foodId === card.dataset.foodId
                 );
                 
-                // Удаляем старые элементы
-                const oldBadge = card.querySelector('.count-badge');
-                const oldButton = card.querySelector('.double-btn');
-                if (oldBadge) oldBadge.remove();
-                if (oldButton) oldButton.remove();
+                // Удаляем старые элементы (могут быть несколько)
+                card.querySelectorAll('.count-badge').forEach(el => el.remove());
+                card.querySelectorAll('.double-btn').forEach(el => el.remove());
                 
                 if (selectedItem) {
                     card.classList.add('selected');
