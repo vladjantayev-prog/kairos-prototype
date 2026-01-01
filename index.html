@@ -1058,6 +1058,386 @@
                 grid-template-columns: repeat(2, 1fr);
             }
         }
+
+        /* ============================
+           iOS Minimal Theme (Mocks)
+           UI-only overrides: no logic
+        ============================ */
+        :root {
+            --bg: #F6F7FB;
+            --bg-2: #F2F5FF;
+            --card: rgba(255, 255, 255, 0.92);
+            --border: rgba(60, 60, 67, 0.12);
+            --text: #0B0B0F;
+            --text-secondary: rgba(60, 60, 67, 0.66);
+            --text-tertiary: rgba(60, 60, 67, 0.45);
+            --accent: #007AFF;
+            --accent-tint: rgba(0, 122, 255, 0.14);
+            --accent-tint-border: rgba(0, 122, 255, 0.14);
+            --shadow-card: 0 14px 40px rgba(17, 24, 39, 0.10);
+            --shadow-tile: 0 10px 28px rgba(17, 24, 39, 0.10);
+            --radius-card: 30px;
+            --radius-tile: 26px;
+            --radius-pill: 999px;
+            --space-8: 8px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-24: 24px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, "Segoe UI", sans-serif;
+            background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+            color: var(--text);
+        }
+        body::before {
+            background:
+                radial-gradient(circle at 30% 20%, rgba(0, 122, 255, 0.035) 0%, transparent 55%),
+                radial-gradient(circle at 80% 85%, rgba(88, 86, 214, 0.025) 0%, transparent 50%);
+        }
+
+        .container {
+            max-width: 420px;
+            padding: 18px 16px;
+        }
+
+        .card,
+        .daily-summary,
+        .modal-card,
+        .hero-card,
+        .macro-card,
+        .menu-card,
+        .constructor-card {
+            background: var(--card) !important;
+            border: 1px solid var(--border) !important;
+            backdrop-filter: none !important;
+        }
+
+        .card,
+        .daily-summary,
+        .modal-card {
+            border-radius: var(--radius-card) !important;
+            box-shadow: var(--shadow-card) !important;
+        }
+
+        /* remove colored/legacy gradients in "blue card" variants */
+        .card.blue-card,
+        .results {
+            background: var(--card) !important;
+            color: var(--text) !important;
+            border: 1px solid rgba(0, 122, 255, 0.14) !important;
+            box-shadow: var(--shadow-card) !important;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+            color: var(--text);
+        }
+
+        .subtitle,
+        .macro-label,
+        .macro-total,
+        .cta-card-subtitle,
+        .menu-subtitle,
+        #water-progress-text {
+            color: var(--text-secondary) !important;
+        }
+
+        /* Budget (top block) */
+        .budget-display {
+            border-radius: var(--radius-card) !important;
+            box-shadow: var(--shadow-card) !important;
+            border: 1px solid var(--border) !important;
+            background: var(--card) !important;
+        }
+        .budget-label {
+            color: var(--text) !important;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+        }
+        .budget-amount {
+            color: var(--text) !important;
+            font-size: 72px;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+        .budget-caption {
+            color: var(--text-secondary) !important;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* Macro tiles */
+        .macros-grid {
+            gap: var(--space-12);
+        }
+        .macro-card {
+            border-radius: var(--radius-tile) !important;
+            box-shadow: var(--shadow-tile) !important;
+            padding: 14px 12px;
+        }
+        .macro-value {
+            color: var(--text) !important;
+            font-weight: 900;
+            letter-spacing: -0.2px;
+        }
+        .macro-progress {
+            background: rgba(120, 120, 128, 0.16) !important;
+        }
+        .macro-progress-fill {
+            background: var(--accent) !important;
+        }
+        .macro-progress-fill--carbs { background: #34C759 !important; } /* iOS green */
+        .macro-progress-fill--fats { background: #FFCC00 !important; }  /* iOS yellow */
+
+        /* CTA cards + iOS buttons */
+        .cta-grid {
+            gap: var(--space-12);
+            margin-top: var(--space-12);
+        }
+
+        .btn {
+            width: 100%;
+            height: 46px;
+            border-radius: var(--radius-pill) !important;
+            padding: 0 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+            box-shadow: none !important;
+            transform: none !important;
+        }
+        .btn-icon {
+            width: 18px;
+            height: 18px;
+            display: inline-block;
+        }
+
+        /* Primary (solid iOS blue) */
+        .btn-primary {
+            background: var(--accent) !important;
+            color: #FFFFFF !important;
+            border: 1px solid rgba(0, 122, 255, 0.35) !important;
+        }
+        .btn-primary:active { opacity: 0.92; }
+
+        /* Secondary (system gray) */
+        .btn-secondary {
+            background: rgba(120, 120, 128, 0.16) !important;
+            color: var(--text) !important;
+            border: 1px solid rgba(120, 120, 128, 0.10) !important;
+        }
+        .btn-secondary:active { opacity: 0.92; }
+
+        /* Tinted (used in CTA cards) */
+        .btn--tinted {
+            background: var(--accent-tint) !important;
+            color: var(--accent) !important;
+            border: 1px solid var(--accent-tint-border) !important;
+        }
+        .btn--tinted:active {
+            background: rgba(0, 122, 255, 0.18) !important;
+        }
+
+        /* Tiles (constructor + main menu) */
+        .constructor-card,
+        .menu-card {
+            border-radius: var(--radius-tile) !important;
+            box-shadow: var(--shadow-tile) !important;
+            transition: none !important;
+        }
+        .constructor-card:hover,
+        .menu-card:hover {
+            transform: none !important;
+            box-shadow: var(--shadow-tile) !important;
+            background: var(--card) !important;
+            border-color: var(--border) !important;
+        }
+        .constructor-card:active,
+        .menu-card:active {
+            opacity: 0.94;
+        }
+
+        .menu-card {
+            align-items: flex-start;
+            text-align: left;
+            gap: 6px;
+            padding: 18px 16px;
+            justify-content: flex-start;
+        }
+        .menu-icon { font-size: 26px; }
+        .menu-title {
+            color: var(--text) !important;
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: -0.3px;
+        }
+
+        .constructor-title,
+        .summary-title,
+        .step-title,
+        .modal-title {
+            color: var(--text) !important;
+            font-weight: 900 !important;
+            letter-spacing: -0.3px;
+        }
+
+        /* Content blocks inside cards */
+        .info-section {
+            background: rgba(255, 255, 255, 0.72) !important;
+            border: 1px solid var(--border) !important;
+            border-radius: 22px !important;
+            box-shadow: none !important;
+        }
+
+        /* remove gradients from small icon blocks in constructor */
+        .constructor-card-icon { box-shadow: none !important; }
+        .constructor-card-icon.blue { background: #EAF2FF !important; }
+        .constructor-card-icon.green { background: #E8FAF0 !important; }
+        .constructor-card-icon.yellow { background: #FFF7DD !important; }
+        .constructor-card-icon.purple { background: #F1ECFF !important; }
+        .constructor-card-icon.red { background: #FFECEE !important; }
+
+        /* Radio selected (no gradients) */
+        .radio-option input[type="radio"]:checked + label {
+            background: var(--accent) !important;
+            color: #FFFFFF !important;
+            border-color: rgba(0, 122, 255, 0.35) !important;
+            box-shadow: none !important;
+        }
+        .radio-option label:hover {
+            border-color: rgba(0, 122, 255, 0.25) !important;
+            background: rgba(0, 122, 255, 0.06) !important;
+        }
+
+        /* Hero selection (remove gradients) */
+        .hero-icon {
+            background: rgba(0, 122, 255, 0.14) !important;
+            box-shadow: none !important;
+        }
+        .hero-card.selected {
+            background: rgba(0, 122, 255, 0.06) !important;
+            border-color: rgba(0, 122, 255, 0.18) !important;
+            box-shadow: var(--shadow-tile) !important;
+        }
+
+        /* Inputs */
+        input[type="number"],
+        select,
+        .form-control,
+        textarea {
+            border-radius: 18px !important;
+            border: 1px solid var(--border) !important;
+            background: rgba(255,255,255,0.9) !important;
+            color: var(--text) !important;
+            box-shadow: none !important;
+        }
+        input[type="number"]:focus,
+        select:focus,
+        .form-control:focus,
+        textarea:focus {
+            border-color: rgba(0, 122, 255, 0.45) !important;
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.10) !important;
+        }
+
+        /* Toast (remove gradients) */
+        .toast {
+            background: rgba(17, 24, 39, 0.88) !important;
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
+            box-shadow: 0 14px 40px rgba(17, 24, 39, 0.25) !important;
+        }
+
+        /* Water: wave progress (mock) */
+        .menu-card--water {
+            overflow: hidden;
+            padding-bottom: 74px;
+        }
+        .menu-card--water .water-progress {
+            --water-fill: 0%;
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 74px;
+            border-radius: 0 0 var(--radius-tile) var(--radius-tile);
+            background: rgba(0, 122, 255, 0.10) !important;
+            overflow: hidden;
+            margin-top: 0;
+        }
+        .menu-card--water .water-progress-fill {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: var(--water-fill);
+            background: rgba(0, 122, 255, 0.22) !important;
+            border-radius: 0;
+            transition: height 0.25s ease;
+        }
+        .menu-card--water .water-progress-fill::before,
+        .menu-card--water .water-progress-fill::after {
+            content: "";
+            position: absolute;
+            left: -25%;
+            width: 150%;
+            height: 26px;
+            top: -18px;
+            background-repeat: repeat-x;
+            background-size: 220px 26px;
+            opacity: 0.95;
+            animation: waterWaveMove 6s linear infinite;
+        }
+        .menu-card--water .water-progress-fill::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='26' viewBox='0 0 220 26'%3E%3Cpath d='M0 14 C 25 6, 55 22, 80 14 S 135 6, 160 14 S 195 22, 220 14 V26 H0 Z' fill='rgba(0,122,255,0.38)'/%3E%3C/svg%3E");
+        }
+        .menu-card--water .water-progress-fill::after {
+            top: -14px;
+            opacity: 0.65;
+            animation-duration: 8s;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='26' viewBox='0 0 220 26'%3E%3Cpath d='M0 14 C 30 20, 55 8, 90 14 S 140 20, 170 14 S 200 8, 220 14 V26 H0 Z' fill='rgba(0,122,255,0.28)'/%3E%3C/svg%3E");
+        }
+        @keyframes waterWaveMove {
+            from { transform: translateX(0); }
+            to { transform: translateX(-140px); }
+        }
+
+        /* Activity mini-bars: remove gradients from inline styles */
+        #activity-cardio-bar,
+        #activity-strength-bar,
+        #activity-base-bar,
+        #activity-joy-bar {
+            background: var(--accent) !important;
+        }
+
+        /* Constructor dynamic UI badges/buttons: remove legacy gradients */
+        .count-badge {
+            background: rgba(17, 24, 39, 0.86) !important;
+            color: #FFFFFF !important;
+            border: 1px solid rgba(255, 255, 255, 0.14) !important;
+            border-radius: 999px !important;
+            box-shadow: 0 10px 24px rgba(17, 24, 39, 0.18) !important;
+        }
+        .double-btn {
+            background: var(--accent-tint) !important;
+            color: var(--accent) !important;
+            border: 1px solid var(--accent-tint-border) !important;
+            border-radius: 999px !important;
+            box-shadow: none !important;
+        }
+
+        /* Sleep confirmation (remove gradients) */
+        #sleep-selected-message {
+            background: rgba(0, 122, 255, 0.10) !important;
+            border: 1px solid rgba(0, 122, 255, 0.14) !important;
+            color: var(--text) !important;
+        }
     </style>
 </head>
 <body>
@@ -1276,12 +1656,22 @@
                 <div class="card" style="text-align: left;">
                     <div class="cta-card-title">ИИ-анализ блюда</div>
                     <div class="cta-card-subtitle">Калории и БЖУ по фото</div>
-                    <button class="btn btn-primary" type="button" onclick="openAiFoodModal()" style="width: 100%;">📷 ИИ-анализ блюда</button>
+                    <button class="btn btn--tinted" type="button" onclick="openAiFoodModal()" style="width: 100%;">
+                        <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill="currentColor" d="M9.5 4.5a1 1 0 0 0-.87.5L7.76 6.5H6a3 3 0 0 0-3 3v8A3.5 3.5 0 0 0 6.5 21h11A3.5 3.5 0 0 0 21 17.5v-8A3 3 0 0 0 18 6.5h-1.76l-.87-1.5a1 1 0 0 0-.87-.5h-5ZM12 9a4 4 0 1 1 0 8 4 4 0 0 1 0-8Zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z"/>
+                        </svg>
+                        <span>ИИ-анализ блюда</span>
+                    </button>
                 </div>
                 <div class="card" style="text-align: left;">
                     <div class="cta-card-title">Добавить вручную</div>
                     <div class="cta-card-subtitle">Внести КБЖУ в план</div>
-                    <button class="btn btn-secondary" type="button" onclick="openManualAddModal()" style="width: 100%;">✍️ Добавить</button>
+                    <button class="btn btn--tinted" type="button" onclick="openManualAddModal()" style="width: 100%;">
+                        <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25Zm18-10.5a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75L21 6.75Z"/>
+                        </svg>
+                        <span>Добавить</span>
+                    </button>
                 </div>
             </section>
 
@@ -1302,7 +1692,7 @@
                     <div class="menu-icon">😴</div>
                     <div class="menu-title">Сон</div>
                 </div>
-                <div class="menu-card" onclick="addWater()">
+                <div class="menu-card menu-card--water" onclick="addWater()">
                     <div class="menu-icon">💧</div>
                     <div class="menu-title">Вода +200 мл</div>
                     <div id="water-progress-text" style="font-size: 12px; color: #6B7280; margin-top: 4px;">0.0 л / 2.5 л</div>
@@ -3974,7 +4364,11 @@
             }
             if (fillEl) {
                 const percent = Math.min(100, (waterUsed / target) * 100);
-                fillEl.style.width = `${percent}%`;
+                // UI: wave progress uses height (but keep width for graceful fallback)
+                fillEl.style.width = '100%';
+                fillEl.style.height = `${percent}%`;
+                const parent = fillEl.parentElement;
+                if (parent) parent.style.setProperty('--water-fill', `${percent}%`);
             }
         }
         
