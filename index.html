@@ -1058,464 +1058,6 @@
                 grid-template-columns: repeat(2, 1fr);
             }
         }
-
-        /* ============================
-           iOS Minimal Theme (Mocks)
-           UI-only overrides: no logic
-        ============================ */
-        :root {
-            --bg: #F6F7FB;
-            --bg-2: #F2F5FF;
-            --card: rgba(255, 255, 255, 0.92);
-            --border: rgba(60, 60, 67, 0.12);
-            --text: #0B0B0F;
-            --text-secondary: rgba(60, 60, 67, 0.66);
-            --text-tertiary: rgba(60, 60, 67, 0.45);
-            --accent: #007AFF;
-            --accent-tint: rgba(0, 122, 255, 0.14);
-            --accent-tint-border: rgba(0, 122, 255, 0.14);
-            --shadow-card: 0 12px 30px rgba(17, 24, 39, 0.08);
-            --shadow-tile: 0 10px 24px rgba(17, 24, 39, 0.08);
-            --radius-card: 28px;
-            --radius-tile: 24px;
-            --radius-pill: 999px;
-            --space-8: 8px;
-            --space-12: 12px;
-            --space-16: 16px;
-            --space-24: 24px;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, "Segoe UI", sans-serif;
-            background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
-            color: var(--text);
-        }
-        body::before {
-            background:
-                radial-gradient(circle at 30% 20%, rgba(0, 122, 255, 0.035) 0%, transparent 55%),
-                radial-gradient(circle at 80% 85%, rgba(88, 86, 214, 0.025) 0%, transparent 50%);
-        }
-
-        .container {
-            max-width: 420px;
-            padding: 16px 16px;
-        }
-
-        .card,
-        .daily-summary,
-        .modal-card,
-        .hero-card,
-        .macro-card,
-        .menu-card,
-        .constructor-card {
-            background: var(--card) !important;
-            border: 1px solid var(--border) !important;
-            backdrop-filter: none !important;
-        }
-
-        .card,
-        .daily-summary,
-        .modal-card {
-            border-radius: var(--radius-card) !important;
-            box-shadow: var(--shadow-card) !important;
-        }
-
-        /* Day plan: remove visible container around budget + macros (match mock) */
-        #app-header.card {
-            background: transparent !important;
-            border: none !important;
-            box-shadow: none !important;
-            padding: 0 !important;
-            margin-bottom: 12px !important;
-        }
-
-        /* Cards size (less "huge") */
-        .card {
-            padding: 20px !important;
-            margin-bottom: 14px !important;
-        }
-
-        /* remove colored/legacy gradients in "blue card" variants */
-        .card.blue-card,
-        .results {
-            background: var(--card) !important;
-            color: var(--text) !important;
-            border: 1px solid rgba(0, 122, 255, 0.14) !important;
-            box-shadow: var(--shadow-card) !important;
-        }
-
-        h1 {
-            font-size: 26px;
-            font-weight: 750;
-            letter-spacing: -0.3px;
-            color: var(--text);
-        }
-
-        .subtitle,
-        .macro-label,
-        .macro-total,
-        .cta-card-subtitle,
-        .menu-subtitle,
-        #water-progress-text {
-            color: var(--text-secondary) !important;
-        }
-
-        /* Budget (top block) */
-        .budget-display {
-            border-radius: var(--radius-card) !important;
-            box-shadow: var(--shadow-card) !important;
-            border: 1px solid var(--border) !important;
-            background: var(--card) !important;
-        }
-        .budget-label {
-            color: var(--text) !important;
-            font-size: 26px;
-            font-weight: 750;
-            letter-spacing: -0.3px;
-        }
-        .budget-amount {
-            color: var(--text) !important;
-            font-size: 70px;
-            font-weight: 800;
-            letter-spacing: -1px;
-        }
-        .budget-caption {
-            color: var(--text-secondary) !important;
-            font-size: 16px;
-            font-weight: 650;
-        }
-
-        /* Macro tiles */
-        .macros-grid {
-            gap: var(--space-12);
-        }
-        .macro-card {
-            border-radius: var(--radius-tile) !important;
-            box-shadow: var(--shadow-tile) !important;
-            padding: 14px 12px;
-            min-height: 118px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-        }
-        .macro-value {
-            color: var(--text) !important;
-            font-weight: 800;
-            letter-spacing: -0.2px;
-        }
-        .macro-progress {
-            background: rgba(120, 120, 128, 0.16) !important;
-        }
-        .macro-progress-fill {
-            background: var(--accent) !important;
-        }
-        .macro-progress-fill--carbs { background: #34C759 !important; } /* iOS green */
-        .macro-progress-fill--fats { background: #FFCC00 !important; }  /* iOS yellow */
-
-        /* CTA cards + iOS buttons */
-        .cta-grid {
-            gap: var(--space-12);
-            margin-top: var(--space-12);
-        }
-
-        .btn {
-            width: 100%;
-            height: 40px;
-            border-radius: var(--radius-pill) !important;
-            padding: 0 14px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            font-size: 16px;
-            font-weight: 650;
-            letter-spacing: -0.2px;
-            box-shadow: none !important;
-            transform: none !important;
-        }
-        .btn-icon {
-            width: 18px;
-            height: 18px;
-            display: inline-block;
-        }
-
-        /* Primary (solid iOS blue) */
-        .btn-primary {
-            background: var(--accent) !important;
-            color: #FFFFFF !important;
-            border: 1px solid rgba(0, 122, 255, 0.35) !important;
-        }
-        .btn-primary:active { opacity: 0.92; }
-
-        /* Secondary (system gray) */
-        .btn-secondary {
-            background: rgba(120, 120, 128, 0.16) !important;
-            color: var(--text) !important;
-            border: 1px solid rgba(120, 120, 128, 0.10) !important;
-        }
-        .btn-secondary:active { opacity: 0.92; }
-
-        /* Tinted (used in CTA cards) */
-        .btn--tinted {
-            background: var(--accent-tint) !important;
-            color: var(--accent) !important;
-            border: 1px solid var(--accent-tint-border) !important;
-        }
-        .btn--tinted:active {
-            background: rgba(0, 122, 255, 0.18) !important;
-        }
-
-        /* Tiles (constructor + main menu) */
-        .constructor-card,
-        .menu-card {
-            border-radius: var(--radius-tile) !important;
-            box-shadow: var(--shadow-tile) !important;
-            transition: none !important;
-        }
-        .constructor-card:hover,
-        .menu-card:hover {
-            transform: none !important;
-            box-shadow: var(--shadow-tile) !important;
-            background: var(--card) !important;
-            border-color: var(--border) !important;
-        }
-        .constructor-card:active,
-        .menu-card:active {
-            opacity: 0.94;
-        }
-
-        .menu-card {
-            align-items: flex-start;
-            text-align: left;
-            gap: 6px;
-            padding: 18px 16px;
-            justify-content: flex-start;
-            min-height: 168px;
-        }
-        .menu-icon { font-size: 26px; }
-        .menu-title {
-            color: var(--text) !important;
-            font-size: 22px;
-            font-weight: 750;
-            letter-spacing: -0.3px;
-        }
-
-        /* Same typography for CTA titles/subtitles as cards (match mock) */
-        .cta-card-title {
-            color: var(--text) !important;
-            font-size: 24px !important;
-            font-weight: 750 !important;
-            letter-spacing: -0.3px;
-        }
-        .cta-card-subtitle {
-            font-size: 16px !important;
-            line-height: 1.25;
-        }
-
-        /* CTA buttons: small, neat, centered pills like in mock */
-        .cta-grid .card {
-            padding: 18px 16px !important;
-            min-height: 172px;
-            display: flex;
-            flex-direction: column;
-        }
-        .cta-grid .btn {
-            width: 82% !important;
-            max-width: 220px !important;
-            margin: auto auto 0 !important;
-        }
-        .cta-grid .btn span {
-            text-align: center;
-            line-height: 1.05;
-        }
-
-        .constructor-title,
-        .summary-title,
-        .step-title,
-        .modal-title {
-            color: var(--text) !important;
-            font-weight: 750 !important;
-            letter-spacing: -0.3px;
-        }
-
-        /* Content blocks inside cards */
-        .info-section {
-            background: rgba(255, 255, 255, 0.72) !important;
-            border: 1px solid var(--border) !important;
-            border-radius: 22px !important;
-            box-shadow: none !important;
-        }
-
-        /* Constructor: no colored underlays behind emoji (match mock) */
-        .constructor-card {
-            padding: 12px 10px 14px !important;
-            height: 144px;
-            justify-content: flex-start;
-        }
-        .constructor-card-icon {
-            width: auto !important;
-            height: auto !important;
-            border-radius: 0 !important;
-            background: transparent !important;
-            box-shadow: none !important;
-            font-size: 34px !important;
-            line-height: 1 !important;
-            margin-top: 6px;
-        }
-        .constructor-card-title {
-            font-size: 14px !important;
-            font-weight: 650 !important;
-            color: var(--text) !important;
-            line-height: 1.15 !important;
-        }
-
-        /* Small typography smoothing + consistent text rendering */
-        body, button, input, select, textarea {
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            text-rendering: geometricPrecision;
-        }
-
-        /* Radio selected (no gradients) */
-        .radio-option input[type="radio"]:checked + label {
-            background: var(--accent) !important;
-            color: #FFFFFF !important;
-            border-color: rgba(0, 122, 255, 0.35) !important;
-            box-shadow: none !important;
-        }
-        .radio-option label:hover {
-            border-color: rgba(0, 122, 255, 0.25) !important;
-            background: rgba(0, 122, 255, 0.06) !important;
-        }
-
-        /* Hero selection (remove gradients) */
-        .hero-icon {
-            background: rgba(0, 122, 255, 0.14) !important;
-            box-shadow: none !important;
-        }
-        .hero-card.selected {
-            background: rgba(0, 122, 255, 0.06) !important;
-            border-color: rgba(0, 122, 255, 0.18) !important;
-            box-shadow: var(--shadow-tile) !important;
-        }
-
-        /* Inputs */
-        input[type="number"],
-        select,
-        .form-control,
-        textarea {
-            border-radius: 18px !important;
-            border: 1px solid var(--border) !important;
-            background: rgba(255,255,255,0.9) !important;
-            color: var(--text) !important;
-            box-shadow: none !important;
-        }
-        input[type="number"]:focus,
-        select:focus,
-        .form-control:focus,
-        textarea:focus {
-            border-color: rgba(0, 122, 255, 0.45) !important;
-            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.10) !important;
-        }
-
-        /* Toast (remove gradients) */
-        .toast {
-            background: rgba(17, 24, 39, 0.88) !important;
-            border: 1px solid rgba(255, 255, 255, 0.12) !important;
-            box-shadow: 0 14px 40px rgba(17, 24, 39, 0.25) !important;
-        }
-
-        /* Water: wave progress (mock) */
-        .menu-card--water {
-            overflow: hidden;
-            padding-bottom: 74px;
-        }
-        .menu-card--water .water-progress {
-            --water-fill: 0%;
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            height: 74px;
-            border-radius: 0 0 var(--radius-tile) var(--radius-tile);
-            background: rgba(0, 122, 255, 0.10) !important;
-            overflow: hidden;
-            margin-top: 0;
-        }
-        .menu-card--water .water-progress-fill {
-            position: absolute;
-            left: 0;
-            width: var(--water-fill);
-            bottom: 0;
-            height: 100%;
-            background: rgba(0, 122, 255, 0.22) !important;
-            border-radius: 0;
-            transition: width 0.25s ease;
-        }
-        .menu-card--water .water-progress-fill::before,
-        .menu-card--water .water-progress-fill::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            width: 150%;
-            height: 26px;
-            top: -18px;
-            background-repeat: repeat-x;
-            background-size: 220px 26px;
-            opacity: 0.95;
-        }
-        .menu-card--water .water-progress-fill::before {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='26' viewBox='0 0 220 26'%3E%3Cpath d='M0 14 C 25 6, 55 22, 80 14 S 135 6, 160 14 S 195 22, 220 14 V26 H0 Z' fill='rgba(0,122,255,0.38)'/%3E%3C/svg%3E");
-        }
-        .menu-card--water .water-progress-fill::after {
-            top: -14px;
-            opacity: 0.65;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='26' viewBox='0 0 220 26'%3E%3Cpath d='M0 14 C 30 20, 55 8, 90 14 S 140 20, 170 14 S 200 8, 220 14 V26 H0 Z' fill='rgba(0,122,255,0.28)'/%3E%3C/svg%3E");
-        }
-        /* Static (non-animated) base wave across full width, like in mock */
-        .menu-card--water .water-progress::before {
-            content: "";
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 22px;
-            height: 30px;
-            opacity: 0.45;
-            background-repeat: repeat-x;
-            background-size: 260px 30px;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='30' viewBox='0 0 260 30'%3E%3Cpath d='M0 18 C 30 10, 65 26, 95 18 S 160 10, 190 18 S 230 26, 260 18 V30 H0 Z' fill='rgba(0,122,255,0.18)'/%3E%3C/svg%3E");
-        }
-
-        /* Activity mini-bars: remove gradients from inline styles */
-        #activity-cardio-bar,
-        #activity-strength-bar,
-        #activity-base-bar,
-        #activity-joy-bar {
-            background: var(--accent) !important;
-        }
-
-        /* Constructor dynamic UI badges/buttons: remove legacy gradients */
-        .count-badge {
-            background: rgba(17, 24, 39, 0.86) !important;
-            color: #FFFFFF !important;
-            border: 1px solid rgba(255, 255, 255, 0.14) !important;
-            border-radius: 999px !important;
-            box-shadow: 0 10px 24px rgba(17, 24, 39, 0.18) !important;
-        }
-        .double-btn {
-            background: var(--accent-tint) !important;
-            color: var(--accent) !important;
-            border: 1px solid var(--accent-tint-border) !important;
-            border-radius: 999px !important;
-            box-shadow: none !important;
-        }
-
-        /* Sleep confirmation (remove gradients) */
-        #sleep-selected-message {
-            background: rgba(0, 122, 255, 0.10) !important;
-            border: 1px solid rgba(0, 122, 255, 0.14) !important;
-            color: var(--text) !important;
-        }
     </style>
 </head>
 <body>
@@ -1579,81 +1121,120 @@
             </form>
         </section>
 
-        <!-- Onboarding Step 2 (Step 1) -->
+        <!-- Onboarding Step 2 -->
         <section id="onboarding-step2" class="card hidden">
-            <h1>Ваш план</h1>
-            <div class="results" style="text-align: left; padding: 18px; border-radius: 20px;">
-                <div style="display:flex; justify-content: space-between; gap: 10px; padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.06);">
-                    <div style="color:#6B7280;">Калории</div>
-                    <div style="font-weight:700; color:#1B2B4A;"><span id="ob-plan-kcal">0</span> ккал</div>
+            <h1>Ваши результаты</h1>
+            <div class="results" style="text-align: left; padding: 24px; border-radius: 20px;">
+                <div style="font-size: 14px; color: #6B7280; margin-bottom: 8px;">Ваша ориентировочная норма:</div>
+                <p style="font-size: 26px; font-weight: 700; color: #1B2B4A; margin: 0;">
+                    <span id="target-calories">1800</span> ккал и <span id="protein-range">110–130</span> г белка в день
+                </p>
+                <div id="calorie-min-note" style="display:none; margin-top: 10px; font-size: 13px; color: #6B7280; line-height: 1.5;">
+                    Это стартовая настройка. Дальше можно уточнить по прогрессу.
+                </div>
             </div>
-                <div style="display:flex; justify-content: space-between; gap: 10px; padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.06);">
-                    <div style="color:#6B7280;">Белки</div>
-                    <div style="font-weight:700; color:#1B2B4A;"><span id="ob-plan-protein">0</span></div>
+            <div class="info-section blue-accent">
+                <h3 style="color: #1B2B4A; margin-top: 0;">🎯 Это твой персональный план!</h3>
+                <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                    Мы рассчитали твою норму по формуле Mifflin–St Jeor — это признанный стандарт в диетологии.
+                    Теперь у тебя есть точный план: сколько калорий и БЖУ нужно именно тебе для достижения цели.<br><br>
+                    <strong>Бонус:</strong> Набирай баллы за здоровые привычки и трать их на вкусности! 🎁
+                </p>
             </div>
-                <div style="display:flex; justify-content: space-between; gap: 10px; padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.06);">
-                    <div style="color:#6B7280;">Жиры</div>
-                    <div style="font-weight:700; color:#1B2B4A;"><span id="ob-plan-fat">0</span> г</div>
+            <div class="info-section">
+                <h3>💰 Что такое дневной бюджет?</h3>
+                <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                    У тебя есть <strong id="budget-explanation">1800 калорий</strong> на день — это твой дневной «бюджет».
+                    Ты «тратишь» его на еду, собирая приёмы пищи в конструкторе. Приложение считает всё автоматически и
+                    показывает, сколько осталось до цели. ⚡
+                </p>
             </div>
-                <div style="display:flex; justify-content: space-between; gap: 10px; padding: 10px 0;">
-                    <div style="color:#6B7280;">Углеводы</div>
-                    <div style="font-weight:700; color:#1B2B4A;"><span id="ob-plan-carbs">0</span> г</div>
+            <div class="info-section">
+                <h3>💪 Почему важно добирать норму белка?</h3>
+                <p style="color: #2A2A2A; line-height: 1.8; margin-bottom: 12px;">
+                    Белок — это основа для мышц, иммунитета и энергии. Когда ты ешь достаточно белка:
+                </p>
+                <ul style="color: #2A2A2A; line-height: 1.8; margin: 0 0 12px 20px; padding: 0;">
+                    <li>Мышцы остаются сильными и подтянутыми</li>
+                    <li>Метаболизм работает быстрее</li>
+                    <li>Чувство сытости держится дольше</li>
+                    <li>Кожа и волосы выглядят лучше</li>
+                </ul>
+                <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                    <strong>Твоя норма белка:</strong> <span id="protein-range-explanation">110–130 г</span> в день — это примерно 4–5 ладоней.
+                </p>
             </div>
+            <div class="info-section">
+                <h3>📊 Что такое БЖУ и сколько нужно?</h3>
+                <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                    <strong>Белки (Б):</strong> <span id="macro-protein-range">110–130 г</span> в день. Курица, рыба, яйца, творог, бобовые. Нужны для мышц и энергии.<br><br>
+                    <strong>Жиры (Ж):</strong> <span id="macro-fat-range">60–70 г</span> в день. Орехи, авокадо, оливковое масло, рыба. Важны для гормонов и усвоения витаминов.<br><br>
+                    <strong>Углеводы (У):</strong> <span id="macro-carb-range">250–300 г</span> в день. Крупы, хлеб, фрукты, овощи. Дают энергию для активности.<br><br>
+                    В конструкторе питания ты увидишь, сколько каждого макронутриента уже съел и сколько осталось.
+                </p>
             </div>
-            <div style="margin-top: 12px; font-size: 13px; color: #6B7280; line-height: 1.5;">
-                Это ориентир на день. План можно уточнять по прогрессу.
+            <div class="info-section blue-accent">
+                <h3 style="color: #1B2B4A; margin-top: 0;">✋ Визуальные порции — без весов!</h3>
+                <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                    Мы перевели твою норму в граммах в простые порции «на глаз»: ладонь для белка, кулак для овощей, пригоршня для углеводов и большой палец для жиров.
+                    Это научно обоснованный метод, который используют диетологи по всему миру — твоя рука идеально подходит для измерения!
+                    Не нужно взвешивать еду — просто смотри на размер ладони, кулака, пригоршни и большого пальца. 🖐️
+                </p>
+                <div class="onboarding-portion-image">
+                    <img src="Palms.png" alt="Пример порций по руке: белок, овощи, углеводы и жиры" />
+                </div>
             </div>
-            <button class="btn btn-primary" id="ob-plan-next" style="margin-top: 18px;">Продолжить →</button>
+            <div class="info-section">
+                <h3>🍽️ Как собирать приёмы пищи?</h3>
+                <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                    <strong>Завтрак:</strong> 1 ладонь белка + 1 пригоршня углеводов + 2 кулака овощей + 1 большой палец жиров.<br><br>
+                    <strong>Обед:</strong> 1 ладонь белка + 1 пригоршня углеводов + 2 кулака овощей + 1 большой палец жиров.<br><br>
+                    <strong>Ужин:</strong> 1 ладонь белка + 2 кулака овощей, углеводы по желанию (0–½ пригоршни) + 1 большой палец жиров.<br><br>
+                    <strong>Перекусы:</strong> фрукт + немного орехов / йогурт / творог.
+                </p>
+                <p style="color: #2A2A2A; line-height: 1.8; margin: 16px 0 0 0;">
+                    <strong>Про жиры:</strong> В день нужно 3–4 порции полезных жиров. Это может быть авокадо (¼ шт.), орехи (20 г),
+                    оливковое масло (1 ст.л.), рыба. Распределяй их между приёмами пищи — не обязательно все в один приём.
+                </p>
+            </div>
+            <button class="btn btn-primary" id="continue-to-mode" style="margin-top: 24px;">Понятно, продолжить →</button>
             <button class="btn btn-secondary" id="back-to-form" style="margin-top: 12px;">← Назад к анкете</button>
         </section>
 
-        <!-- Onboarding Step 3 (Step 2) -->
-        <section id="onboarding-step3" class="card hidden">
-            <h1>Как пользоваться</h1>
-            <div class="info-section">
-                <div style="margin-bottom: 12px;">
-                    <div style="font-weight: 800; color:#1B2B4A; margin-bottom: 4px;">1. Конструктор питания</div>
-                    <div style="color:#6B7280; line-height:1.6;">Соберите завтрак/обед/ужин из продуктов — приложение покажет, сколько осталось по плану.</div>
+        <!-- Mode Selection (скрыт, сразу переходим к plate-guide) -->
+        <section id="mode-selection" class="card hidden">
+            <h1>Выбери способ контроля</h1>
+            <p class="subtitle">Как тебе удобнее отслеживать питание?</p>
+            
+            <div class="info-section blue-accent" style="margin-bottom: 24px;">
+                <h3>📊 Вариант 1: Цифры</h3>
+                <p style="color: #2A2A2A; line-height: 1.6; margin: 0;">
+                    Считаем калории и БЖУ точно. Видишь цифры, прогресс-бары, остаток бюджета. 
+                    Подходит для тех, кто любит точность и контроль.
+                </p>
             </div>
-                <div style="margin-bottom: 12px;">
-                    <div style="font-weight: 800; color:#1B2B4A; margin-bottom: 4px;">2. ИИ-анализ блюда</div>
-                    <div style="color:#6B7280; line-height:1.6;">Сфотографируйте блюдо в боте — получите оценку КБЖУ.</div>
+            
+            <div class="info-section" style="margin-bottom: 24px;">
+                <h3>🎮 Вариант 2: Интуитивно (баллы)</h3>
+                <p style="color: #2A2A2A; line-height: 1.6; margin: 0;">
+                    Без строгого подсчёта калорий. Добавляешь продукты — получаешь очки и бонусы по трекам прокачки. 
+                    Фокус на качестве питания и привычках, а не на цифрах.
+                </p>
             </div>
-                <div>
-                    <div style="font-weight: 800; color:#1B2B4A; margin-bottom: 4px;">3. Добавить вручную</div>
-                    <div style="color:#6B7280; line-height:1.6;">Если знаете КБЖУ — внесите вручную, и они попадут в план дня.</div>
+            
+            <div class="options-grid" style="margin-top: 24px;">
+                <div class="option-card" id="mode-numbers" onclick="selectTrackingMode('numbers')">
+                    <div class="option-name">📊 Цифры</div>
+                    <div class="option-portion">Точный подсчёт КБЖУ</div>
+                </div>
+                <div class="option-card" id="mode-intuitive" onclick="selectTrackingMode('intuitive')">
+                    <div class="option-name">🎮 Интуитивно</div>
+                    <div class="option-portion">Очки и направления развития</div>
                 </div>
             </div>
-            <button class="btn btn-primary" id="ob-how-next" style="margin-top: 18px;">Дальше →</button>
-            <button class="btn btn-secondary" id="ob-how-back" style="margin-top: 12px;">← Назад</button>
-        </section>
-
-        <!-- Onboarding Step 4 (Step 3) -->
-        <section id="onboarding-step4" class="card hidden">
-            <h1>Ориентиры порций</h1>
-            <div class="info-section">
-                <div style="font-weight: 800; color:#1B2B4A; margin-bottom: 8px;">Гарвардская тарелка</div>
-                <ul style="color: #2A2A2A; line-height: 1.8; margin: 0 0 0 18px; padding: 0;">
-                    <li>½ тарелки — овощи</li>
-                    <li>¼ — белок</li>
-                    <li>¼ — углеводы</li>
-                    <li>+ немного полезных жиров</li>
-                </ul>
-                </div>
-            <div class="info-section">
-                <div style="font-weight: 800; color:#1B2B4A; margin-bottom: 6px;">Порции по руке (опция)</div>
-                <div style="color:#6B7280; line-height:1.6; margin-bottom: 12px;">
-                    Это практичный визуальный ориентир порций без весов. Подходит для повседневной жизни, когда не хочется считать граммы.
-                </div>
-                <div class="onboarding-portion-image" style="margin-top: 0;">
-                    <img src="Palms.png" alt="Пример порций по руке: белок, овощи, углеводы и жиры" />
-            </div>
-                <div style="font-size: 13px; color:#6B7280; line-height:1.6; margin-top: 10px;">
-                    Белок — ладонь • Овощи — кулак • Углеводы — пригоршня • Жиры — большой палец
-                </div>
-            </div>
-            <button class="btn btn-primary" id="ob-finish" style="margin-top: 18px;">Перейти в план</button>
-            <button class="btn btn-secondary" id="ob-portions-back" style="margin-top: 12px;">← Назад</button>
+            
+            <button class="btn btn-primary" id="continue-to-hero" style="margin-top: 24px; display: none;">Продолжить →</button>
+            <button class="btn btn-secondary" id="back-to-results" style="margin-top: 12px;">← Назад</button>
         </section>
 
 
@@ -1711,11 +1292,11 @@
                         <div class="constructor-card-title">Как<br>собирать тарелку</div>
                     </div>
                     <div class="constructor-card" onclick="startConstructor('breakfast')">
-                        <div class="constructor-card-icon green">🍳</div>
+                        <div class="constructor-card-icon green">🌅</div>
                         <div class="constructor-card-title">Завтрак</div>
                     </div>
                     <div class="constructor-card" onclick="startConstructor('lunch')">
-                        <div class="constructor-card-icon yellow">🍲</div>
+                        <div class="constructor-card-icon yellow">☀️</div>
                         <div class="constructor-card-title">Обед</div>
                     </div>
                     <div class="constructor-card" onclick="startConstructor('snack')">
@@ -1723,7 +1304,7 @@
                         <div class="constructor-card-title">Перекус</div>
                     </div>
                     <div class="constructor-card" onclick="startConstructor('dinner')">
-                        <div class="constructor-card-icon purple">🍗</div>
+                        <div class="constructor-card-icon purple">🌙</div>
                         <div class="constructor-card-title">Ужин</div>
                     </div>
                 </div>
@@ -1734,22 +1315,12 @@
                 <div class="card" style="text-align: left;">
                     <div class="cta-card-title">ИИ-анализ блюда</div>
                     <div class="cta-card-subtitle">Калории и БЖУ по фото</div>
-                    <button class="btn btn--tinted" type="button" onclick="openAiFoodModal()" style="width: 100%;">
-                        <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
-                            <path fill="currentColor" d="M9.5 4.5a1 1 0 0 0-.87.5L7.76 6.5H6a3 3 0 0 0-3 3v8A3.5 3.5 0 0 0 6.5 21h11A3.5 3.5 0 0 0 21 17.5v-8A3 3 0 0 0 18 6.5h-1.76l-.87-1.5a1 1 0 0 0-.87-.5h-5ZM12 9a4 4 0 1 1 0 8 4 4 0 0 1 0-8Zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z"/>
-                        </svg>
-                        <span>ИИ-анализ блюда</span>
-                    </button>
+                    <button class="btn btn-primary" type="button" onclick="openAiFoodModal()" style="width: 100%;">📷 ИИ-анализ блюда</button>
                 </div>
                 <div class="card" style="text-align: left;">
                     <div class="cta-card-title">Добавить вручную</div>
                     <div class="cta-card-subtitle">Внести КБЖУ в план</div>
-                    <button class="btn btn--tinted" type="button" onclick="openManualAddModal()" style="width: 100%;">
-                        <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
-                            <path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25Zm18-10.5a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75L21 6.75Z"/>
-                        </svg>
-                        <span>Добавить</span>
-                    </button>
+                    <button class="btn btn-secondary" type="button" onclick="openManualAddModal()" style="width: 100%;">✍️ Добавить</button>
                 </div>
             </section>
 
@@ -1757,8 +1328,8 @@
             <!-- Main Menu -->
             <main id="main-menu" class="main-menu">
                 <div class="menu-card" onclick="openActivityModule()">
-                    <div class="menu-icon">🏃</div>
-                    <div class="menu-title">Активность</div>
+                    <div class="menu-icon">🏃‍♂️</div>
+                    <div class="menu-title">🏃 Активность</div>
                     <div class="menu-subtitle" id="activity-menu-subtitle" style="font-size: 12px; color: #6B7280; margin-top: 4px;">0 / 150 мин за неделю</div>
                     <div class="menu-subtitle" id="activity-menu-note" style="font-size: 11px; color: #9CA3AF; margin-top: 2px;">Рекомендованный минимум для здоровья</div>
                 </div>
@@ -1770,7 +1341,7 @@
                     <div class="menu-icon">😴</div>
                     <div class="menu-title">Сон</div>
                 </div>
-                <div class="menu-card menu-card--water" onclick="addWater()">
+                <div class="menu-card" onclick="addWater()">
                     <div class="menu-icon">💧</div>
                     <div class="menu-title">Вода +200 мл</div>
                     <div id="water-progress-text" style="font-size: 12px; color: #6B7280; margin-top: 4px;">0.0 л / 2.5 л</div>
@@ -3722,8 +3293,7 @@
             // Скрываем все секции сначала
             document.getElementById('onboarding-step1').classList.add('hidden');
             document.getElementById('onboarding-step2').classList.add('hidden');
-            document.getElementById('onboarding-step3').classList.add('hidden');
-            document.getElementById('onboarding-step4').classList.add('hidden');
+            document.getElementById('mode-selection').classList.add('hidden');
             document.getElementById('app-main').classList.add('hidden');
             
             if (kairosState.profile) {
@@ -3731,19 +3301,13 @@
                 dailyTargets = {
                     calories: kairosState.profile.target_calories || 1800,
                     protein: kairosState.profile.protein_max || 90,
-                    carbs: kairosState.profile.carbs_grams || Math.round((kairosState.profile.target_calories || 1800) * 0.45 / 4),
-                    fats: kairosState.profile.fats_grams || Math.round((kairosState.profile.target_calories || 1800) * 0.30 / 9),
+                    carbs: Math.round((kairosState.profile.target_calories || 1800) * 0.45 / 4),
+                    fats: Math.round((kairosState.profile.target_calories || 1800) * 0.30 / 9),
                     fiber: 30
                 };
                 
                 await loadTodayStats();
-                // Новый онбординг после анкеты показываем только если пользователь его ещё не завершил.
-                // Для старых профилей без флага — считаем завершённым.
-                if (kairosState.profile.post_survey_onboarding_completed === false) {
-                    showPostSurveyOnboardingStep(2);
-                } else {
                 showApp();
-                }
             } else {
                 // Нет профиля - показываем анкету
                 document.getElementById('onboarding-step1').classList.remove('hidden');
@@ -4016,8 +3580,6 @@
                 has_limitations: false,
                 high_bmi: false,
                 activity_intro_completed: false,
-                // Онбординг после анкеты (новый, 3 шага) — показываем до нажатия "Перейти в план"
-                post_survey_onboarding_completed: false,
                 created_at: new Date().toISOString()
             };
             
@@ -4056,18 +3618,34 @@
                 created_at: new Date().toISOString()
             };
 
-            // Заполняем новый шаг 1 "Ваш план"
-            const proteinText = proteinDisplayMin === proteinDisplayMax
-                ? `${proteinDisplayMax} г`
-                : `${proteinDisplayMin}–${proteinDisplayMax} г`;
-            const planKcalEl = document.getElementById('ob-plan-kcal');
-            const planProteinEl = document.getElementById('ob-plan-protein');
-            const planFatEl = document.getElementById('ob-plan-fat');
-            const planCarbEl = document.getElementById('ob-plan-carbs');
-            if (planKcalEl) planKcalEl.textContent = `${targetCalories}`;
-            if (planProteinEl) planProteinEl.textContent = `${proteinText}`;
-            if (planFatEl) planFatEl.textContent = `${fatsGrams}`;
-            if (planCarbEl) planCarbEl.textContent = `${carbsGrams}`;
+            document.getElementById('target-calories').textContent = targetCalories;
+            const proteinRangeText = proteinDisplayMin === proteinDisplayMax
+                ? `${proteinDisplayMax}`
+                : `${proteinDisplayMin}–${proteinDisplayMax}`;
+            document.getElementById('protein-range').textContent = proteinRangeText;
+            document.getElementById('budget-explanation').textContent = `${targetCalories} ккал`;
+            const minNote = document.getElementById('calorie-min-note');
+            if (minNote) minNote.style.display = minApplied ? 'block' : 'none';
+            const proteinRangeExplanationEl = document.getElementById('protein-range-explanation');
+            if (proteinRangeExplanationEl) {
+                proteinRangeExplanationEl.textContent = proteinDisplayMin === proteinDisplayMax
+                    ? `${proteinDisplayMax} г`
+                    : `${proteinDisplayMin}–${proteinDisplayMax} г`;
+            }
+            const macroProteinRangeEl = document.getElementById('macro-protein-range');
+            if (macroProteinRangeEl) {
+                macroProteinRangeEl.textContent = proteinDisplayMin === proteinDisplayMax
+                    ? `${proteinDisplayMax} г`
+                    : `${proteinDisplayMin}–${proteinDisplayMax} г`;
+            }
+            const macroFatRangeEl = document.getElementById('macro-fat-range');
+            if (macroFatRangeEl) {
+                macroFatRangeEl.textContent = `${fatsGrams} г`;
+            }
+            const macroCarbRangeEl = document.getElementById('macro-carb-range');
+            if (macroCarbRangeEl) {
+                macroCarbRangeEl.textContent = `${carbsGrams} г`;
+            }
             
             document.getElementById('onboarding-step1').classList.add('hidden');
             document.getElementById('onboarding-step2').classList.remove('hidden');
@@ -4088,45 +3666,42 @@
             console.error('Форма онбординга не найдена!');
         }
 
-        function showPostSurveyOnboardingStep(stepNum) {
-            // stepNum: 2 (Ваш план), 3 (Как пользоваться), 4 (Ориентиры порций)
-            const ids = ['onboarding-step1', 'onboarding-step2', 'onboarding-step3', 'onboarding-step4', 'app-main'];
-            ids.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.classList.add('hidden');
-            });
-            const el = document.getElementById(`onboarding-step${stepNum}`);
-            if (el) el.classList.remove('hidden');
-            hapticFeedback('light');
-        }
-
-        const obPlanNext = document.getElementById('ob-plan-next');
-        if (obPlanNext) {
-            obPlanNext.addEventListener('click', () => showPostSurveyOnboardingStep(3));
-        }
-        const obHowNext = document.getElementById('ob-how-next');
-        if (obHowNext) {
-            obHowNext.addEventListener('click', () => showPostSurveyOnboardingStep(4));
-        }
-        const obHowBack = document.getElementById('ob-how-back');
-        if (obHowBack) {
-            obHowBack.addEventListener('click', () => showPostSurveyOnboardingStep(2));
-        }
-        const obPortionsBack = document.getElementById('ob-portions-back');
-        if (obPortionsBack) {
-            obPortionsBack.addEventListener('click', () => showPostSurveyOnboardingStep(3));
-        }
-        const obFinish = document.getElementById('ob-finish');
-        if (obFinish) {
-            obFinish.addEventListener('click', async () => {
+        document.getElementById('continue-to-mode').addEventListener('click', () => {
+            // Завершаем онбординг и открываем приложение
+            showApp();
+            // Переходим сразу к разделу "Как собирать тарелку"
+            showSection('plate-guide');
+            updatePlateGuidePortions();
+        });
+        
+        document.getElementById('back-to-results').addEventListener('click', () => {
+            document.getElementById('mode-selection').classList.add('hidden');
+            document.getElementById('onboarding-step2').classList.remove('hidden');
+        });
+        
+        function selectTrackingMode(mode) {
+            trackingMode = mode;
             if (kairosState.profile) {
-                    kairosState.profile.post_survey_onboarding_completed = true;
+                kairosState.profile.mode = mode;
                 saveState();
             }
-                await loadTodayStats();
-                showApp();
+            
+            // Выделяем выбранный режим
+            document.querySelectorAll('[id^="mode-"]').forEach(card => {
+                card.classList.remove('selected');
             });
+            document.getElementById(`mode-${mode}`).classList.add('selected');
+            
+            // Показываем кнопку продолжения
+            document.getElementById('continue-to-hero').style.display = 'block';
+            hapticFeedback('medium');
         }
+        
+        document.getElementById('continue-to-hero').addEventListener('click', () => {
+            if (trackingMode) {
+                showApp();
+            }
+        });
 
         document.getElementById('back-to-form').addEventListener('click', () => {
             document.getElementById('onboarding-step2').classList.add('hidden');
@@ -4136,10 +3711,7 @@
         function showApp() {
             document.getElementById('onboarding-step1').classList.add('hidden');
             document.getElementById('onboarding-step2').classList.add('hidden');
-            const ob3 = document.getElementById('onboarding-step3');
-            const ob4 = document.getElementById('onboarding-step4');
-            if (ob3) ob3.classList.add('hidden');
-            if (ob4) ob4.classList.add('hidden');
+            document.getElementById('mode-selection').classList.add('hidden');
             document.getElementById('app-main').classList.remove('hidden');
             
             // Устанавливаем dailyTargets из профиля
@@ -4442,11 +4014,7 @@
             }
             if (fillEl) {
                 const percent = Math.min(100, (waterUsed / target) * 100);
-                // UI: wave-progress is a horizontal progress (L→R), styled as a wave (static)
-                fillEl.style.height = '100%';
                 fillEl.style.width = `${percent}%`;
-                const parent = fillEl.parentElement;
-                if (parent) parent.style.setProperty('--water-fill', `${percent}%`);
             }
         }
         
@@ -5662,10 +5230,7 @@
                     // Скрываем все секции
                     document.getElementById('app-main').classList.add('hidden');
                     document.getElementById('onboarding-step2').classList.add('hidden');
-                    const ob3 = document.getElementById('onboarding-step3');
-                    const ob4 = document.getElementById('onboarding-step4');
-                    if (ob3) ob3.classList.add('hidden');
-                    if (ob4) ob4.classList.add('hidden');
+                    document.getElementById('mode-selection').classList.add('hidden');
                     document.getElementById('hero-selection').classList.add('hidden');
                     document.getElementById('main-menu').classList.add('hidden');
                     ['plate-guide', 'constructor', 'activity', 'problems', 'sleep', 'calendar'].forEach(id => {
@@ -6889,7 +6454,6 @@
     </script>
 </body>
 </html>
-
 
 
 
