@@ -15,7 +15,7 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #F7F7FA;
+            background: #F2F4F7;
             min-height: 100vh;
             color: #1B2B4A;
             position: relative;
@@ -30,11 +30,16 @@
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(circle at 18% 22%, rgba(130, 196, 255, 0.10) 0%, transparent 55%),
-                radial-gradient(circle at 80% 78%, rgba(167, 139, 250, 0.08) 0%, transparent 60%),
-                radial-gradient(circle at 50% 105%, rgba(130, 196, 255, 0.06) 0%, transparent 55%);
+                radial-gradient(circle at 20% 18%, rgba(255, 255, 255, 0.90) 0%, rgba(255, 255, 255, 0) 55%),
+                radial-gradient(circle at 78% 35%, rgba(130, 196, 255, 0.18) 0%, transparent 60%),
+                radial-gradient(circle at 75% 85%, rgba(130, 196, 255, 0.12) 0%, transparent 55%);
             pointer-events: none;
             z-index: 0;
+        }
+
+        /* Header wrapper on main screen: no outer card, only inner blocks (как в референсе) */
+        .app-header {
+            margin-bottom: 12px;
         }
 
         .container {
@@ -598,11 +603,11 @@
             margin: 0;
         /* CTA (главный экран) — светло‑голубые кнопки как в референсе */
         .btn-cta-light {
-            background: rgba(130, 196, 255, 0.34);
+            background: rgba(130, 196, 255, 0.26);
             color: #2F80ED;
             border: none;
             box-shadow: none;
-            border-radius: 18px;
+            border-radius: 16px;
             font-weight: 700;
             padding: 14px 16px;
             display: inline-flex;
@@ -611,13 +616,30 @@
             gap: 10px;
         }
         .btn-cta-light:hover {
-            background: rgba(130, 196, 255, 0.40);
+            background: rgba(130, 196, 255, 0.30);
             transform: none;
             box-shadow: none;
         }
         .btn-cta-light:active {
             opacity: 0.9;
             transform: translateY(1px);
+        }
+        .btn-cta-icon {
+            width: 22px;
+            height: 22px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #2F80ED;
+            flex: 0 0 auto;
+        }
+        .btn-cta-icon svg {
+            width: 22px;
+            height: 22px;
+        }
+        .btn-cta-text {
+            line-height: 1.05;
+            text-align: left;
         }
 
             min-height: auto;
@@ -908,47 +930,19 @@
             margin-bottom: 12px;
         }
 
-        /* Water progress — волна как в референсе, рост вправо остаётся */
         .water-progress {
             width: 100%;
-            height: 52px;
-            border-radius: 18px;
-            background: rgba(47, 128, 237, 0.06);
-            border: 1px solid rgba(0, 0, 0, 0.06);
+            height: 8px;
+            border-radius: 999px;
+            background: #E5E7EB;
             overflow: hidden;
-            margin-top: 10px;
-            position: relative;
+            margin-top: 8px;
         }
         .water-progress-fill {
             height: 100%;
-            width: 0%;
-            position: absolute;
-            left: 0;
-            top: 0;
-            background: rgba(130, 196, 255, 0.40);
+            width: 0;
+            background: linear-gradient(90deg, #82C4FF 0%, #4A6BC8 100%);
             transition: width 0.25s ease;
-            overflow: hidden;
-        }
-        .water-progress-fill::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: -2px;
-            width: 200%;
-            height: 32px;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 32' preserveAspectRatio='none'%3E%3Cpath d='M0 18 C 30 6 60 30 90 18 S 150 30 180 18 S 210 6 240 18 V32 H0 Z' fill='rgba(47,128,237,0.32)'/%3E%3C/svg%3E");
-            background-repeat: repeat-x;
-            background-size: 240px 32px;
-            opacity: 0.95;
-        }
-        .water-progress-fill::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 26px;
-            width: 100%;
-            height: calc(100% - 26px);
-            background: rgba(47, 128, 237, 0.22);
         }
 
         /* AI modal */
@@ -1299,7 +1293,7 @@
         <div id="app-main" class="hidden">
             <div class="container">
             <!-- Main App Header -->
-            <header id="app-header" class="card">
+            <header id="app-header" class="app-header">
                 <h1 style="display: none;"></h1>
                 <div class="budget-display">
                     <div class="budget-label">Дневной план</div>
@@ -1372,12 +1366,28 @@
                 <div class="card" style="text-align: left;">
                     <div class="cta-card-title">ИИ-анализ блюда</div>
                     <div class="cta-card-subtitle">Калории и БЖУ по фото</div>
-                    <button class="btn btn-cta-light" type="button" onclick="openAiFoodModal()" style="width: 100%;">📷 ИИ-анализ блюда</button>
+                    <button class="btn btn-cta-light" type="button" onclick="openAiFoodModal()" style="width: 100%;">
+                        <span class="btn-cta-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 7h3l2-2h6l2 2h3v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7Z"/>
+                                <path d="M12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/>
+                            </svg>
+                        </span>
+                        <span class="btn-cta-text">ИИ-анализ<br>блюда</span>
+                    </button>
                 </div>
                 <div class="card" style="text-align: left;">
                     <div class="cta-card-title">Добавить вручную</div>
                     <div class="cta-card-subtitle">Внести КБЖУ в план</div>
-                    <button class="btn btn-cta-light" type="button" onclick="openManualAddModal()" style="width: 100%;">✍️ Добавить</button>
+                    <button class="btn btn-cta-light" type="button" onclick="openManualAddModal()" style="width: 100%;">
+                        <span class="btn-cta-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 20h9"/>
+                                <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4 11.5-11.5Z"/>
+                            </svg>
+                        </span>
+                        <span class="btn-cta-text">Добавить</span>
+                    </button>
                 </div>
             </section>
 
