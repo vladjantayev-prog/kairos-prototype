@@ -598,9 +598,9 @@
             margin: 0;
         /* CTA (главный экран) — светло‑голубые кнопки как в референсе */
         .btn-cta-light {
-            background: rgba(130, 196, 255, 0.28);
+            background: rgba(130, 196, 255, 0.34);
             color: #2F80ED;
-            border: 1px solid rgba(130, 196, 255, 0.22);
+            border: none;
             box-shadow: none;
             border-radius: 18px;
             font-weight: 700;
@@ -611,7 +611,7 @@
             gap: 10px;
         }
         .btn-cta-light:hover {
-            background: rgba(130, 196, 255, 0.34);
+            background: rgba(130, 196, 255, 0.40);
             transform: none;
             box-shadow: none;
         }
@@ -908,19 +908,47 @@
             margin-bottom: 12px;
         }
 
+        /* Water progress — волна как в референсе, рост вправо остаётся */
         .water-progress {
             width: 100%;
-            height: 8px;
-            border-radius: 999px;
-            background: #E5E7EB;
+            height: 52px;
+            border-radius: 18px;
+            background: rgba(47, 128, 237, 0.06);
+            border: 1px solid rgba(0, 0, 0, 0.06);
             overflow: hidden;
-            margin-top: 8px;
+            margin-top: 10px;
+            position: relative;
         }
         .water-progress-fill {
             height: 100%;
-            width: 0;
-            background: linear-gradient(90deg, #82C4FF 0%, #4A6BC8 100%);
+            width: 0%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: rgba(130, 196, 255, 0.40);
             transition: width 0.25s ease;
+            overflow: hidden;
+        }
+        .water-progress-fill::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: -2px;
+            width: 200%;
+            height: 32px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 32' preserveAspectRatio='none'%3E%3Cpath d='M0 18 C 30 6 60 30 90 18 S 150 30 180 18 S 210 6 240 18 V32 H0 Z' fill='rgba(47,128,237,0.32)'/%3E%3C/svg%3E");
+            background-repeat: repeat-x;
+            background-size: 240px 32px;
+            opacity: 0.95;
+        }
+        .water-progress-fill::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 26px;
+            width: 100%;
+            height: calc(100% - 26px);
+            background: rgba(47, 128, 237, 0.22);
         }
 
         /* AI modal */
