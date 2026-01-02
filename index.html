@@ -3347,7 +3347,13 @@
             document.getElementById('mode-selection').classList.add('hidden');
             document.getElementById('app-main').classList.add('hidden');
             
-            if (kairosState.profile) {
+            // Профиль считаем валидным только если он реально заполнен (иначе анкета “пропадает”)
+            const isProfileComplete = (p) => {
+                if (!p || typeof p !== 'object') return false;
+                return !!p.sex && !!p.goal && Number(p.target_calories) > 0 && Number(p.weight) > 0;
+            };
+
+            if (isProfileComplete(kairosState.profile)) {
                 // Устанавливаем dailyTargets из профиля
                 dailyTargets = {
                     calories: kairosState.profile.target_calories || 1800,
@@ -3374,7 +3380,11 @@
                     showApp();
                 }
             } else {
-                // Нет профиля - показываем анкету
+                // Нет валидного профиля - показываем анкету
+                if (kairosState.profile && !isProfileComplete(kairosState.profile)) {
+                    kairosState.profile = null;
+                    saveState();
+                }
                 document.getElementById('onboarding-step1').classList.remove('hidden');
             }
         }
@@ -3730,6 +3740,9 @@
                     kairosState.profile.post_onboarding_completed = true;
                     saveState();
                 }
+                // На всякий случай скрываем онбординг перед переходом
+                const step3 = document.getElementById('onboarding-step3');
+                if (step3) step3.classList.add('hidden');
                 await loadTodayStats();
                 showApp();
                 hapticFeedback('light');
@@ -3776,6 +3789,8 @@
         function showApp() {
             document.getElementById('onboarding-step1').classList.add('hidden');
             document.getElementById('onboarding-step2').classList.add('hidden');
+            const step3 = document.getElementById('onboarding-step3');
+            if (step3) step3.classList.add('hidden');
             document.getElementById('mode-selection').classList.add('hidden');
             document.getElementById('app-main').classList.remove('hidden');
             
@@ -5295,6 +5310,8 @@
                     // Скрываем все секции
                     document.getElementById('app-main').classList.add('hidden');
                     document.getElementById('onboarding-step2').classList.add('hidden');
+                    const step3 = document.getElementById('onboarding-step3');
+                    if (step3) step3.classList.add('hidden');
                     document.getElementById('mode-selection').classList.add('hidden');
                     document.getElementById('hero-selection').classList.add('hidden');
                     document.getElementById('main-menu').classList.add('hidden');
