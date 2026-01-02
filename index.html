@@ -142,7 +142,7 @@
         }
 
         .radio-option input[type="radio"]:checked + label {
-            background: linear-gradient(135deg, #82C4FF, #4A6BC8);
+            background: #2F80ED;
             color: #FFFFFF;
             border-color: transparent;
             box-shadow: 0 8px 18px rgba(130, 196, 255, 0.4);
@@ -166,7 +166,7 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #82C4FF, #4A6BC8);
+            background: #2F80ED;
             color: #FFFFFF;
             box-shadow: 0 8px 18px rgba(130, 196, 255, 0.4);
         }
@@ -202,7 +202,7 @@
         }
 
         .results {
-            background: linear-gradient(135deg, #82C4FF, #4A6BC8);
+             background: #2F80ED;
             border: none;
             color: #FFFFFF;
             padding: 24px;
@@ -291,7 +291,7 @@
             justify-content: center;
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, #82C4FF, #4A6BC8);
+            background: #2F80ED;
             border-radius: 50%;
             box-shadow: 0 4px 16px rgba(130, 196, 255, 0.3);
         }
@@ -388,7 +388,7 @@
             height: 100%;
             width: 0%;
             border-radius: inherit;
-            background: linear-gradient(90deg, #82C4FF, #4A6BC8);
+             background: #2F80ED;
             transition: width 0.25s ease-out;
         }
 
@@ -589,13 +589,37 @@
         }
 
         .option-card.selected {
-            background: linear-gradient(135deg, #82C4FF, #4A6BC8);
+            background: #2F80ED;
             border-color: transparent;
             color: #FFFFFF;
             box-shadow: 0 10px 24px rgba(130, 196, 255, 0.4);
             transform: translateY(-1px);
             padding: 16px;
             margin: 0;
+        /* CTA (главный экран) — светло‑голубые кнопки как в референсе */
+        .btn-cta-light {
+            background: rgba(130, 196, 255, 0.28);
+            color: #2F80ED;
+            border: 1px solid rgba(130, 196, 255, 0.22);
+            box-shadow: none;
+            border-radius: 18px;
+            font-weight: 700;
+            padding: 14px 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-cta-light:hover {
+            background: rgba(130, 196, 255, 0.34);
+            transform: none;
+            box-shadow: none;
+        }
+        .btn-cta-light:active {
+            opacity: 0.9;
+            transform: translateY(1px);
+        }
+
             min-height: auto;
         }
 
@@ -981,7 +1005,7 @@
         }
 
         .summary-totals {
-            background: linear-gradient(135deg, #82C4FF, #4A6BC8);
+            background: #2F80ED;
             border: none;
             color: #FFFFFF;
             border-radius: 20px;
@@ -1012,7 +1036,7 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            background: linear-gradient(135deg, #82C4FF, #4A6BC8);
+             background: #2F80ED;
             color: #FFFFFF;
             padding: 16px 24px;
             border-radius: 18px;
@@ -1320,12 +1344,12 @@
                 <div class="card" style="text-align: left;">
                     <div class="cta-card-title">ИИ-анализ блюда</div>
                     <div class="cta-card-subtitle">Калории и БЖУ по фото</div>
-                    <button class="btn btn-primary" type="button" onclick="openAiFoodModal()" style="width: 100%;">📷 ИИ-анализ блюда</button>
+                    <button class="btn btn-cta-light" type="button" onclick="openAiFoodModal()" style="width: 100%;">📷 ИИ-анализ блюда</button>
                 </div>
                 <div class="card" style="text-align: left;">
                     <div class="cta-card-title">Добавить вручную</div>
                     <div class="cta-card-subtitle">Внести КБЖУ в план</div>
-                    <button class="btn btn-secondary" type="button" onclick="openManualAddModal()" style="width: 100%;">✍️ Добавить</button>
+                    <button class="btn btn-cta-light" type="button" onclick="openManualAddModal()" style="width: 100%;">✍️ Добавить</button>
                 </div>
             </section>
 
@@ -2060,7 +2084,7 @@
                             <div style="font-size: 14px; color: #6B7280;" id="activity-cardio-progress">0 / 150 мин</div>
                         </div>
                         <div style="background: rgba(0, 0, 0, 0.06); border-radius: 999px; height: 8px; overflow: hidden; margin-bottom: 4px;">
-                            <div id="activity-cardio-bar" style="background: linear-gradient(135deg, #82C4FF, #4A6BC8); height: 100%; border-radius: 999px; transition: width 0.3s ease; width: 0%;"></div>
+                        <div id="activity-cardio-bar" style="background: #2F80ED; height: 100%; border-radius: 999px; transition: width 0.3s ease; width: 0%;"></div>
                         </div>
                         <div style="font-size: 12px; color: #6B7280;">Быстрая ходьба, вело, плавание.</div>
                     </div>
@@ -2072,7 +2096,7 @@
                             <div style="font-size: 14px; color: #6B7280;" id="activity-strength-progress">0 / 2 тренировки</div>
                         </div>
                         <div style="background: rgba(0, 0, 0, 0.06); border-radius: 999px; height: 8px; overflow: hidden; margin-bottom: 4px;">
-                            <div id="activity-strength-bar" style="background: linear-gradient(135deg, #82C4FF, #4A6BC8); height: 100%; border-radius: 999px; transition: width 0.3s ease; width: 0%;"></div>
+                        <div id="activity-strength-bar" style="background: #2F80ED; height: 100%; border-radius: 999px; transition: width 0.3s ease; width: 0%;"></div>
                         </div>
                         <div style="font-size: 12px; color: #6B7280;">Домашняя или зал, 20–40 минут.</div>
                     </div>
@@ -2084,7 +2108,7 @@
                             <div style="font-size: 14px; color: #6B7280;" id="activity-base-progress">0 / 30 мин сегодня</div>
                         </div>
                         <div style="background: rgba(0, 0, 0, 0.06); border-radius: 999px; height: 8px; overflow: hidden; margin-bottom: 4px;">
-                            <div id="activity-base-bar" style="background: linear-gradient(135deg, #82C4FF, #4A6BC8); height: 100%; border-radius: 999px; transition: width 0.3s ease; width: 0%;"></div>
+                        <div id="activity-base-bar" style="background: #2F80ED; height: 100%; border-radius: 999px; transition: width 0.3s ease; width: 0%;"></div>
                         </div>
                         <div style="font-size: 12px; color: #6B7280;">Любое лёгкое движение в течение дня.</div>
                     </div>
@@ -2096,7 +2120,7 @@
                             <div style="font-size: 14px; color: #6B7280;" id="activity-joy-progress">0 / 2 активности</div>
                         </div>
                         <div style="background: rgba(0, 0, 0, 0.06); border-radius: 999px; height: 8px; overflow: hidden; margin-bottom: 4px;">
-                            <div id="activity-joy-bar" style="background: linear-gradient(135deg, #82C4FF, #4A6BC8); height: 100%; border-radius: 999px; transition: width 0.3s ease; width: 0%;"></div>
+                        <div id="activity-joy-bar" style="background: #2F80ED; height: 100%; border-radius: 999px; transition: width 0.3s ease; width: 0%;"></div>
                         </div>
                         <div style="font-size: 12px; color: #6B7280;">Танцы, прогулка, йога, игры.</div>
                     </div>
@@ -5377,7 +5401,7 @@
                         const countBadge = document.createElement('div');
                         countBadge.className = 'count-badge';
                         countBadge.textContent = `x${selectedItem.count}`;
-                        countBadge.style.cssText = 'position: absolute; top: 8px; right: 8px; background: linear-gradient(135deg, #82C4FF, #4A6BC8); color: #FFFFFF; border-radius: 18px; padding: 4px 8px; font-size: 12px; font-weight: 700; z-index: 10;';
+                        countBadge.style.cssText = 'position: absolute; top: 8px; right: 8px; background: #2F80ED; color: #FFFFFF; border-radius: 18px; padding: 4px 8px; font-size: 12px; font-weight: 700; z-index: 10;';
                         card.appendChild(countBadge);
                     }
                     
@@ -5386,7 +5410,7 @@
                         const doubleBtn = document.createElement('button');
                         doubleBtn.className = 'double-btn';
                         doubleBtn.textContent = '+ Удвоить';
-                        doubleBtn.style.cssText = 'position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #82C4FF, #4A6BC8); color: #FFFFFF; border: 2px solid #82C4FF; border-radius: 18px; padding: 4px 12px; font-size: 11px; font-weight: 600; cursor: pointer; z-index: 10;';
+                        doubleBtn.style.cssText = 'position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); background: #2F80ED; color: #FFFFFF; border: 2px solid rgba(255,255,255,0.28); border-radius: 18px; padding: 4px 12px; font-size: 11px; font-weight: 600; cursor: pointer; z-index: 10;';
                         doubleBtn.onclick = (e) => {
                             e.stopPropagation();
                             doublePortionForOption(selectedItem);
