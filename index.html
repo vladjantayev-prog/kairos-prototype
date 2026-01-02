@@ -601,6 +601,8 @@
             transform: translateY(-1px);
             padding: 16px;
             margin: 0;
+        }
+
         /* CTA (главный экран) — светло‑голубые кнопки как в референсе */
         .btn-cta-light {
             background: #CFE4F4; /* светло‑голубой как на референсе */
@@ -614,6 +616,8 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
+            -webkit-appearance: none;
+            appearance: none;
         }
         .btn-cta-light:hover {
             background: #C3DEF1;
@@ -625,9 +629,6 @@
             transform: translateY(1px);
         }
         /* SVG‑иконки в CTA не используем — остаются эмодзи */
-
-            min-height: auto;
-        }
 
         .option-name {
             font-size: 15px;
@@ -6493,7 +6494,6 @@
     </script>
 </body>
 </html>
-
 
 
 
