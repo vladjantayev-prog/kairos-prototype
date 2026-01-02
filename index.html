@@ -1200,84 +1200,47 @@
             </form>
         </section>
 
-        <!-- Onboarding Step 2 -->
+        <!-- Post-onboarding Screen 1 (after questionnaire) -->
         <section id="onboarding-step2" class="card hidden">
-            <h1>Ваши результаты</h1>
-            <div class="results" style="text-align: left; padding: 24px; border-radius: 20px;">
-                <div style="font-size: 14px; color: #6B7280; margin-bottom: 8px;">Ваша ориентировочная норма:</div>
-                <p style="font-size: 26px; font-weight: 700; color: #1B2B4A; margin: 0;">
-                    <span id="target-calories">1800</span> ккал и <span id="protein-range">110–130</span> г белка в день
-                </p>
-                <div id="calorie-min-note" style="display:none; margin-top: 10px; font-size: 13px; color: #6B7280; line-height: 1.5;">
-                    Это стартовая настройка. Дальше можно уточнить по прогрессу.
-                </div>
+            <div class="step-header" style="margin-bottom: 16px;">
+                <div class="step-title">План на день готов</div>
             </div>
-            <div class="info-section blue-accent">
-                <h3 style="color: #1B2B4A; margin-top: 0;">🎯 Это твой персональный план!</h3>
+            <div class="info-section" style="margin-bottom: 12px;">
                 <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
-                    Мы рассчитали твою норму по формуле Mifflin–St Jeor — это признанный стандарт в диетологии.
-                    Теперь у тебя есть точный план: сколько калорий и БЖУ нужно именно тебе для достижения цели.<br><br>
-                    <strong>Бонус:</strong> Набирай баллы за здоровые привычки и трать их на вкусности! 🎁
+                    Ваш дневной ориентир: <strong><span id="post-kcal">0</span> ккал</strong><br>
+                    Баланс БЖУ: <strong>Б <span id="post-protein">0</span> г</strong> • <strong>Ж <span id="post-fat">0</span> г</strong> • <strong>У <span id="post-carbs">0</span> г</strong>
                 </p>
             </div>
             <div class="info-section">
-                <h3>💰 Что такое дневной бюджет?</h3>
                 <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
-                    У тебя есть <strong id="budget-explanation">1800 калорий</strong> на день — это твой дневной «бюджет».
-                    Ты «тратишь» его на еду, собирая приёмы пищи в конструкторе. Приложение считает всё автоматически и
-                    показывает, сколько осталось до цели. ⚡
+                    Это не жёсткие рамки, а понятная опора: сколько энергии и каких нутриентов Вам нужно в течение дня, чтобы двигаться к своей цели.
+                </p>
+            </div>
+            <button class="btn btn-primary" id="post-onboarding-next" style="margin-top: 14px;">Дальше</button>
+        </section>
+
+        <!-- Post-onboarding Screen 2 -->
+        <section id="onboarding-step3" class="card hidden">
+            <div class="step-header" style="margin-bottom: 16px;">
+                <div class="step-title">Что делать дальше</div>
+            </div>
+            <div class="info-section">
+                <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                    Конструктор питания помогает быстро составить рацион на день. Он подсказывает, что добавить в тарелку и в каком количестве, чтобы держаться своего плана по калориям и БЖУ.
                 </p>
             </div>
             <div class="info-section">
-                <h3>💪 Почему важно добирать норму белка?</h3>
-                <p style="color: #2A2A2A; line-height: 1.8; margin-bottom: 12px;">
-                    Белок — это основа для мышц, иммунитета и энергии. Когда ты ешь достаточно белка:
-                </p>
-                <ul style="color: #2A2A2A; line-height: 1.8; margin: 0 0 12px 20px; padding: 0;">
-                    <li>Мышцы остаются сильными и подтянутыми</li>
-                    <li>Метаболизм работает быстрее</li>
-                    <li>Чувство сытости держится дольше</li>
-                    <li>Кожа и волосы выглядят лучше</li>
-                </ul>
                 <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
-                    <strong>Твоя норма белка:</strong> <span id="protein-range-explanation">110–130 г</span> в день — это примерно 4–5 ладоней.
+                    ИИ-анализ блюда — загрузите фото, и приложение оценит калории и БЖУ.<br>
+                    Добавить вручную — внесите данные сами, если так точнее или удобнее.
                 </p>
             </div>
             <div class="info-section">
-                <h3>📊 Что такое БЖУ и сколько нужно?</h3>
                 <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
-                    <strong>Белки (Б):</strong> <span id="macro-protein-range">110–130 г</span> в день. Курица, рыба, яйца, творог, бобовые. Нужны для мышц и энергии.<br><br>
-                    <strong>Жиры (Ж):</strong> <span id="macro-fat-range">60–70 г</span> в день. Орехи, авокадо, оливковое масло, рыба. Важны для гормонов и усвоения витаминов.<br><br>
-                    <strong>Углеводы (У):</strong> <span id="macro-carb-range">250–300 г</span> в день. Крупы, хлеб, фрукты, овощи. Дают энергию для активности.<br><br>
-                    В конструкторе питания ты увидишь, сколько каждого макронутриента уже съел и сколько осталось.
+                    Для удобства отмечайте сон, воду и активность — это напрямую влияет на самочувствие, восстановление и результат.
                 </p>
             </div>
-            <div class="info-section blue-accent">
-                <h3 style="color: #1B2B4A; margin-top: 0;">✋ Визуальные порции — без весов!</h3>
-                <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
-                    Мы перевели твою норму в граммах в простые порции «на глаз»: ладонь для белка, кулак для овощей, пригоршня для углеводов и большой палец для жиров.
-                    Это научно обоснованный метод, который используют диетологи по всему миру — твоя рука идеально подходит для измерения!
-                    Не нужно взвешивать еду — просто смотри на размер ладони, кулака, пригоршни и большого пальца. 🖐️
-                </p>
-                <div class="onboarding-portion-image">
-                    <img src="Palms.png" alt="Пример порций по руке: белок, овощи, углеводы и жиры" />
-                </div>
-            </div>
-            <div class="info-section">
-                <h3>🍽️ Как собирать приёмы пищи?</h3>
-                <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
-                    <strong>Завтрак:</strong> 1 ладонь белка + 1 пригоршня углеводов + 2 кулака овощей + 1 большой палец жиров.<br><br>
-                    <strong>Обед:</strong> 1 ладонь белка + 1 пригоршня углеводов + 2 кулака овощей + 1 большой палец жиров.<br><br>
-                    <strong>Ужин:</strong> 1 ладонь белка + 2 кулака овощей, углеводы по желанию (0–½ пригоршни) + 1 большой палец жиров.<br><br>
-                    <strong>Перекусы:</strong> фрукт + немного орехов / йогурт / творог.
-                </p>
-                <p style="color: #2A2A2A; line-height: 1.8; margin: 16px 0 0 0;">
-                    <strong>Про жиры:</strong> В день нужно 3–4 порции полезных жиров. Это может быть авокадо (¼ шт.), орехи (20 г),
-                    оливковое масло (1 ст.л.), рыба. Распределяй их между приёмами пищи — не обязательно все в один приём.
-                </p>
-            </div>
-            <button class="btn btn-primary" id="continue-to-mode" style="margin-top: 24px;">Понятно, продолжить →</button>
-            <button class="btn btn-secondary" id="back-to-form" style="margin-top: 12px;">← Назад к анкете</button>
+            <button class="btn btn-primary" id="post-onboarding-finish" style="margin-top: 14px;">Перейти на главный экран</button>
         </section>
 
         <!-- Mode Selection (скрыт, сразу переходим к plate-guide) -->
@@ -3379,6 +3342,8 @@
             // Скрываем все секции сначала
             document.getElementById('onboarding-step1').classList.add('hidden');
             document.getElementById('onboarding-step2').classList.add('hidden');
+            const step3 = document.getElementById('onboarding-step3');
+            if (step3) step3.classList.add('hidden');
             document.getElementById('mode-selection').classList.add('hidden');
             document.getElementById('app-main').classList.add('hidden');
             
@@ -3392,8 +3357,22 @@
                     fiber: 30
                 };
                 
-                await loadTodayStats();
-                showApp();
+                // Показываем короткий онбординг после анкеты один раз
+                if (!kairosState.profile.post_onboarding_completed) {
+                    // Подставляем рассчитанные значения (без новых расчётов)
+                    const kcalEl = document.getElementById('post-kcal');
+                    const pEl = document.getElementById('post-protein');
+                    const fEl = document.getElementById('post-fat');
+                    const cEl = document.getElementById('post-carbs');
+                    if (kcalEl) kcalEl.textContent = Math.round(kairosState.profile.target_calories || 0);
+                    if (pEl) pEl.textContent = Math.round(kairosState.profile.protein_grams || kairosState.profile.protein_max || 0);
+                    if (fEl) fEl.textContent = Math.round(kairosState.profile.fats_grams || 0);
+                    if (cEl) cEl.textContent = Math.round(kairosState.profile.carbs_grams || 0);
+                    document.getElementById('onboarding-step2').classList.remove('hidden');
+                } else {
+                    await loadTodayStats();
+                    showApp();
+                }
             } else {
                 // Нет профиля - показываем анкету
                 document.getElementById('onboarding-step1').classList.remove('hidden');
@@ -3704,34 +3683,15 @@
                 created_at: new Date().toISOString()
             };
 
-            document.getElementById('target-calories').textContent = targetCalories;
-            const proteinRangeText = proteinDisplayMin === proteinDisplayMax
-                ? `${proteinDisplayMax}`
-                : `${proteinDisplayMin}–${proteinDisplayMax}`;
-            document.getElementById('protein-range').textContent = proteinRangeText;
-            document.getElementById('budget-explanation').textContent = `${targetCalories} ккал`;
-            const minNote = document.getElementById('calorie-min-note');
-            if (minNote) minNote.style.display = minApplied ? 'block' : 'none';
-            const proteinRangeExplanationEl = document.getElementById('protein-range-explanation');
-            if (proteinRangeExplanationEl) {
-                proteinRangeExplanationEl.textContent = proteinDisplayMin === proteinDisplayMax
-                    ? `${proteinDisplayMax} г`
-                    : `${proteinDisplayMin}–${proteinDisplayMax} г`;
-            }
-            const macroProteinRangeEl = document.getElementById('macro-protein-range');
-            if (macroProteinRangeEl) {
-                macroProteinRangeEl.textContent = proteinDisplayMin === proteinDisplayMax
-                    ? `${proteinDisplayMax} г`
-                    : `${proteinDisplayMin}–${proteinDisplayMax} г`;
-            }
-            const macroFatRangeEl = document.getElementById('macro-fat-range');
-            if (macroFatRangeEl) {
-                macroFatRangeEl.textContent = `${fatsGrams} г`;
-            }
-            const macroCarbRangeEl = document.getElementById('macro-carb-range');
-            if (macroCarbRangeEl) {
-                macroCarbRangeEl.textContent = `${carbsGrams} г`;
-            }
+            // Короткий онбординг после анкеты: подставляем значения (без новых расчётов)
+            const postKcalEl = document.getElementById('post-kcal');
+            const postPEl = document.getElementById('post-protein');
+            const postFEl = document.getElementById('post-fat');
+            const postCEl = document.getElementById('post-carbs');
+            if (postKcalEl) postKcalEl.textContent = targetCalories;
+            if (postPEl) postPEl.textContent = proteinRec;
+            if (postFEl) postFEl.textContent = fatsGrams;
+            if (postCEl) postCEl.textContent = carbsGrams;
             
             document.getElementById('onboarding-step1').classList.add('hidden');
             document.getElementById('onboarding-step2').classList.remove('hidden');
@@ -3752,13 +3712,29 @@
             console.error('Форма онбординга не найдена!');
         }
 
-        document.getElementById('continue-to-mode').addEventListener('click', () => {
-            // Завершаем онбординг и открываем приложение
-            showApp();
-            // Переходим сразу к разделу "Как собирать тарелку"
-            showSection('plate-guide');
-            updatePlateGuidePortions();
-        });
+        // Короткий онбординг после анкеты (2 экрана)
+        const postNextBtn = document.getElementById('post-onboarding-next');
+        if (postNextBtn) {
+            postNextBtn.addEventListener('click', () => {
+                document.getElementById('onboarding-step2').classList.add('hidden');
+                const step3 = document.getElementById('onboarding-step3');
+                if (step3) step3.classList.remove('hidden');
+                hapticFeedback('light');
+            });
+        }
+
+        const postFinishBtn = document.getElementById('post-onboarding-finish');
+        if (postFinishBtn) {
+            postFinishBtn.addEventListener('click', async () => {
+                if (kairosState.profile) {
+                    kairosState.profile.post_onboarding_completed = true;
+                    saveState();
+                }
+                await loadTodayStats();
+                showApp();
+                hapticFeedback('light');
+            });
+        }
         
         document.getElementById('back-to-results').addEventListener('click', () => {
             document.getElementById('mode-selection').classList.add('hidden');
@@ -3789,10 +3765,13 @@
             }
         });
 
-        document.getElementById('back-to-form').addEventListener('click', () => {
-            document.getElementById('onboarding-step2').classList.add('hidden');
-            document.getElementById('onboarding-step1').classList.remove('hidden');
-        });
+        const backToFormBtn = document.getElementById('back-to-form');
+        if (backToFormBtn) {
+            backToFormBtn.addEventListener('click', () => {
+                document.getElementById('onboarding-step2').classList.add('hidden');
+                document.getElementById('onboarding-step1').classList.remove('hidden');
+            });
+        }
 
         function showApp() {
             document.getElementById('onboarding-step1').classList.add('hidden');
