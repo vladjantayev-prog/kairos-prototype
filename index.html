@@ -603,11 +603,11 @@
             margin: 0;
         /* CTA (главный экран) — светло‑голубые кнопки как в референсе */
         .btn-cta-light {
-            background: rgba(130, 196, 255, 0.26);
+            background: #CFE4F4; /* светло‑голубой как на референсе */
             color: #2F80ED;
             border: none;
             box-shadow: none;
-            border-radius: 16px;
+            border-radius: 18px;
             font-weight: 700;
             padding: 14px 16px;
             display: inline-flex;
@@ -616,7 +616,7 @@
             gap: 10px;
         }
         .btn-cta-light:hover {
-            background: rgba(130, 196, 255, 0.30);
+            background: #C3DEF1;
             transform: none;
             box-shadow: none;
         }
@@ -624,23 +624,7 @@
             opacity: 0.9;
             transform: translateY(1px);
         }
-        .btn-cta-icon {
-            width: 22px;
-            height: 22px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: #2F80ED;
-            flex: 0 0 auto;
-        }
-        .btn-cta-icon svg {
-            width: 22px;
-            height: 22px;
-        }
-        .btn-cta-text {
-            line-height: 1.05;
-            text-align: left;
-        }
+        /* SVG‑иконки в CTA не используем — остаются эмодзи */
 
             min-height: auto;
         }
@@ -1367,26 +1351,14 @@
                     <div class="cta-card-title">ИИ-анализ блюда</div>
                     <div class="cta-card-subtitle">Калории и БЖУ по фото</div>
                     <button class="btn btn-cta-light" type="button" onclick="openAiFoodModal()" style="width: 100%;">
-                        <span class="btn-cta-icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M4 7h3l2-2h6l2 2h3v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7Z"/>
-                                <path d="M12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/>
-                            </svg>
-                        </span>
-                        <span class="btn-cta-text">ИИ-анализ<br>блюда</span>
+                        📷 ИИ-анализ блюда
                     </button>
                 </div>
                 <div class="card" style="text-align: left;">
                     <div class="cta-card-title">Добавить вручную</div>
                     <div class="cta-card-subtitle">Внести КБЖУ в план</div>
                     <button class="btn btn-cta-light" type="button" onclick="openManualAddModal()" style="width: 100%;">
-                        <span class="btn-cta-icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 20h9"/>
-                                <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4 11.5-11.5Z"/>
-                            </svg>
-                        </span>
-                        <span class="btn-cta-text">Добавить</span>
+                        ✍️ Добавить
                     </button>
                 </div>
             </section>
@@ -6521,6 +6493,7 @@
     </script>
 </body>
 </html>
+
 
 
 
