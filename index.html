@@ -424,8 +424,8 @@
             background: #FFFFFF;
             border: 1px solid rgba(0, 0, 0, 0.06);
             border-radius: 20px;
-            padding: 20px 16px;
-            text-align: center;
+            padding: 56px 16px 18px 16px;
+            text-align: left;
             cursor: pointer;
             transition: all 0.2s ease;
             position: relative;
@@ -433,9 +433,9 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
+            align-items: flex-start;
+            justify-content: flex-start;
+            gap: 8px;
         }
 
         .menu-card:hover {
@@ -446,8 +446,10 @@
         }
 
         .menu-icon {
-            display: block;
-            font-size: 32px;
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            font-size: 28px;
             line-height: 1;
             margin: 0;
         }
@@ -458,6 +460,24 @@
             color: #1B2B4A;
             line-height: 1.3;
             margin: 0;
+        }
+
+        .menu-subtitle {
+            text-align: left;
+            width: 100%;
+        }
+
+        /* CTA cards (ИИ-анализ / Добавить вручную) — эмодзи в левом верхнем углу */
+        .cta-card {
+            position: relative;
+            padding-top: 56px;
+        }
+        .cta-emoji {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            font-size: 28px;
+            line-height: 1;
         }
 
         /* Горизонтальный блок «Конструктор питания» */
@@ -1349,18 +1369,20 @@
 
             <!-- 2 карточки в ряд: ИИ-анализ блюда + Добавить вручную -->
             <section class="cta-grid">
-                <div class="card" style="text-align: left;">
+                <div class="card cta-card" style="text-align: left;">
+                    <div class="cta-emoji">📷</div>
                     <div class="cta-card-title">ИИ-анализ блюда</div>
                     <div class="cta-card-subtitle">Калории и БЖУ по фото</div>
                     <button class="btn btn-cta-light" type="button" onclick="openAiFoodModal()" style="width: 100%;">
-                        📷 ИИ-анализ блюда
+                        Анализ по фото
                     </button>
                 </div>
-                <div class="card" style="text-align: left;">
+                <div class="card cta-card" style="text-align: left;">
+                    <div class="cta-emoji">✍️</div>
                     <div class="cta-card-title">Добавить вручную</div>
                     <div class="cta-card-subtitle">Внести КБЖУ в план</div>
                     <button class="btn btn-cta-light" type="button" onclick="openManualAddModal()" style="width: 100%;">
-                        ✍️ Добавить
+                        Добавить
                     </button>
                 </div>
             </section>
@@ -1384,7 +1406,8 @@
                 </div>
                 <div class="menu-card" onclick="addWater()">
                     <div class="menu-icon">💧</div>
-                    <div class="menu-title">Вода +200 мл</div>
+                    <div class="menu-title">Вода</div>
+                    <div class="menu-subtitle" style="font-size: 12px; color: #6B7280; margin-top: 0;">+ 200 мл</div>
                     <div id="water-progress-text" style="font-size: 12px; color: #6B7280; margin-top: 4px;">0.0 л / 2.5 л</div>
                     <div class="water-progress">
                         <div class="water-progress-fill"></div>
