@@ -2655,21 +2655,29 @@
         // Функция для показа уведомления через Telegram
         function showTelegramAlert(message, callback) {
             if (tg && tg.showAlert) {
-                tg.showAlert(message, callback);
-            } else {
-                alert(message);
-                if (callback) callback();
+                try {
+                    tg.showAlert(message, callback);
+                    return;
+                } catch (e) {
+                    console.warn('tg.showAlert unsupported/failed, fallback to alert()', e);
+                }
             }
+            alert(message);
+            if (callback) callback();
         }
         
         // Функция для показа подтверждения через Telegram
         function showTelegramConfirm(message, callback) {
             if (tg && tg.showConfirm) {
-                tg.showConfirm(message, callback);
-            } else {
-                const result = confirm(message);
-                if (callback) callback(result);
+                try {
+                    tg.showConfirm(message, callback);
+                    return;
+                } catch (e) {
+                    console.warn('tg.showConfirm unsupported/failed, fallback to confirm()', e);
+                }
             }
+            const result = confirm(message);
+            if (callback) callback(result);
         }
         
         // Функция для открытия ссылки через Telegram
