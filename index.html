@@ -169,6 +169,7 @@
             justify-content: space-between;
             gap: 12px;
             margin-bottom: 12px;
+            flex-wrap: wrap;
         }
         .journal-summary-title {
             font-size: 18px;
@@ -192,6 +193,7 @@
             gap: 8px;
             align-items: center;
             justify-content: flex-end;
+            flex-wrap: wrap;
         }
         .journal-macro-pill {
             min-width: 56px;
@@ -210,8 +212,27 @@
             color: #6B7280;
             font-size: 14px;
             margin: 10px 0 14px 0;
+            flex-wrap: wrap;
         }
         .journal-metrics span { display: inline-flex; align-items: center; gap: 6px; }
+
+        .journal-summary {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .journal-day.has-data {
+            position: relative;
+        }
+        .journal-day.has-data::after {
+            content: '';
+            position: absolute;
+            bottom: 6px;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #82C4FF;
+        }
 
         .container {
             width: 100%;
@@ -1457,7 +1478,7 @@
             <!-- Main App Header -->
             <header id="app-header" class="app-header">
                 <h1 style="display: none;"></h1>
-                <button class="journal-btn" type="button" onclick="openJournal()">🗓️ Журнал</button>
+                <button class="journal-btn" type="button" onclick="openJournal()">📅 Календарь</button>
                 <div class="budget-display">
                     <div class="budget-label">Дневной план</div>
                     <div class="budget-amount"><span id="remaining-calories">1800</span></div>
@@ -2475,6 +2496,11 @@
 
                     <button class="btn btn-secondary" type="button" onclick="copySelectedDayToToday()">Скопировать в сегодня</button>
                 </div>
+
+                <div style="margin-top: 16px;">
+                    <div style="font-weight: 800; color: #1B2B4A; margin-bottom: 10px;">Итог дня</div>
+                    <div id="journal-meals"></div>
+                </div>
             </section>
 
             <!-- Calendar Section -->
@@ -2779,6 +2805,86 @@
             }
         };
 
+        // ===== Supabase helpers: daily_stats + meal_entries =====
+        function generateUuid() {
+            if (crypto && typeof crypto.randomUUID === 'function') return crypto.randomUUID();
+            // fallback (не идеален, но лучше чем ничего)
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+                const r = Math.random() * 16 | 0;
+                const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        async function fetchDailyStatsRow(userId, dayStr) {
+            const { data, error } = await supabaseClient
+                .from('daily_stats')
+                .select('*')
+                .eq('user_id', userId)
+                .eq('day', dayStr)
+                .maybeSingle();
+            if (error && error.code !== 'PGRST116') {
+                console.error('Ошибка загрузки daily_stats:', error);
+            }
+            return data || null;
+        }
+
+        async function fetchMealEntries(userId, dayStr) {
+            const { data, error } = await supabaseClient
+                .from('meal_entries')
+                .select('*')
+                .eq('user_id', userId)
+                .eq('day', dayStr)
+                .eq('deleted', false)
+                .order('created_at', { ascending: true });
+            if (error) {
+                console.error('Ошибка загрузки meal_entries:', error);
+            }
+            return data || [];
+        }
+
+        function mapMealEntryToUi(me) {
+            return {
+                id: me.id,
+                meal_type: me.meal_type || 'other',
+                title: me.title || '',
+                items: me.items || '',
+                calories: me.calories || 0,
+                protein_g: me.protein || 0,
+                carbs_g: me.carbs || 0,
+                fats_g: me.fat || 0,
+                // для совместимости со старым рендером
+                protein: '',
+                carbs: me.items || '',
+                fats: '',
+                veg: ''
+            };
+        }
+
+        async function insertMealEntry(payload) {
+            const { error } = await supabaseClient
+                .from('meal_entries')
+                .insert(payload);
+            if (error) {
+                console.error('Ошибка insert meal_entries:', error);
+                return { ok: false, error };
+            }
+            return { ok: true };
+        }
+
+        async function softDeleteMealEntry(userId, id) {
+            const { error } = await supabaseClient
+                .from('meal_entries')
+                .update({ deleted: true })
+                .eq('user_id', userId)
+                .eq('id', id);
+            if (error) {
+                console.error('Ошибка soft delete meal_entries:', error);
+                return { ok: false, error };
+            }
+            return { ok: true };
+        }
+
         function getTodayKey(userId) {
             return `kairos_day_state_${userId}_${getTodayDate()}`;
         }
@@ -2838,22 +2944,82 @@
             }
         }
 
-        // Получить userId (из Telegram или локально с fallback)
+        // Получить userId (строго: Telegram ID как строка). Если недоступен — возвращаем null.
         function getUserId() {
             try {
-                if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe?.user?.id) {
-                    return String(window.Telegram.WebApp.initDataUnsafe.user.id);
-                }
+                const id = window.Telegram?.WebApp?.initDataUnsafe?.user?.id;
+                if (id) return String(id);
             } catch (e) {
-                console.warn('Telegram user id недоступен, используем локальный id', e);
+                console.warn('Не удалось получить Telegram user id', e);
             }
-            const KEY = 'kairos_user_id';
-            let stored = localStorage.getItem(KEY);
-            if (!stored) {
-                stored = crypto.randomUUID ? crypto.randomUUID() : `user_${Math.random().toString(36).slice(2, 10)}`;
-                localStorage.setItem(KEY, stored);
+            return null;
+        }
+
+        function requireUserIdOrShowError() {
+            const userId = getUserId();
+            if (!userId) {
+                showTelegramAlert('Не удалось определить пользователя');
+                return null;
             }
-            return stored;
+            return userId;
+        }
+
+        function pickUserProfilePayload(profile) {
+            // Отправляем только понятные поля анкеты; лишние/undefined не отправляем.
+            const p = profile || {};
+            const payload = { user_id: requireUserIdOrShowError() };
+            if (!payload.user_id) return null;
+
+            [
+                'sex', 'age', 'height', 'weight', 'activity', 'goal',
+                'target_calories',
+                'protein_min', 'protein_max',
+                'protein_grams', 'carbs_grams', 'fats_grams',
+                'carbs_min', 'carbs_max', 'fats_min', 'fats_max',
+                'protein_palms', 'carb_fists', 'veg_palms',
+                'water_target_ml',
+                'mode',
+                'post_onboarding_completed'
+            ].forEach((k) => {
+                if (p[k] !== undefined && p[k] !== null) payload[k] = p[k];
+            });
+            return payload;
+        }
+
+        async function fetchUserProfile(userId) {
+            if (!userId) return null;
+            try {
+                const { data, error } = await supabaseClient
+                    .from('user_profile')
+                    .select('*')
+                    .eq('user_id', userId)
+                    .maybeSingle();
+                if (error && error.code !== 'PGRST116') {
+                    console.error('Ошибка загрузки user_profile:', error);
+                }
+                return data || null;
+            } catch (e) {
+                console.error('fetchUserProfile exception', e);
+                return null;
+            }
+        }
+
+        async function upsertUserProfile(profile) {
+            const payload = pickUserProfilePayload(profile);
+            if (!payload) return { ok: false, error: 'no_user' };
+            try {
+                const { error } = await supabaseClient
+                    .from('user_profile')
+                    .upsert(payload, { onConflict: 'user_id' });
+                if (error) {
+                    console.error('Ошибка сохранения user_profile:', error);
+                    return { ok: false, error };
+                }
+                return { ok: true };
+            } catch (e) {
+                console.error('upsertUserProfile exception', e);
+                return { ok: false, error: e };
+            }
         }
 
         // Сохранить состояние в localStorage
@@ -2977,29 +3143,19 @@
         // Флаг, чтобы не триггерить запись в момент загрузки
         let isLoadingStats = false;
 
-        // Загрузить/инициализировать статистику за сегодня (Supabase + локальный кэш)
+        // Загрузить/инициализировать статистику за сегодня (Supabase = источник истины; строку не создаём автоматически)
         async function loadTodayStats() {
             try {
                 isLoadingStats = true;
-                const userId = getUserId();
+                const userId = requireUserIdOrShowError();
+                if (!userId) return;
                 const day = getTodayDate();
                 dailyStats.userId = userId;
                 dailyStats.day = day;
 
                 const localCache = loadLocalDayCache(userId);
 
-                // Загружаем из Supabase (строку не создаём автоматически — создаётся при первом действии)
-                const { data, error } = await supabaseClient
-                    .from('daily_stats')
-                    .select('*')
-                    .eq('user_id', userId)
-                    .eq('day', day)
-                    .maybeSingle();
-
-                if (error && error.code !== 'PGRST116') {
-                    console.error('Ошибка загрузки daily_stats:', error);
-                }
-
+                const data = await fetchDailyStatsRow(userId, day);
                 const supaStats = data || {
                     calories: 0, protein: 0, fat: 0, carbs: 0,
                     water_ml: 0, activity_min: 0, mindful_choice: false, mindful: 0
@@ -3012,54 +3168,41 @@
                     !!kairosState.today &&
                     kairosState.today.date === day &&
                     (
-                        (kairosState.today.meals && kairosState.today.meals.length > 0) ||
-                        (kairosState.today.kcalUsed || 0) > 0 ||
-                        (kairosState.today.pUsed || 0) > 0 ||
-                        (kairosState.today.cUsed || 0) > 0 ||
-                        (kairosState.today.fUsed || 0) > 0 ||
-                        (kairosState.today.water || 0) > 0
+                        (kairosState.today.water || 0) > 0 ||
+                        (kairosState.today?.activityProgress?.baseMovementMinutesTodayDone || 0) > 0 ||
+                        (kairosState.today?.selfRegulationCount || 0) > 0
                     );
 
                 if (!kairosState.today || kairosState.today.date !== day) {
                     kairosState.today = createEmptyDay(day);
                 }
 
-                if (hasLocalTodayProgress) {
-                    // Берём макросы из локального состояния, а воду/активность/осознанность — из дневного кэша/супабейза
-                    dailyStats.calories = kairosState.today.kcalUsed || 0;
-                    dailyStats.protein = kairosState.today.pUsed || 0;
-                    dailyStats.fat = kairosState.today.fUsed || 0;
-                    dailyStats.carbs = kairosState.today.cUsed || 0;
-                    dailyStats.waterMl = (localCache?.waterMl ?? kairosState.today.water ?? supaStats.water_ml ?? 0) || 0;
-                    dailyStats.activityMin =
-                        (localCache?.activityMin ??
-                            kairosState.today?.activityProgress?.baseMovementMinutesTodayDone ??
-                            supaStats.activity_min ??
-                            0) || 0;
-                    dailyStats.mindfulChoice = (localCache?.mindfulChoice ?? !!supaStats.mindful_choice) || false;
-                    dailyStats.mindful =
-                        (localCache?.mindful ??
-                            kairosState.today?.selfRegulationCount ??
-                            supaStats.mindful ??
-                            0) || 0;
-                } else {
-                    // Если локального прогресса нет — берём из Supabase
-                    dailyStats.calories = supaStats.calories || 0;
-                    dailyStats.protein = supaStats.protein || 0;
-                    dailyStats.fat = supaStats.fat || 0;
-                    dailyStats.carbs = supaStats.carbs || 0;
-                    dailyStats.waterMl = supaStats.water_ml || 0;
-                    dailyStats.activityMin = supaStats.activity_min || 0;
-                    dailyStats.mindfulChoice = !!supaStats.mindful_choice;
-                    dailyStats.mindful = supaStats.mindful || 0;
+                // Макросы/ккал берём из Supabase (пересчёт идёт триггерами по meal_entries)
+                dailyStats.calories = supaStats.calories || 0;
+                dailyStats.protein = supaStats.protein || 0;
+                dailyStats.fat = supaStats.fat || 0;
+                dailyStats.carbs = supaStats.carbs || 0;
 
-                    // Инициализируем локальное состояние из dailyStats
-                    kairosState.today.kcalUsed = dailyStats.calories;
-                    kairosState.today.pUsed = dailyStats.protein;
-                    kairosState.today.fUsed = dailyStats.fat;
-                    kairosState.today.cUsed = dailyStats.carbs;
-                    kairosState.today.selfRegulationCount = dailyStats.mindful || 0;
-                }
+                // Воду/активность/осознанность — из кэша/локального, чтобы не терять при слабой сети
+                dailyStats.waterMl = (localCache?.waterMl ?? kairosState.today.water ?? supaStats.water_ml ?? 0) || 0;
+                dailyStats.activityMin =
+                    (localCache?.activityMin ??
+                        kairosState.today?.activityProgress?.baseMovementMinutesTodayDone ??
+                        supaStats.activity_min ??
+                        0) || 0;
+                dailyStats.mindfulChoice = (localCache?.mindfulChoice ?? !!supaStats.mindful_choice) || false;
+                dailyStats.mindful =
+                    (localCache?.mindful ??
+                        kairosState.today?.selfRegulationCount ??
+                        supaStats.mindful ??
+                        0) || 0;
+
+                // Инициализируем локальное состояние из dailyStats (чтобы UI/формулы не менялись)
+                kairosState.today.kcalUsed = dailyStats.calories;
+                kairosState.today.pUsed = dailyStats.protein;
+                kairosState.today.fUsed = dailyStats.fat;
+                kairosState.today.cUsed = dailyStats.carbs;
+                kairosState.today.selfRegulationCount = dailyStats.mindful || 0;
 
                 // Воду синхронизируем всегда
                 kairosState.today.water = dailyStats.waterMl;
@@ -3101,6 +3244,17 @@
                 updateDailySummary();
                 // Обновляем активность за последние 7 дней
                 refreshWeeklyActivityMinutes();
+                // Загружаем список блюд за today из meal_entries
+                try {
+                    const meals = await fetchMealEntries(userId, day);
+                    kairosState.today.meals = (meals || []).map(mapMealEntryToUi);
+                    saveState();
+                    dailyUsed = getDailyUsed();
+                    allMeals = getAllMeals();
+                    updateDailySummary();
+                } catch (e) {
+                    console.error('loadTodayStats meals exception', e);
+                }
             } finally {
                 isLoadingStats = false;
             }
@@ -3112,10 +3266,6 @@
                 const payload = {
                     user_id: dailyStats.userId,
                     day: dailyStats.day,
-                    calories: Math.round(dailyStats.calories || 0),
-                    protein: Math.round(dailyStats.protein || 0),
-                    fat: Math.round(dailyStats.fat || 0),
-                    carbs: Math.round(dailyStats.carbs || 0),
                     water_ml: Math.round(dailyStats.waterMl || 0),
                     activity_min: Math.round(dailyStats.activityMin || 0),
                     mindful_choice: !!dailyStats.mindfulChoice,
@@ -3140,10 +3290,6 @@
             if (dailyStatsSaveTimer) clearTimeout(dailyStatsSaveTimer);
             dailyStatsSaveTimer = setTimeout(() => {
                 const snapshot = {
-                    calories: Math.round(dailyStats.calories || 0),
-                    protein: Math.round(dailyStats.protein || 0),
-                    fat: Math.round(dailyStats.fat || 0),
-                    carbs: Math.round(dailyStats.carbs || 0),
                     waterMl: Math.round(dailyStats.waterMl || 0),
                     activityMin: Math.round(dailyStats.activityMin || 0),
                     mindfulChoice: !!dailyStats.mindfulChoice,
@@ -3172,10 +3318,6 @@
                 }
                 if (!dailyStats.userId) return;
                 const snapshot = {
-                    calories: Math.round(dailyStats.calories || 0),
-                    protein: Math.round(dailyStats.protein || 0),
-                    fat: Math.round(dailyStats.fat || 0),
-                    carbs: Math.round(dailyStats.carbs || 0),
                     waterMl: Math.round(dailyStats.waterMl || 0),
                     activityMin: Math.round(dailyStats.activityMin || 0),
                     mindfulChoice: !!dailyStats.mindfulChoice,
@@ -3542,13 +3684,14 @@
         };
 
         async function initApp() {
-            // Инициализируем userId (Telegram или локальный)
-            getUserId();
+            // Строго: user_id должен быть Telegram ID
+            const userId = requireUserIdOrShowError();
+            if (!userId) return;
             // Обновляем streak при запуске (если есть активность сегодня)
             if (kairosState.today && kairosState.today.meals.length > 0) {
             updateStreak();
             }
-            await checkOnboardingStatus();
+            await checkOnboardingStatus(userId);
             // Обновляем состояние орба при инициализации
             updateHealthOrbState();
             // Обновляем прогресс саморегуляции
@@ -3557,7 +3700,7 @@
             updateActivityMenuSubtitle();
         }
 
-        async function checkOnboardingStatus() {
+        async function checkOnboardingStatus(userId) {
             // Скрываем все секции сначала
             document.getElementById('onboarding-step1').classList.add('hidden');
             document.getElementById('onboarding-step2').classList.add('hidden');
@@ -3565,47 +3708,62 @@
             if (step3) step3.classList.add('hidden');
             document.getElementById('mode-selection').classList.add('hidden');
             document.getElementById('app-main').classList.add('hidden');
-            
-            // Профиль считаем валидным только если он реально заполнен (иначе анкета “пропадает”)
+
+            // 1) Пытаемся взять профиль из Supabase (источник истины для анкеты)
+            const supaProfile = await fetchUserProfile(userId);
+            if (supaProfile) {
+                kairosState.profile = { ...(kairosState.profile || {}), ...supaProfile };
+                saveState();
+            }
+
+            // 2) Если профиля нет в БД — в приоритете анкета,
+            // но делаем fallback на локальный профиль (на случай временного сбоя сети),
+            // чтобы анкета не всплывала «спустя время» при наличии данных.
             const isProfileComplete = (p) => {
                 if (!p || typeof p !== 'object') return false;
                 return !!p.sex && !!p.goal && Number(p.target_calories) > 0 && Number(p.weight) > 0;
             };
-
-            if (isProfileComplete(kairosState.profile)) {
-                // Устанавливаем dailyTargets из профиля
-                dailyTargets = {
-                    calories: kairosState.profile.target_calories || 1800,
-                    protein: kairosState.profile.protein_max || 90,
-                    carbs: Math.round((kairosState.profile.target_calories || 1800) * 0.45 / 4),
-                    fats: Math.round((kairosState.profile.target_calories || 1800) * 0.30 / 9),
-                    fiber: 30
-                };
-                
-                // Показываем короткий онбординг после анкеты один раз
-                if (!kairosState.profile.post_onboarding_completed) {
-                    // Подставляем рассчитанные значения (без новых расчётов)
-                    const kcalEl = document.getElementById('post-kcal');
-                    const pEl = document.getElementById('post-protein');
-                    const fEl = document.getElementById('post-fat');
-                    const cEl = document.getElementById('post-carbs');
-                    if (kcalEl) kcalEl.textContent = Math.round(kairosState.profile.target_calories || 0);
-                    if (pEl) pEl.textContent = Math.round(kairosState.profile.protein_grams || kairosState.profile.protein_max || 0);
-                    if (fEl) fEl.textContent = Math.round(kairosState.profile.fats_grams || 0);
-                    if (cEl) cEl.textContent = Math.round(kairosState.profile.carbs_grams || 0);
-                    document.getElementById('onboarding-step2').classList.remove('hidden');
-                } else {
+            if (!supaProfile) {
+                if (isProfileComplete(kairosState.profile)) {
+                    dailyTargets = {
+                        calories: kairosState.profile.target_calories || 1800,
+                        protein: kairosState.profile.protein_max || 90,
+                        carbs: Math.round((kairosState.profile.target_calories || 1800) * 0.45 / 4),
+                        fats: Math.round((kairosState.profile.target_calories || 1800) * 0.30 / 9),
+                        fiber: 30
+                    };
                     await loadTodayStats();
-                showApp();
-                }
-            } else {
-                // Нет валидного профиля - показываем анкету
-                if (kairosState.profile && !isProfileComplete(kairosState.profile)) {
-                    kairosState.profile = null;
-                    saveState();
+                    showApp();
+                    return;
                 }
                 document.getElementById('onboarding-step1').classList.remove('hidden');
+                return;
             }
+
+            // 3) Профиль есть — открываем основной поток (сохраняем текущий UX: короткий онбординг один раз)
+            dailyTargets = {
+                calories: kairosState.profile.target_calories || 1800,
+                protein: kairosState.profile.protein_max || 90,
+                carbs: Math.round((kairosState.profile.target_calories || 1800) * 0.45 / 4),
+                fats: Math.round((kairosState.profile.target_calories || 1800) * 0.30 / 9),
+                fiber: 30
+            };
+
+            if (!kairosState.profile.post_onboarding_completed) {
+                const kcalEl = document.getElementById('post-kcal');
+                const pEl = document.getElementById('post-protein');
+                const fEl = document.getElementById('post-fat');
+                const cEl = document.getElementById('post-carbs');
+                if (kcalEl) kcalEl.textContent = Math.round(kairosState.profile.target_calories || 0);
+                if (pEl) pEl.textContent = Math.round(kairosState.profile.protein_grams || kairosState.profile.protein_max || 0);
+                if (fEl) fEl.textContent = Math.round(kairosState.profile.fats_grams || 0);
+                if (cEl) cEl.textContent = Math.round(kairosState.profile.carbs_grams || 0);
+                document.getElementById('onboarding-step2').classList.remove('hidden');
+                return;
+            }
+
+            await loadTodayStats();
+            showApp();
         }
 
         function calculateBMR(gender, age, height, weight) {
@@ -3755,7 +3913,7 @@
         // Обработчик формы онбординга
         const onboardingForm = document.getElementById('onboarding-form');
         if (onboardingForm) {
-            onboardingForm.addEventListener('submit', (e) => {
+            onboardingForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             try {
             const btn = document.getElementById('calculate-btn');
@@ -3765,6 +3923,14 @@
             }
             btn.disabled = true;
             btn.textContent = 'Рассчитываем...';
+
+            // Строго: user_id должен быть известен до сохранения профиля
+            const userId = requireUserIdOrShowError();
+            if (!userId) {
+                btn.disabled = false;
+                btn.textContent = 'Рассчитать мою норму';
+                return;
+            }
 
             const formData = new FormData(e.target);
             const gender = formData.get('gender');
@@ -3894,7 +4060,16 @@
                 carbFists: targetCarbFists,
                 vegPalms: targetVegPalms
             };
-            
+
+            // Сохраняем профиль в Supabase (чтобы анкета не появлялась снова)
+            const upsertRes = await upsertUserProfile(kairosState.profile);
+            if (!upsertRes.ok) {
+                showTelegramAlert('Не удалось сохранить профиль. Попробуйте ещё раз.');
+                btn.disabled = false;
+                btn.textContent = 'Рассчитать мою норму';
+                return;
+            }
+
             saveState();
             
             // Для обратной совместимости
@@ -3958,6 +4133,8 @@
                 if (kairosState.profile) {
                     kairosState.profile.post_onboarding_completed = true;
                     saveState();
+                    // Пытаемся сохранить флаг в профиле в Supabase (если поле есть в таблице)
+                    try { await upsertUserProfile(kairosState.profile); } catch (e) {}
                 }
                 // На всякий случай скрываем онбординг перед переходом
                 const step3 = document.getElementById('onboarding-step3');
@@ -4411,22 +4588,25 @@
                 lunch: '☀️ Обед',
                 dinner: '🌙 Ужин',
                 snack: '🍎 Перекус',
-                manual: '✍️ Добавлено вручную'
+                manual: '✍️ Добавлено вручную',
+                other: '✍️ Добавлено вручную'
             };
 
             container.innerHTML = '';
             allMeals.forEach(meal => {
                 const mealDiv = document.createElement('div');
                 mealDiv.className = 'meal-entry';
-                const items = [meal.protein, meal.carbs, meal.fats, meal.veg]
+                const title = meal.title ? `${mealNames[meal.meal_type] ? mealNames[meal.meal_type].split(' ').slice(0,1).join(' ') : ''} ${meal.title}`.trim() : (mealNames[meal.meal_type] || 'Приём пищи');
+                const itemsText = (meal.items || '').trim();
+                const legacyItems = [meal.protein, meal.carbs, meal.fats, meal.veg]
                     .map(v => String(v || '').trim())
                     .filter(Boolean);
-                const itemsHtml = items.length
-                    ? items.join(', ')
-                    : '<span style="color:#9CA3AF;">Без деталей</span>';
+                const itemsHtml = itemsText
+                    ? itemsText
+                    : (legacyItems.length ? legacyItems.join(', ') : '<span style="color:#9CA3AF;">Без деталей</span>');
                 mealDiv.innerHTML = `
                     <div class="meal-header">
-                        <div class="meal-name">${mealNames[meal.meal_type]}</div>
+                        <div class="meal-name">${title}</div>
                         <div class="meal-calories">${Math.round(meal.calories)} ккал</div>
                     </div>
                     <div class="meal-items">${itemsHtml}</div>
@@ -4448,43 +4628,23 @@
         }
 
         function deleteMeal(mealId) {
-            if (!mealId || !kairosState.today) return;
+            if (!mealId) return;
             
             showTelegramConfirm('Удалить этот приём пищи?', (confirmed) => {
                 if (!confirmed) return;
-                
-                const index = kairosState.today.meals.findIndex(meal => meal.id === mealId);
-                if (index === -1) return;
-                
-                const meal = kairosState.today.meals[index];
-                kairosState.today.meals.splice(index, 1);
-                
-                const calories = meal.calories || 0;
-                const protein = meal.protein_g || 0;
-                const carbs = meal.carbs_g || 0;
-                const fats = meal.fats_g || 0;
-                const fiber = meal.fiber_g || 0;
-                const trackXP = meal.trackXP || {};
-                
-                kairosState.today.kcalUsed = Math.max(0, kairosState.today.kcalUsed - calories);
-                kairosState.today.pUsed = Math.max(0, kairosState.today.pUsed - protein);
-                kairosState.today.cUsed = Math.max(0, kairosState.today.cUsed - carbs);
-                kairosState.today.fUsed = Math.max(0, kairosState.today.fUsed - fats);
-                kairosState.today.fiber = Math.max(0, kairosState.today.fiber - fiber);
-                // Вычитаем «сырые очки» направлений
-                Object.keys(kairosState.today.tracks || {}).forEach(key => {
-                    const delta = trackXP[key] || 0;
-                    kairosState.today.tracks[key] = Math.max(0, (kairosState.today.tracks[key] || 0) - delta);
-                });
-                
-                saveState();
-                dailyUsed = getDailyUsed();
-                allMeals = getAllMeals();
-                
-                updateDailyTotals();
-                updateDailySummary();
-                
-                showToast('Приём пищи удалён');
+
+                (async () => {
+                    const userId = requireUserIdOrShowError();
+                    if (!userId) return;
+                    const res = await softDeleteMealEntry(userId, mealId);
+                    if (!res.ok) {
+                        showTelegramAlert('Не удалось удалить блюдо. Попробуйте ещё раз.');
+                        return;
+                    }
+                    await loadTodayStats(); // перечитываем daily_stats + список блюд
+                    updateHeroDisplay();
+                    showToast('Приём пищи удалён');
+                })();
             });
         }
 
@@ -4713,18 +4873,34 @@
             detailsContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
-        // ========== ЖУРНАЛ (Supabase daily_stats по датам) ==========
+        // ========== ЖУРНАЛ (Supabase: daily_stats + meal_entries) ==========
         const JOURNAL_MONTHS = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
                               'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
 
         let journalState = {
             year: null,
             month: null, // 0-11
-            selectedDay: null // YYYY-MM-DD
+            selectedDay: null, // YYYY-MM-DD
+            hasDataDays: new Set()
         };
 
-        function openJournal() {
-            // Инициализация состояния
+        function normalizeDailyStatsRow(row) {
+            return {
+                calories: row?.calories ?? 0,
+                protein: row?.protein ?? 0,
+                fat: row?.fat ?? 0,
+                carbs: row?.carbs ?? 0,
+                water_ml: row?.water_ml ?? 0,
+                activity_min: row?.activity_min ?? 0,
+                mindful_choice: !!row?.mindful_choice,
+                mindful: row?.mindful ?? 0
+            };
+        }
+
+        async function openJournal() {
+            const userId = requireUserIdOrShowError();
+            if (!userId) return;
+
             const todayStr = getTodayDate();
             journalState.selectedDay = journalState.selectedDay || todayStr;
             const d = new Date(journalState.selectedDay + 'T00:00:00');
@@ -4732,38 +4908,65 @@
             journalState.month = d.getMonth();
 
             showSection('journal');
+            await loadJournalMonthHasData();
             renderJournalCalendar();
-            journalPickDay(journalState.selectedDay);
+            await journalPickDay(journalState.selectedDay);
         }
 
         function closeJournal() {
             showMainMenu();
         }
 
-        function journalPrevMonth() {
-            if (journalState.month === null || journalState.year === null) {
-                openJournal();
-                return;
-            }
+        async function journalPrevMonth() {
+            if (journalState.month === null || journalState.year === null) return openJournal();
             journalState.month -= 1;
             if (journalState.month < 0) {
                 journalState.month = 11;
                 journalState.year -= 1;
             }
+            await loadJournalMonthHasData();
             renderJournalCalendar();
         }
 
-        function journalNextMonth() {
-            if (journalState.month === null || journalState.year === null) {
-                openJournal();
-                return;
-            }
+        async function journalNextMonth() {
+            if (journalState.month === null || journalState.year === null) return openJournal();
             journalState.month += 1;
             if (journalState.month > 11) {
                 journalState.month = 0;
                 journalState.year += 1;
             }
+            await loadJournalMonthHasData();
             renderJournalCalendar();
+        }
+
+        async function loadJournalMonthHasData() {
+            const userId = requireUserIdOrShowError();
+            if (!userId) return;
+            const year = journalState.year ?? new Date().getFullYear();
+            const month = journalState.month ?? new Date().getMonth();
+            const start = formatLocalDate(new Date(year, month, 1));
+            const end = formatLocalDate(new Date(year, month + 1, 0));
+            try {
+                const { data, error } = await supabaseClient
+                    .from('daily_stats')
+                    .select('day')
+                    .eq('user_id', userId)
+                    .gte('day', start)
+                    .lte('day', end);
+                if (error) {
+                    console.error('Ошибка month days daily_stats:', error);
+                    journalState.hasDataDays = new Set();
+                    return;
+                }
+                const set = new Set();
+                (data || []).forEach(r => {
+                    if (r && r.day) set.add(String(r.day));
+                });
+                journalState.hasDataDays = set;
+            } catch (e) {
+                console.error('loadJournalMonthHasData exception', e);
+                journalState.hasDataDays = new Set();
+            }
         }
 
         function renderJournalCalendar() {
@@ -4786,9 +4989,10 @@
                 const inMonth = cur.getMonth() === month;
                 const dateStr = formatLocalDate(cur);
                 const isSelected = journalState.selectedDay === dateStr;
+                const hasData = journalState.hasDataDays && journalState.hasDataDays.has(dateStr);
                 html += `
                     <div
-                        class="journal-day${inMonth ? '' : ' is-muted'}${isSelected ? ' is-selected' : ''}"
+                        class="journal-day${inMonth ? '' : ' is-muted'}${isSelected ? ' is-selected' : ''}${hasData ? ' has-data' : ''}"
                         onclick="journalPickDay('${dateStr}')"
                     >${cur.getDate()}</div>
                 `;
@@ -4799,21 +5003,8 @@
         async function journalPickDay(dateStr) {
             journalState.selectedDay = dateStr;
             renderJournalCalendar();
-            await loadJournalDayStats(dateStr);
+            await loadJournalDay(dateStr);
             hapticFeedback('light');
-        }
-
-        function normalizeDailyStatsRow(row) {
-            return {
-                calories: row?.calories ?? 0,
-                protein: row?.protein ?? 0,
-                fat: row?.fat ?? 0,
-                carbs: row?.carbs ?? 0,
-                water_ml: row?.water_ml ?? 0,
-                activity_min: row?.activity_min ?? 0,
-                mindful_choice: !!row?.mindful_choice,
-                mindful: row?.mindful ?? 0
-            };
         }
 
         function updateJournalSummaryUI(rowOrNull) {
@@ -4850,104 +5041,142 @@
             if (actEl) actEl.textContent = `${Math.round(row.activity_min || 0)} мин`;
         }
 
-        async function loadJournalDayStats(dayStr) {
-            try {
-                const userId = getUserId();
-                const { data, error } = await supabaseClient
-                    .from('daily_stats')
-                    .select('*')
-                    .eq('user_id', userId)
-                    .eq('day', dayStr)
-                    .maybeSingle();
-
-                if (error && error.code !== 'PGRST116') {
-                    console.error('Ошибка загрузки daily_stats (journal):', error);
-                }
-                updateJournalSummaryUI(data || null);
-            } catch (e) {
-                console.error('loadJournalDayStats exception', e);
-                updateJournalSummaryUI(null);
+        function renderJournalMeals(meals) {
+            const container = document.getElementById('journal-meals');
+            if (!container) return;
+            if (!meals || meals.length === 0) {
+                container.innerHTML = '<div class="empty-cart">Пока нет приёмов пищи</div>';
+                return;
             }
+
+            const mealEmoji = {
+                breakfast: '🌅',
+                lunch: '☀️',
+                dinner: '🌙',
+                snack: '🍎',
+                other: '✍️'
+            };
+
+            container.innerHTML = '';
+            meals.forEach(me => {
+                const div = document.createElement('div');
+                div.className = 'meal-entry';
+                const emoji = mealEmoji[me.meal_type] || '🍽️';
+                const title = me.title ? `${emoji} ${me.title}` : `${emoji} Приём пищи`;
+                const items = (me.items || '').trim() || '<span style="color:#9CA3AF;">Без деталей</span>';
+                div.innerHTML = `
+                    <div class="meal-header">
+                        <div class="meal-name">${title}</div>
+                        <div class="meal-calories">${Math.round(me.calories || 0)} ккал</div>
+                    </div>
+                    <div class="meal-items">${items}</div>
+                    <button class="btn btn-secondary" type="button" style="margin-top: 8px; font-size: 12px; padding: 6px 12px;">Удалить</button>
+                `;
+                const delBtn = div.querySelector('button');
+                delBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    journalDeleteMeal(me.id);
+                });
+                container.appendChild(div);
+            });
+        }
+
+        async function loadJournalDay(dayStr) {
+            const userId = requireUserIdOrShowError();
+            if (!userId) return;
+            try {
+                const stats = await fetchDailyStatsRow(userId, dayStr);
+                updateJournalSummaryUI(stats || null);
+                const meals = await fetchMealEntries(userId, dayStr);
+                renderJournalMeals(meals || []);
+            } catch (e) {
+                console.error('loadJournalDay exception', e);
+                updateJournalSummaryUI(null);
+                renderJournalMeals([]);
+            }
+        }
+
+        function journalDeleteMeal(mealId) {
+            if (!mealId) return;
+            showTelegramConfirm('Удалить этот приём пищи?', (confirmed) => {
+                if (!confirmed) return;
+                (async () => {
+                    const userId = requireUserIdOrShowError();
+                    if (!userId) return;
+                    const res = await softDeleteMealEntry(userId, mealId);
+                    if (!res.ok) {
+                        showTelegramAlert('Не удалось удалить блюдо. Попробуйте ещё раз.');
+                        return;
+                    }
+                    await new Promise(r => setTimeout(r, 200));
+                    await loadJournalDay(journalState.selectedDay);
+                    // Обновляем подсветку месяца (день мог стать пустым)
+                    await loadJournalMonthHasData();
+                    renderJournalCalendar();
+                    showToast('Приём пищи удалён');
+                })();
+            });
         }
 
         async function copySelectedDayToToday() {
             try {
-                const userId = getUserId();
+                const userId = requireUserIdOrShowError();
+                if (!userId) return;
                 const srcDay = journalState.selectedDay;
                 const today = getTodayDate();
                 if (!srcDay) return;
 
-                const { data, error } = await supabaseClient
-                    .from('daily_stats')
-                    .select('*')
-                    .eq('user_id', userId)
-                    .eq('day', srcDay)
-                    .maybeSingle();
+                const sourceMeals = await fetchMealEntries(userId, srcDay);
+                const sourceStatsRaw = await fetchDailyStatsRow(userId, srcDay);
+                const sourceStats = normalizeDailyStatsRow(sourceStatsRaw);
 
-                if (error && error.code !== 'PGRST116') {
-                    console.error('Ошибка чтения daily_stats для копирования:', error);
-                }
-
-                if (!data) {
+                if ((!sourceMeals || sourceMeals.length === 0) && !sourceStatsRaw) {
                     showToast('За выбранный день данных нет');
                     return;
                 }
 
-                const row = normalizeDailyStatsRow(data);
-                const payload = {
-                    user_id: userId,
-                    day: today,
-                    calories: Math.round(row.calories || 0),
-                    protein: Math.round(row.protein || 0),
-                    fat: Math.round(row.fat || 0),
-                    carbs: Math.round(row.carbs || 0),
-                    water_ml: Math.round(row.water_ml || 0),
-                    activity_min: Math.round(row.activity_min || 0),
-                    mindful_choice: !!row.mindful_choice,
-                    mindful: Math.round(row.mindful || 0)
-                };
+                // 1) Копируем еду (meal_entries) с source='copy'
+                if (sourceMeals && sourceMeals.length > 0) {
+                    const inserts = sourceMeals.map(m => ({
+                        id: generateUuid(),
+                        user_id: userId,
+                        day: today,
+                        meal_type: m.meal_type || 'other',
+                        title: m.title || '',
+                        items: m.items || '',
+                        source: 'copy',
+                        calories: m.calories || 0,
+                        protein: m.protein || 0,
+                        fat: m.fat || 0,
+                        carbs: m.carbs || 0,
+                        deleted: false
+                    }));
+                    const { error } = await supabaseClient.from('meal_entries').insert(inserts);
+                    if (error) {
+                        console.error('Ошибка копирования meal_entries:', error);
+                        showTelegramAlert('Не удалось скопировать еду. Попробуйте ещё раз.');
+                        return;
+                    }
+                }
 
-                const { error: upsertError } = await supabaseClient
+                // 2) Копируем воду/активность/mindful (без макросов — их пересчитает триггер)
+                const { error: dsErr } = await supabaseClient
                     .from('daily_stats')
-                    .upsert(payload, { onConflict: 'user_id,day' });
-                if (upsertError) {
-                    console.error('Ошибка upsert при копировании в today:', upsertError);
+                    .upsert({
+                        user_id: userId,
+                        day: today,
+                        water_ml: Math.round(sourceStats.water_ml || 0),
+                        activity_min: Math.round(sourceStats.activity_min || 0),
+                        mindful_choice: !!sourceStats.mindful_choice,
+                        mindful: Math.round(sourceStats.mindful || 0)
+                    }, { onConflict: 'user_id,day' });
+                if (dsErr) {
+                    console.error('Ошибка копирования non-food daily_stats:', dsErr);
                 }
 
-                // Обновляем текущее состояние, чтобы UI не вернулся к старым значениям
-                if (!kairosState.today || kairosState.today.date !== today) {
-                    kairosState.today = createEmptyDay(today);
-                }
-                kairosState.today.kcalUsed = payload.calories;
-                kairosState.today.pUsed = payload.protein;
-                kairosState.today.fUsed = payload.fat;
-                kairosState.today.cUsed = payload.carbs;
-                kairosState.today.water = payload.water_ml;
-                if (!kairosState.today.activityProgress) {
-                    kairosState.today.activityProgress = {
-                        cardioMinutesWeekDone: 0,
-                        strengthSessionsWeekDone: 0,
-                        joySessionsWeekDone: 0,
-                        baseMovementMinutesTodayDone: payload.activity_min
-                    };
-                } else {
-                    kairosState.today.activityProgress.baseMovementMinutesTodayDone = payload.activity_min;
-                }
-                kairosState.today.selfRegulationCount = payload.mindful || 0;
-                dailyStats.userId = userId;
-                dailyStats.day = today;
-                dailyStats.calories = payload.calories;
-                dailyStats.protein = payload.protein;
-                dailyStats.fat = payload.fat;
-                dailyStats.carbs = payload.carbs;
-                dailyStats.waterMl = payload.water_ml;
-                dailyStats.activityMin = payload.activity_min;
-                dailyStats.mindfulChoice = payload.mindful_choice;
-                dailyStats.mindful = payload.mindful;
-
-                saveState();
-                updateDailyTotals();
-                updateDailySummary();
+                // 3) Перечитываем today
+                await new Promise(r => setTimeout(r, 350));
+                await loadTodayStats();
                 refreshWeeklyActivityMinutes();
                 showToast('Скопировано в сегодня');
                 hapticFeedback('medium');
@@ -5062,7 +5291,7 @@
             hapticFeedback('light');
         }
 
-        function submitManualAdd() {
+        async function submitManualAdd() {
             const kcalEl = document.getElementById('manual-kcal');
             const pEl = document.getElementById('manual-protein');
             const cEl = document.getElementById('manual-carbs');
@@ -5077,41 +5306,40 @@
                 return;
             }
 
-            if (!kairosState.today) {
-                kairosState.today = createEmptyDay(getTodayDate());
+            const userId = requireUserIdOrShowError();
+            if (!userId) return;
+            const day = getTodayDate();
+
+            const itemsParts = [];
+            if (protein) itemsParts.push(`Б ${protein} г`);
+            if (fats) itemsParts.push(`Ж ${fats} г`);
+            if (carbs) itemsParts.push(`У ${carbs} г`);
+            const items = itemsParts.join(' • ');
+
+            const payload = {
+                id: generateUuid(),
+                user_id: userId,
+                day,
+                meal_type: 'other',
+                title: 'Добавлено вручную',
+                items: items || '',
+                source: 'manual',
+                calories: kcal,
+                protein,
+                fat: fats,
+                carbs,
+                deleted: false
+            };
+
+            const res = await insertMealEntry(payload);
+            if (!res.ok) {
+                showTelegramAlert('Не удалось сохранить блюдо. Попробуйте ещё раз.');
+                return;
             }
 
-            // Добавляем запись в "Итог дня", чтобы можно было удалить
-            const mealData = {
-                id: Date.now().toString(),
-                meal_type: 'manual',
-                items: [],
-                protein: protein > 0 ? `Белки: ${protein} г` : '',
-                carbs: `Углеводы: ${carbs} г • Жиры: ${fats} г`,
-                fats: '',
-                veg: '',
-                calories: kcal,
-                protein_g: protein,
-                carbs_g: carbs,
-                fats_g: fats,
-                fiber_g: 0,
-                trackXP: {},
-                totalXP: 0,
-                created_at: new Date().toISOString(),
-                telegram_user_id: telegramUser?.id || null
-            };
-            kairosState.today.meals.push(mealData);
-
-            kairosState.today.kcalUsed += kcal;
-            kairosState.today.pUsed += protein;
-            kairosState.today.cUsed += carbs;
-            kairosState.today.fUsed += fats;
-
-            saveState();
-            updateDailyTotals();
-            updateDailySummary();
-            updateHeroDisplay();
             closeManualAddModal();
+            await loadTodayStats(); // перечитываем daily_stats + список блюд
+            updateHeroDisplay();
             showToast('Добавлено в дневной план');
         }
 
@@ -5739,6 +5967,15 @@
             const message = 'Начать всё сначала? Мы удалим профиль, историю и текущий день. Всё придётся настроить заново.';
             const confirmCallback = (confirmed) => {
                 if (confirmed) {
+                    // Пытаемся удалить данные пользователя в Supabase (если user_id доступен)
+                    (async () => {
+                        const userId = getUserId();
+                        if (!userId) return;
+                        try { await supabaseClient.from('meal_entries').delete().eq('user_id', userId); } catch (e) {}
+                        try { await supabaseClient.from('daily_stats').delete().eq('user_id', userId); } catch (e) {}
+                        try { await supabaseClient.from('user_profile').delete().eq('user_id', userId); } catch (e) {}
+                    })();
+
                     // Удаляем все старые ключи из localStorage
                     localStorage.removeItem('kairos_state');
                     localStorage.removeItem('kairos_userData');
@@ -6030,7 +6267,7 @@
         // Флаг для предотвращения множественных вызовов saveMeal
         let isSavingMeal = false;
 
-        function saveMeal() {
+        async function saveMeal() {
             // Защита от множественных вызовов
             if (isSavingMeal) {
                 console.log('saveMeal уже выполняется, пропускаем');
@@ -6133,87 +6370,97 @@
                 kairosState.today.xp += synergyXP;
             }
 
-            const mealData = {
-                id: Date.now().toString(),
+            // Сохраняем еду в Supabase (meal_entries), а итоги берём из daily_stats (триггеры)
+            const userId = requireUserIdOrShowError();
+            if (!userId) {
+                isSavingMeal = false;
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = 'Сохранить приём пищи';
+                }
+                return;
+            }
+            const dayStr = getTodayDate();
+
+            const titleMap = {
+                breakfast: 'Завтрак',
+                lunch: 'Обед',
+                dinner: 'Ужин',
+                snack: 'Перекус',
+                other: 'Приём пищи'
+            };
+            const title = titleMap[currentMeal.type] || 'Приём пищи';
+
+            const itemsText = [proteinItems.map(i => {
+                    const qty = i.count || i.qty || 1;
+                    return qty > 1 ? `${i.name} x${qty}` : i.name;
+                }).filter(n => n !== 'Пропустить').join(', '),
+                carbsItems.map(i => {
+                    const qty = i.count || i.qty || 1;
+                    return qty > 1 ? `${i.name} x${qty}` : i.name;
+                }).filter(n => n !== 'Пропустить').join(', '),
+                fatsItems.map(i => {
+                    const qty = i.count || i.qty || 1;
+                    return qty > 1 ? `${i.name} x${qty}` : i.name;
+                }).filter(n => n !== 'Пропустить').join(', '),
+                vegItems.map(i => {
+                    const qty = i.count || i.qty || 1;
+                    return qty > 1 ? `${i.name} x${qty}` : i.name;
+                }).filter(n => n !== 'Пропустить').join(', ')
+            ].map(s => String(s || '').trim()).filter(Boolean).join(' • ');
+
+            const payload = {
+                id: generateUuid(),
+                user_id: userId,
+                day: dayStr,
                 meal_type: currentMeal.type,
-                items: mealItems,
-                protein: proteinItems.map(i => {
-                    const qty = i.count || i.qty || 1;
-                    return qty > 1 ? `${i.name} x${qty}` : i.name;
-                }).filter(n => n !== 'Пропустить').join(', '),
-                carbs: carbsItems.map(i => {
-                    const qty = i.count || i.qty || 1;
-                    return qty > 1 ? `${i.name} x${qty}` : i.name;
-                }).filter(n => n !== 'Пропустить').join(', '),
-                fats: fatsItems.map(i => {
-                    const qty = i.count || i.qty || 1;
-                    return qty > 1 ? `${i.name} x${qty}` : i.name;
-                }).filter(n => n !== 'Пропустить').join(', '),
-                veg: vegItems.map(i => {
-                    const qty = i.count || i.qty || 1;
-                    return qty > 1 ? `${i.name} x${qty}` : i.name;
-                }).filter(n => n !== 'Пропустить').join(', '),
-                calories: totalCalories,
-                protein_g: totalProtein,
-                carbs_g: totalCarbs,
-                fats_g: totalFats,
-                fiber_g: totalFiber,
-                trackXP: totalTrackXP,
-                totalXP: totalXP + synergyXP,
-                created_at: new Date().toISOString(),
-                telegram_user_id: telegramUser?.id || null
+                title,
+                items: itemsText,
+                source: 'manual',
+                calories: Math.round(totalCalories || 0),
+                protein: Math.round(totalProtein || 0),
+                fat: Math.round(totalFats || 0),
+                carbs: Math.round(totalCarbs || 0),
+                deleted: false
             };
 
-            // Сохраняем приём пищи в kairosState.today
-            if (!kairosState.today) {
-                kairosState.today = createEmptyDay(getTodayDate());
+            const ins = await insertMealEntry(payload);
+            if (!ins.ok) {
+                showTelegramAlert('Не удалось сохранить блюдо. Попробуйте ещё раз.');
+                isSavingMeal = false;
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = 'Сохранить приём пищи';
+                }
+                if (tg) {
+                    tg.MainButton.hideProgress();
+                }
+                return;
             }
-            kairosState.today.meals.push(mealData);
-            
-            // Обновляем КБЖУ в today
-            kairosState.today.kcalUsed += totalCalories;
-            kairosState.today.pUsed += totalProtein;
-            kairosState.today.cUsed += totalCarbs;
-            kairosState.today.fUsed += totalFats;
-            kairosState.today.fiber += totalFiber;
-            
-            // Сохраняем состояние
-            saveState();
 
-            // Сразу синхронизируем дневные метрики (чтобы при перезаходе БЖУ не сбрасывались)
-            updateDailyTotals();
-            
-            // Отправляем данные в бота
+            // Даем триггерам обновить daily_stats и перечитываем day
+            await new Promise(r => setTimeout(r, 250));
+            await loadTodayStats();
+
+            // Отправляем данные в бота (как было)
             sendDataToBot();
 
             hapticFeedback('heavy');
-            
-            // MVP: без геймификационных подсказок/плашек
-                showToast('✅ Приём пищи сохранён!');
-            
-            setTimeout(() => {
-                // Сбрасываем флаг после завершения
-                isSavingMeal = false;
-                
-                // Сбрасываем текущий приём пищи
-                currentMeal = {
-                    type: '',
-                    step: 0,
-                    selections: {},
-                    totals: { calories: 0, protein: 0, carbs: 0, fats: 0 }
-                };
-                
-                showMainMenu();
-                updateDailyTotals();
-                updateDailySummary();
-                updateHeroDisplay();
-                
-                if (tg) {
-                    tg.MainButton.hideProgress();
-                    tg.MainButton.hide();
-                    tg.MainButton.offClick();
-                }
-            }, 2000);
+            showToast('✅ Приём пищи сохранён!');
+
+            // Сбрасываем флаг и состояние конструктора
+            isSavingMeal = false;
+            currentMeal = { type: '', step: 0, selections: {}, totals: { calories: 0, protein: 0, carbs: 0, fats: 0 } };
+            showMainMenu();
+            updateDailyTotals();
+            updateDailySummary();
+            updateHeroDisplay();
+
+            if (tg) {
+                tg.MainButton.hideProgress();
+                tg.MainButton.hide();
+                tg.MainButton.offClick();
+            }
 
             if (btn) {
                 btn.disabled = false;
@@ -7003,6 +7250,7 @@
     </script>
 </body>
 </html>
+
 
 
 
