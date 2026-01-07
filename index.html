@@ -40,7 +40,178 @@
         /* Header wrapper on main screen: no outer card, only inner blocks (как в референсе) */
         .app-header {
             margin-bottom: 12px;
+            position: relative;
         }
+
+        /* Small top-right action button in header */
+        .journal-btn {
+            position: absolute;
+            top: 2px;
+            right: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1B2B4A;
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 16px;
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .journal-btn:active { transform: scale(0.98); }
+
+        /* Journal screen */
+        .journal-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 14px;
+        }
+        .journal-back {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 36px;
+            height: 36px;
+            border-radius: 14px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            background: rgba(255, 255, 255, 0.88);
+            color: #1B2B4A;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .journal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1B2B4A;
+        }
+        .journal-monthbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            margin-bottom: 12px;
+        }
+        .journal-month-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 14px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            background: rgba(255, 255, 255, 0.88);
+            color: #1B2B4A;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .journal-month-label {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1B2B4A;
+        }
+        .journal-dow {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .journal-dow div {
+            text-align: center;
+            font-weight: 700;
+            color: #6B7280;
+            font-size: 12px;
+            padding: 6px 0;
+        }
+        .journal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .journal-day {
+            aspect-ratio: 1;
+            border-radius: 16px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            background: rgba(255, 255, 255, 0.72);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1B2B4A;
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .journal-day.is-muted {
+            opacity: 0.35;
+        }
+        .journal-day.is-selected {
+            border-color: rgba(130, 196, 255, 0.85);
+            background: linear-gradient(135deg, rgba(130, 196, 255, 0.35) 0%, rgba(74, 107, 200, 0.20) 100%);
+            box-shadow: 0 8px 22px rgba(130, 196, 255, 0.25);
+        }
+        .journal-summary {
+            padding: 18px;
+        }
+        .journal-summary-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .journal-summary-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #1B2B4A;
+        }
+        .journal-kcal {
+            font-size: 46px;
+            line-height: 1;
+            font-weight: 900;
+            color: #1B2B4A;
+            letter-spacing: -0.5px;
+        }
+        .journal-kcal-caption {
+            margin-top: 6px;
+            font-size: 14px;
+            color: #6B7280;
+        }
+        .journal-mini-macros {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            justify-content: flex-end;
+        }
+        .journal-macro-pill {
+            min-width: 56px;
+            padding: 8px 10px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            text-align: center;
+        }
+        .journal-macro-pill .val { font-weight: 800; color: #1B2B4A; font-size: 16px; }
+        .journal-macro-pill .sub { color: #6B7280; font-size: 11px; margin-top: 2px; }
+        .journal-metrics {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            color: #6B7280;
+            font-size: 14px;
+            margin: 10px 0 14px 0;
+        }
+        .journal-metrics span { display: inline-flex; align-items: center; gap: 6px; }
 
         .container {
             width: 100%;
@@ -1286,6 +1457,7 @@
             <!-- Main App Header -->
             <header id="app-header" class="app-header">
                 <h1 style="display: none;"></h1>
+                <button class="journal-btn" type="button" onclick="openJournal()">🗓️ Журнал</button>
                 <div class="budget-display">
                     <div class="budget-label">Дневной план</div>
                     <div class="budget-amount"><span id="remaining-calories">1800</span></div>
@@ -2254,6 +2426,57 @@
                 <button class="btn btn-secondary" onclick="showMainMenu()">← Назад в меню</button>
             </section>
 
+            <!-- Journal (daily_stats by date) -->
+            <section id="journal" class="card hidden">
+                <div class="journal-topbar">
+                    <button class="journal-back" type="button" onclick="closeJournal()">‹</button>
+                    <div class="journal-title">Журнал</div>
+                </div>
+
+                <div class="journal-monthbar">
+                    <button class="journal-month-btn" type="button" onclick="journalPrevMonth()">‹</button>
+                    <div class="journal-month-label" id="journal-month-label">Месяц</div>
+                    <button class="journal-month-btn" type="button" onclick="journalNextMonth()">›</button>
+                </div>
+
+                <div class="journal-dow">
+                    <div>ПН</div><div>ВТ</div><div>СР</div><div>ЧТ</div><div>ПТ</div><div>СБ</div><div>ВС</div>
+                </div>
+
+                <div id="journal-calendar-grid" class="journal-grid"></div>
+
+                <div class="card journal-summary" style="margin-bottom: 0;">
+                    <div class="journal-summary-header">
+                        <div>
+                            <div class="journal-summary-title">Дневной план</div>
+                            <div class="journal-kcal" id="journal-remaining-calories">0</div>
+                            <div class="journal-kcal-caption">ккал осталось</div>
+                        </div>
+                        <div class="journal-mini-macros">
+                            <div class="journal-macro-pill">
+                                <div class="val" id="journal-used-protein">0</div>
+                                <div class="sub">из <span id="journal-total-protein">0</span> г</div>
+                            </div>
+                            <div class="journal-macro-pill">
+                                <div class="val" id="journal-used-carbs">0</div>
+                                <div class="sub">из <span id="journal-total-carbs">0</span> г</div>
+                            </div>
+                            <div class="journal-macro-pill">
+                                <div class="val" id="journal-used-fats">0</div>
+                                <div class="sub">из <span id="journal-total-fats">0</span> г</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="journal-metrics">
+                        <span>💧 <span id="journal-water">0.0 л</span></span>
+                        <span>⚡ <span id="journal-activity">0 мин</span></span>
+                    </div>
+
+                    <button class="btn btn-secondary" type="button" onclick="copySelectedDayToToday()">Скопировать в сегодня</button>
+                </div>
+            </section>
+
             <!-- Calendar Section -->
             <section id="calendar" class="card hidden">
                 <div class="step-header">
@@ -2381,7 +2604,7 @@
         // Функция для обработки кнопки "Назад"
         function handleBackButton() {
             // Проверяем текущий экран и возвращаемся назад
-            const sections = ['plate-guide', 'constructor', 'activity', 'problems', 'sleep'];
+            const sections = ['plate-guide', 'constructor', 'activity', 'problems', 'sleep', 'calendar', 'journal'];
             const visibleSection = sections.find(id => {
                 const el = document.getElementById(id);
                 return el && !el.classList.contains('hidden');
@@ -2550,6 +2773,7 @@
             waterMl: 0,
             activityMin: 0,
             mindfulChoice: false,
+            mindful: 0,
             healthAreasRawScores: {
                 muscles: 0, energy: 0, immunity: 0, hormones: 0, gut: 0, skin: 0, brain: 0
             }
@@ -2764,7 +2988,7 @@
 
                 const localCache = loadLocalDayCache(userId);
 
-                // Загружаем из Supabase или создаём дефолт
+                // Загружаем из Supabase (строку не создаём автоматически — создаётся при первом действии)
                 const { data, error } = await supabaseClient
                     .from('daily_stats')
                     .select('*')
@@ -2778,25 +3002,8 @@
 
                 const supaStats = data || {
                     calories: 0, protein: 0, fat: 0, carbs: 0,
-                    water_ml: 0, activity_min: 0, mindful_choice: false
+                    water_ml: 0, activity_min: 0, mindful_choice: false, mindful: 0
                 };
-
-                // Если записи не было — создаём нулевую строку
-                if (!data) {
-                    await supabaseClient
-                        .from('daily_stats')
-                        .upsert({
-                            user_id: userId,
-                            day,
-                            calories: 0,
-                            protein: 0,
-                            fat: 0,
-                            carbs: 0,
-                            water_ml: 0,
-                            activity_min: 0,
-                            mindful_choice: false
-                        }, { onConflict: 'user_id,day' });
-                }
 
                 // Собираем dailyStats из supabase + локального кэша (локальный приоритет для healthAreasRawScores)
                 // ВАЖНО: если в localStorage уже есть прогресс за сегодня (kairos_state),
@@ -2830,6 +3037,11 @@
                             supaStats.activity_min ??
                             0) || 0;
                     dailyStats.mindfulChoice = (localCache?.mindfulChoice ?? !!supaStats.mindful_choice) || false;
+                    dailyStats.mindful =
+                        (localCache?.mindful ??
+                            kairosState.today?.selfRegulationCount ??
+                            supaStats.mindful ??
+                            0) || 0;
                 } else {
                     // Если локального прогресса нет — берём из Supabase
                     dailyStats.calories = supaStats.calories || 0;
@@ -2839,12 +3051,14 @@
                     dailyStats.waterMl = supaStats.water_ml || 0;
                     dailyStats.activityMin = supaStats.activity_min || 0;
                     dailyStats.mindfulChoice = !!supaStats.mindful_choice;
+                    dailyStats.mindful = supaStats.mindful || 0;
 
                     // Инициализируем локальное состояние из dailyStats
                     kairosState.today.kcalUsed = dailyStats.calories;
                     kairosState.today.pUsed = dailyStats.protein;
                     kairosState.today.fUsed = dailyStats.fat;
                     kairosState.today.cUsed = dailyStats.carbs;
+                    kairosState.today.selfRegulationCount = dailyStats.mindful || 0;
                 }
 
                 // Воду синхронизируем всегда
@@ -2904,7 +3118,8 @@
                     carbs: Math.round(dailyStats.carbs || 0),
                     water_ml: Math.round(dailyStats.waterMl || 0),
                     activity_min: Math.round(dailyStats.activityMin || 0),
-                    mindful_choice: !!dailyStats.mindfulChoice
+                    mindful_choice: !!dailyStats.mindfulChoice,
+                    mindful: Math.round(dailyStats.mindful || 0)
                 };
                 const { error } = await supabaseClient
                     .from('daily_stats')
@@ -2931,7 +3146,8 @@
                     carbs: Math.round(dailyStats.carbs || 0),
                     waterMl: Math.round(dailyStats.waterMl || 0),
                     activityMin: Math.round(dailyStats.activityMin || 0),
-                    mindfulChoice: !!dailyStats.mindfulChoice
+                    mindfulChoice: !!dailyStats.mindfulChoice,
+                    mindful: Math.round(dailyStats.mindful || 0)
                 };
                 const json = JSON.stringify(snapshot);
                 if (json === lastSavedDailyStatsJson) return;
@@ -2940,6 +3156,7 @@
                     waterMl: dailyStats.waterMl,
                     activityMin: dailyStats.activityMin,
                     mindfulChoice: dailyStats.mindfulChoice,
+                    mindful: dailyStats.mindful,
                     healthAreasRawScores: dailyStats.healthAreasRawScores
                 });
                 saveTodayStats();
@@ -2961,13 +3178,15 @@
                     carbs: Math.round(dailyStats.carbs || 0),
                     waterMl: Math.round(dailyStats.waterMl || 0),
                     activityMin: Math.round(dailyStats.activityMin || 0),
-                    mindfulChoice: !!dailyStats.mindfulChoice
+                    mindfulChoice: !!dailyStats.mindfulChoice,
+                    mindful: Math.round(dailyStats.mindful || 0)
                 };
                 lastSavedDailyStatsJson = JSON.stringify(snapshot);
                 saveLocalDayCache(dailyStats.userId, {
                     waterMl: dailyStats.waterMl,
                     activityMin: dailyStats.activityMin,
                     mindfulChoice: dailyStats.mindfulChoice,
+                    mindful: dailyStats.mindful,
                     healthAreasRawScores: dailyStats.healthAreasRawScores
                 });
                 // Пытаемся сохранить в Supabase (может не успеть, но не хуже)
@@ -3377,7 +3596,7 @@
                     document.getElementById('onboarding-step2').classList.remove('hidden');
                 } else {
                     await loadTodayStats();
-                    showApp();
+                showApp();
                 }
             } else {
                 // Нет валидного профиля - показываем анкету
@@ -3726,7 +3945,7 @@
         const postNextBtn = document.getElementById('post-onboarding-next');
         if (postNextBtn) {
             postNextBtn.addEventListener('click', () => {
-                document.getElementById('onboarding-step2').classList.add('hidden');
+            document.getElementById('onboarding-step2').classList.add('hidden');
                 const step3 = document.getElementById('onboarding-step3');
                 if (step3) step3.classList.remove('hidden');
                 hapticFeedback('light');
@@ -3781,9 +4000,9 @@
         const backToFormBtn = document.getElementById('back-to-form');
         if (backToFormBtn) {
             backToFormBtn.addEventListener('click', () => {
-                document.getElementById('onboarding-step2').classList.add('hidden');
-                document.getElementById('onboarding-step1').classList.remove('hidden');
-            });
+            document.getElementById('onboarding-step2').classList.add('hidden');
+            document.getElementById('onboarding-step1').classList.remove('hidden');
+        });
         }
 
         function showApp() {
@@ -4064,6 +4283,8 @@
             dailyStats.fat = dailyUsed.fats || 0;
             dailyStats.waterMl = kairosState.today?.water || 0;
             dailyStats.activityMin = kairosState.today?.activityProgress?.baseMovementMinutesTodayDone || 0;
+            dailyStats.mindfulChoice = !!dailyStats.mindfulChoice;
+            dailyStats.mindful = kairosState.today?.selfRegulationCount || 0;
             dailyStats.healthAreasRawScores = {
                 muscles: kairosState.today?.tracks?.muscles || 0,
                 energy: kairosState.today?.tracks?.energy || 0,
@@ -4492,6 +4713,250 @@
             detailsContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
+        // ========== ЖУРНАЛ (Supabase daily_stats по датам) ==========
+        const JOURNAL_MONTHS = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
+                              'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+
+        let journalState = {
+            year: null,
+            month: null, // 0-11
+            selectedDay: null // YYYY-MM-DD
+        };
+
+        function openJournal() {
+            // Инициализация состояния
+            const todayStr = getTodayDate();
+            journalState.selectedDay = journalState.selectedDay || todayStr;
+            const d = new Date(journalState.selectedDay + 'T00:00:00');
+            journalState.year = d.getFullYear();
+            journalState.month = d.getMonth();
+
+            showSection('journal');
+            renderJournalCalendar();
+            journalPickDay(journalState.selectedDay);
+        }
+
+        function closeJournal() {
+            showMainMenu();
+        }
+
+        function journalPrevMonth() {
+            if (journalState.month === null || journalState.year === null) {
+                openJournal();
+                return;
+            }
+            journalState.month -= 1;
+            if (journalState.month < 0) {
+                journalState.month = 11;
+                journalState.year -= 1;
+            }
+            renderJournalCalendar();
+        }
+
+        function journalNextMonth() {
+            if (journalState.month === null || journalState.year === null) {
+                openJournal();
+                return;
+            }
+            journalState.month += 1;
+            if (journalState.month > 11) {
+                journalState.month = 0;
+                journalState.year += 1;
+            }
+            renderJournalCalendar();
+        }
+
+        function renderJournalCalendar() {
+            const grid = document.getElementById('journal-calendar-grid');
+            const label = document.getElementById('journal-month-label');
+            if (!grid || !label) return;
+
+            const year = journalState.year ?? new Date().getFullYear();
+            const month = journalState.month ?? new Date().getMonth();
+            label.textContent = `${JOURNAL_MONTHS[month]} ${year}`;
+
+            const firstOfMonth = new Date(year, month, 1);
+            const firstDowMon0 = (firstOfMonth.getDay() + 6) % 7; // 0=ПН ... 6=ВС
+            const start = new Date(year, month, 1 - firstDowMon0);
+
+            let html = '';
+            for (let i = 0; i < 42; i++) {
+                const cur = new Date(start);
+                cur.setDate(start.getDate() + i);
+                const inMonth = cur.getMonth() === month;
+                const dateStr = formatLocalDate(cur);
+                const isSelected = journalState.selectedDay === dateStr;
+                html += `
+                    <div
+                        class="journal-day${inMonth ? '' : ' is-muted'}${isSelected ? ' is-selected' : ''}"
+                        onclick="journalPickDay('${dateStr}')"
+                    >${cur.getDate()}</div>
+                `;
+            }
+            grid.innerHTML = html;
+        }
+
+        async function journalPickDay(dateStr) {
+            journalState.selectedDay = dateStr;
+            renderJournalCalendar();
+            await loadJournalDayStats(dateStr);
+            hapticFeedback('light');
+        }
+
+        function normalizeDailyStatsRow(row) {
+            return {
+                calories: row?.calories ?? 0,
+                protein: row?.protein ?? 0,
+                fat: row?.fat ?? 0,
+                carbs: row?.carbs ?? 0,
+                water_ml: row?.water_ml ?? 0,
+                activity_min: row?.activity_min ?? 0,
+                mindful_choice: !!row?.mindful_choice,
+                mindful: row?.mindful ?? 0
+            };
+        }
+
+        function updateJournalSummaryUI(rowOrNull) {
+            const row = rowOrNull ? normalizeDailyStatsRow(rowOrNull) : normalizeDailyStatsRow(null);
+
+            const totalCals = dailyTargets?.calories || (kairosState.profile?.target_calories || 1800);
+            const totalP = dailyTargets?.protein || (kairosState.profile?.protein_max || 90);
+            const totalC = dailyTargets?.carbs || Math.round(totalCals * 0.45 / 4);
+            const totalF = dailyTargets?.fats || Math.round(totalCals * 0.30 / 9);
+
+            const remaining = Math.round((totalCals || 0) - (row.calories || 0));
+            const elRemain = document.getElementById('journal-remaining-calories');
+            if (elRemain) elRemain.textContent = String(remaining);
+
+            const elUP = document.getElementById('journal-used-protein');
+            const elUC = document.getElementById('journal-used-carbs');
+            const elUF = document.getElementById('journal-used-fats');
+            if (elUP) elUP.textContent = String(Math.round(row.protein || 0));
+            if (elUC) elUC.textContent = String(Math.round(row.carbs || 0));
+            if (elUF) elUF.textContent = String(Math.round(row.fat || 0));
+
+            const elTP = document.getElementById('journal-total-protein');
+            const elTC = document.getElementById('journal-total-carbs');
+            const elTF = document.getElementById('journal-total-fats');
+            if (elTP) elTP.textContent = String(Math.round(totalP || 0));
+            if (elTC) elTC.textContent = String(Math.round(totalC || 0));
+            if (elTF) elTF.textContent = String(Math.round(totalF || 0));
+
+            const waterL = ((row.water_ml || 0) / 1000);
+            const waterEl = document.getElementById('journal-water');
+            if (waterEl) waterEl.textContent = `${waterL.toFixed(1)} л`;
+
+            const actEl = document.getElementById('journal-activity');
+            if (actEl) actEl.textContent = `${Math.round(row.activity_min || 0)} мин`;
+        }
+
+        async function loadJournalDayStats(dayStr) {
+            try {
+                const userId = getUserId();
+                const { data, error } = await supabaseClient
+                    .from('daily_stats')
+                    .select('*')
+                    .eq('user_id', userId)
+                    .eq('day', dayStr)
+                    .maybeSingle();
+
+                if (error && error.code !== 'PGRST116') {
+                    console.error('Ошибка загрузки daily_stats (journal):', error);
+                }
+                updateJournalSummaryUI(data || null);
+            } catch (e) {
+                console.error('loadJournalDayStats exception', e);
+                updateJournalSummaryUI(null);
+            }
+        }
+
+        async function copySelectedDayToToday() {
+            try {
+                const userId = getUserId();
+                const srcDay = journalState.selectedDay;
+                const today = getTodayDate();
+                if (!srcDay) return;
+
+                const { data, error } = await supabaseClient
+                    .from('daily_stats')
+                    .select('*')
+                    .eq('user_id', userId)
+                    .eq('day', srcDay)
+                    .maybeSingle();
+
+                if (error && error.code !== 'PGRST116') {
+                    console.error('Ошибка чтения daily_stats для копирования:', error);
+                }
+
+                if (!data) {
+                    showToast('За выбранный день данных нет');
+                    return;
+                }
+
+                const row = normalizeDailyStatsRow(data);
+                const payload = {
+                    user_id: userId,
+                    day: today,
+                    calories: Math.round(row.calories || 0),
+                    protein: Math.round(row.protein || 0),
+                    fat: Math.round(row.fat || 0),
+                    carbs: Math.round(row.carbs || 0),
+                    water_ml: Math.round(row.water_ml || 0),
+                    activity_min: Math.round(row.activity_min || 0),
+                    mindful_choice: !!row.mindful_choice,
+                    mindful: Math.round(row.mindful || 0)
+                };
+
+                const { error: upsertError } = await supabaseClient
+                    .from('daily_stats')
+                    .upsert(payload, { onConflict: 'user_id,day' });
+                if (upsertError) {
+                    console.error('Ошибка upsert при копировании в today:', upsertError);
+                }
+
+                // Обновляем текущее состояние, чтобы UI не вернулся к старым значениям
+                if (!kairosState.today || kairosState.today.date !== today) {
+                    kairosState.today = createEmptyDay(today);
+                }
+                kairosState.today.kcalUsed = payload.calories;
+                kairosState.today.pUsed = payload.protein;
+                kairosState.today.fUsed = payload.fat;
+                kairosState.today.cUsed = payload.carbs;
+                kairosState.today.water = payload.water_ml;
+                if (!kairosState.today.activityProgress) {
+                    kairosState.today.activityProgress = {
+                        cardioMinutesWeekDone: 0,
+                        strengthSessionsWeekDone: 0,
+                        joySessionsWeekDone: 0,
+                        baseMovementMinutesTodayDone: payload.activity_min
+                    };
+                } else {
+                    kairosState.today.activityProgress.baseMovementMinutesTodayDone = payload.activity_min;
+                }
+                kairosState.today.selfRegulationCount = payload.mindful || 0;
+                dailyStats.userId = userId;
+                dailyStats.day = today;
+                dailyStats.calories = payload.calories;
+                dailyStats.protein = payload.protein;
+                dailyStats.fat = payload.fat;
+                dailyStats.carbs = payload.carbs;
+                dailyStats.waterMl = payload.water_ml;
+                dailyStats.activityMin = payload.activity_min;
+                dailyStats.mindfulChoice = payload.mindful_choice;
+                dailyStats.mindful = payload.mindful;
+
+                saveState();
+                updateDailyTotals();
+                updateDailySummary();
+                refreshWeeklyActivityMinutes();
+                showToast('Скопировано в сегодня');
+                hapticFeedback('medium');
+                closeJournal();
+            } catch (e) {
+                console.error('copySelectedDayToToday exception', e);
+            }
+        }
+
         function updatePlateGuidePortions() {
             if (!kairosState.profile) return;
             
@@ -4525,7 +4990,8 @@
              'snack-5min-task', 'snack-conscious-options',
              'activity-intro-1', 'activity-intro-2', 'activity-intro-3', 'activity-intro-4',
              'activity-intro-5', 'activity-intro-6', 'activity-main', 'activity-today',
-             'activity-instruction', 'activity-education'].forEach(id => {
+             'activity-instruction', 'activity-education',
+             'calendar', 'journal'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.classList.add('hidden');
             });
@@ -5208,7 +5674,8 @@
              'snack-5min-task', 'snack-conscious-options',
              'activity-intro-1', 'activity-intro-2', 'activity-intro-3', 'activity-intro-4',
              'activity-intro-5', 'activity-intro-6', 'activity-main', 'activity-today',
-             'activity-instruction', 'activity-education'].forEach(id => {
+             'activity-instruction', 'activity-education',
+             'calendar', 'journal'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.classList.add('hidden');
             });
