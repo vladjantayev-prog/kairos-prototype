@@ -1642,6 +1642,10 @@
             <!-- Progress Widget removed (MVP) -->
             <!-- Main Menu -->
             <main id="main-menu" class="main-menu">
+                <div class="menu-card" onclick="openEditGoals()">
+                    <div class="menu-icon">⚙️</div>
+                    <div class="menu-title">Редактировать цели</div>
+                </div>
                 <div class="menu-card" onclick="openActivityModule()">
                     <div class="menu-icon">🏃‍♂️</div>
                     <div class="menu-title">Активность</div>
@@ -1665,7 +1669,7 @@
                         <div class="water-progress-fill"></div>
                     </div>
                 </div>
-                <div class="menu-card" onclick="resetDailyProgress()">
+                <div class="menu-card" onclick="resetDailyProgress()" style="display:none;">
                     <div class="menu-icon">🔄</div>
                     <div class="menu-title">Сбросить день</div>
                 </div>
@@ -2567,8 +2571,6 @@
                         <span>💧 <span id="journal-water">0.0 л</span></span>
                         <span>⚡ <span id="journal-activity">0 мин</span></span>
                     </div>
-
-                    <button class="btn btn-secondary" type="button" onclick="copySelectedDayToToday()">Скопировать в сегодня</button>
                 </div>
 
                 <div style="margin-top: 16px;">
@@ -2756,6 +2758,8 @@
 
         // ===== Fullscreen overlay navigation (no "push-down" sections) =====
         const OVERLAY_SECTION_IDS = new Set([
+            // Edit goals uses the same onboarding form UI
+            'onboarding-step1',
             // Journal/Calendar
             'journal', 'calendar',
             // Meals flow
@@ -2819,6 +2823,15 @@
                 }
                 // Keep it hidden by default; showSection/showMainMenu will decide what to show
                 node.classList.add('hidden');
+
+                if (sectionId === 'onboarding-step1') {
+                    // Exit edit mode if we were editing goals
+                    isEditingGoals = false;
+                    const btn = document.getElementById('calculate-btn');
+                    if (btn) btn.textContent = 'Рассчитать мою норму';
+                    const subtitle = document.querySelector('#onboarding-step1 .subtitle');
+                    if (subtitle) subtitle.textContent = 'Рассчитаем вашу персональную норму калорий и БЖУ';
+                }
             });
 
             overlay.classList.add('hidden');
@@ -2867,6 +2880,72 @@
                 showFatalError(msg, details);
             } catch (e) {}
         });
+
+        // ===== Edit goals (reuse onboarding form UI) =====
+        let isEditingGoals = false;
+
+        function fillOnboardingFormFromProfile(profile) {
+            const p = profile || {};
+            const gender = p.sex || '';
+            const goal = p.goal || '';
+            const activity = p.activity || '';
+            const age = p.age ?? '';
+            const height = p.height ?? '';
+            const weight = p.weight ?? '';
+
+            // radios
+            const male = document.getElementById('male');
+            const female = document.getElementById('female');
+            if (male) male.checked = gender === 'male';
+            if (female) female.checked = gender === 'female';
+
+            const lose = document.getElementById('lose');
+            const maintain = document.getElementById('maintain');
+            const gain = document.getElementById('gain');
+            if (lose) lose.checked = goal === 'lose';
+            if (maintain) maintain.checked = goal === 'maintain';
+            if (gain) gain.checked = goal === 'gain';
+
+            const ageEl = document.getElementById('age');
+            const heightEl = document.getElementById('height');
+            const weightEl = document.getElementById('weight');
+            if (ageEl) ageEl.value = age !== null && age !== undefined ? String(age) : '';
+            if (heightEl) heightEl.value = height !== null && height !== undefined ? String(height) : '';
+            if (weightEl) weightEl.value = weight !== null && weight !== undefined ? String(weight) : '';
+
+            const actEl = document.getElementById('current-activity');
+            if (actEl) actEl.value = activity || '';
+
+            // keep trackingMode (used in calculations)
+            trackingMode = p.mode || trackingMode || 'numbers';
+        }
+
+        async function openEditGoals() {
+            const userId = requireUserIdOrShowError();
+            if (!userId) return;
+
+            // Ensure profile is loaded from Supabase
+            if (!kairosState.profile || !kairosState.profile.sex) {
+                const supaProfile = await fetchUserProfile(userId);
+                if (supaProfile) {
+                    kairosState.profile = { ...(kairosState.profile || {}), ...supaProfile };
+                    saveState();
+                }
+            }
+            if (!kairosState.profile) {
+                showTelegramAlert('Профиль не найден. Заполните анкету.');
+                return;
+            }
+
+            isEditingGoals = true;
+            const subtitle = document.querySelector('#onboarding-step1 .subtitle');
+            if (subtitle) subtitle.textContent = 'Обновите данные — мы пересчитаем ваш дневной план';
+            const btn = document.getElementById('calculate-btn');
+            if (btn) btn.textContent = 'Сохранить';
+
+            fillOnboardingFormFromProfile(kairosState.profile);
+            openScreenOverlayForSection('onboarding-step1');
+        }
         
         // Функция для показа уведомления через Telegram
         function showTelegramAlert(message, callback) {
