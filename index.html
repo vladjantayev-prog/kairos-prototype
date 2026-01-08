@@ -40,29 +40,55 @@
         /* Header wrapper on main screen: no outer card, only inner blocks (как в референсе) */
         .app-header {
             margin-bottom: 12px;
-            position: relative;
         }
 
-        /* Small top-right action button in header */
-        .journal-btn {
-            position: absolute;
-            top: 2px;
-            right: 0;
+        .header-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .header-today-block {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+        }
+        .header-today {
+            font-size: 18px;
+            font-weight: 800;
+            color: #1B2B4A;
+            letter-spacing: -0.2px;
+        }
+        .header-today-date {
+            font-size: 13px;
+            color: #6B7280;
+            font-weight: 500;
+        }
+        .header-today-date {
+            margin-top: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #9CA3AF;
+            letter-spacing: 0;
+        }
+        /* Icon-only calendar button (top-right) */
+        .calendar-icon-btn {
+            width: 44px;
+            height: 44px;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 8px 12px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #1B2B4A;
+            justify-content: center;
             background: rgba(255, 255, 255, 0.88);
             border: 1px solid rgba(0, 0, 0, 0.08);
             border-radius: 16px;
             box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
+            font-size: 20px; /* emoji size */
+            line-height: 1;
         }
-        .journal-btn:active { transform: scale(0.98); }
+        .calendar-icon-btn:active { transform: scale(0.98); }
 
         /* Journal screen */
         .journal-topbar {
@@ -1478,7 +1504,13 @@
             <!-- Main App Header -->
             <header id="app-header" class="app-header">
                 <h1 style="display: none;"></h1>
-                <button class="journal-btn" type="button" onclick="openJournal()">📅 Календарь</button>
+                <div class="header-topbar">
+                    <div class="header-today-block">
+                        <div class="header-today">Сегодня</div>
+                        <div class="header-today-date" id="header-today-date"></div>
+                    </div>
+                    <button class="calendar-icon-btn" type="button" onclick="openJournal()" aria-label="Календарь">📅</button>
+                </div>
                 <div class="budget-display">
                     <div class="budget-label">Дневной план</div>
                     <div class="budget-amount"><span id="remaining-calories">1800</span></div>
@@ -2652,6 +2684,17 @@
             }
         }
 
+        function updateHeaderTodayDate() {
+            const el = document.getElementById('header-today-date');
+            if (!el) return;
+            try {
+                const d = new Date();
+                el.textContent = d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
+            } catch (e) {
+                el.textContent = getTodayDate();
+            }
+        }
+
         function showFatalError(message, details) {
             try {
                 const existing = document.getElementById('fatal-error-overlay');
@@ -3736,6 +3779,7 @@
             // Строго: user_id должен быть Telegram ID
             const userId = requireUserIdOrShowError();
             if (!userId) return;
+            updateHeaderTodayDate();
             // Обновляем streak при запуске (если есть активность сегодня)
             if (kairosState.today && kairosState.today.meals.length > 0) {
             updateStreak();
