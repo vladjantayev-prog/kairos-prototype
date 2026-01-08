@@ -4626,7 +4626,10 @@
 
         function updateDailySummary() {
             const container = document.getElementById('daily-meals');
-            if (allMeals.length === 0) {
+            if (!container) return;
+
+            const meals = Array.isArray(allMeals) ? allMeals : [];
+            if (meals.length === 0) {
                 container.innerHTML = '<div class="empty-cart">Пока нет приёмов пищи</div>';
                 document.getElementById('summary-totals').style.display = 'none';
                 return;
@@ -4642,7 +4645,7 @@
             };
 
             container.innerHTML = '';
-            allMeals.forEach(meal => {
+            meals.forEach(meal => {
                 const mealDiv = document.createElement('div');
                 mealDiv.className = 'meal-entry';
                 const title = meal.title ? `${mealNames[meal.meal_type] ? mealNames[meal.meal_type].split(' ').slice(0,1).join(' ') : ''} ${meal.title}`.trim() : (mealNames[meal.meal_type] || 'Приём пищи');
@@ -7301,13 +7304,14 @@
                 await initApp();
             } catch (e) {
                 console.error('initApp fatal error', e);
-                showFatalError('Не удалось запустить приложение', e && e.stack ? e.stack : String(e || ''));
+                const msg = (e && e.message) ? e.message : 'Не удалось запустить приложение';
+                const details = (e && e.stack) ? e.stack : String(e || '');
+                showFatalError(msg, details);
             }
         })();
     </script>
 </body>
 </html>
-
 
 
 
