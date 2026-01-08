@@ -4628,6 +4628,25 @@
             const container = document.getElementById('daily-meals');
             if (!container) return;
 
+            const normalizeMealItemsText = (meal) => {
+                try {
+                    const v = meal ? meal.items : '';
+                    if (typeof v === 'string') return v.trim();
+                    if (Array.isArray(v)) {
+                        // legacy: массив объектов из конструктора
+                        return v
+                            .map(x => (x && (x.displayName || x.name)) ? String(x.displayName || x.name) : '')
+                            .map(s => s.trim())
+                            .filter(Boolean)
+                            .join(', ');
+                    }
+                    if (v == null) return '';
+                    return String(v).trim();
+                } catch (e) {
+                    return '';
+                }
+            };
+
             const meals = Array.isArray(allMeals) ? allMeals : [];
             if (meals.length === 0) {
                 container.innerHTML = '<div class="empty-cart">Пока нет приёмов пищи</div>';
@@ -4649,7 +4668,7 @@
                 const mealDiv = document.createElement('div');
                 mealDiv.className = 'meal-entry';
                 const title = meal.title ? `${mealNames[meal.meal_type] ? mealNames[meal.meal_type].split(' ').slice(0,1).join(' ') : ''} ${meal.title}`.trim() : (mealNames[meal.meal_type] || 'Приём пищи');
-                const itemsText = (meal.items || '').trim();
+                const itemsText = normalizeMealItemsText(meal);
                 const legacyItems = [meal.protein, meal.carbs, meal.fats, meal.veg]
                     .map(v => String(v || '').trim())
                     .filter(Boolean);
@@ -5115,7 +5134,10 @@
                 div.className = 'meal-entry';
                 const emoji = mealEmoji[me.meal_type] || '🍽️';
                 const title = me.title ? `${emoji} ${me.title}` : `${emoji} Приём пищи`;
-                const items = (me.items || '').trim() || '<span style="color:#9CA3AF;">Без деталей</span>';
+                const itemsStr = (typeof me.items === 'string')
+                    ? me.items.trim()
+                    : (me.items == null ? '' : String(me.items).trim());
+                const items = itemsStr || '<span style="color:#9CA3AF;">Без деталей</span>';
                 div.innerHTML = `
                     <div class="meal-header">
                         <div class="meal-name">${title}</div>
@@ -7312,6 +7334,7 @@
     </script>
 </body>
 </html>
+
 
 
 
