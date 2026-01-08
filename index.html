@@ -1314,6 +1314,48 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
+        /* Fullscreen overlay screens (Journal / Plate guide / Constructor) */
+        body.no-scroll {
+            overflow: hidden;
+        }
+        .screen-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(242, 244, 247, 0.98);
+            z-index: 5000;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .screen-overlay.hidden { display: none; }
+        .screen-overlay-topbar {
+            position: sticky;
+            top: 0;
+            background: rgba(242, 244, 247, 0.92);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            z-index: 1;
+        }
+        .screen-overlay-topbar .container {
+            padding-top: 14px;
+            padding-bottom: 10px;
+        }
+        .screen-overlay-back {
+            width: 44px;
+            height: 44px;
+            border-radius: 16px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            background: rgba(255, 255, 255, 0.88);
+            color: #1B2B4A;
+            font-size: 20px;
+            font-weight: 800;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .screen-overlay-back:active { transform: scale(0.98); }
+        .screen-overlay-content .card {
+            margin-top: 12px;
+        }
+
         @keyframes toastSlideIn {
             from {
                 transform: translateX(400px);
@@ -2553,6 +2595,18 @@
         </div>
     </div>
 
+    <!-- Fullscreen overlay host for screens that should not "push down" the main page -->
+    <div id="screen-overlay" class="screen-overlay hidden" role="dialog" aria-modal="true">
+        <div class="screen-overlay-topbar">
+            <div class="container" style="display:flex; align-items:center; justify-content:flex-start;">
+                <button class="screen-overlay-back" type="button" onclick="closeScreenOverlay()" aria-label="Назад">‹</button>
+            </div>
+        </div>
+        <div class="container screen-overlay-content">
+            <div id="screen-overlay-content"></div>
+        </div>
+    </div>
+
     <script>
         // Инициализация Telegram Web App
         const tg = window.Telegram?.WebApp;
@@ -2668,6 +2722,11 @@
                 return el && !el.classList.contains('hidden');
             });
             
+            if (isOverlayOpen()) {
+                closeScreenOverlay(true);
+                return;
+            }
+
             if (visibleSection) {
                 showMainMenu();
                 tg.HapticFeedback.impactOccurred('light');
@@ -2692,6 +2751,71 @@
                 el.textContent = d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
             } catch (e) {
                 el.textContent = getTodayDate();
+            }
+        }
+
+        // ===== Fullscreen overlay navigation (no "push-down" sections) =====
+        const OVERLAY_SECTION_IDS = new Set(['journal', 'calendar', 'plate-guide', 'getting-started', 'constructor']);
+        const overlayPlaceholders = new Map(); // sectionId -> placeholderNode
+
+        function isOverlayOpen() {
+            const overlay = document.getElementById('screen-overlay');
+            return !!overlay && !overlay.classList.contains('hidden');
+        }
+
+        function openScreenOverlayForSection(sectionId) {
+            const overlay = document.getElementById('screen-overlay');
+            const host = document.getElementById('screen-overlay-content');
+            const section = document.getElementById(sectionId);
+            if (!overlay || !host || !section) return;
+
+            // If another section is open, close it first
+            if (isOverlayOpen()) {
+                closeScreenOverlay(false);
+            }
+
+            // Put a placeholder where the section was
+            if (!overlayPlaceholders.has(sectionId)) {
+                const placeholder = document.createComment(`overlay-placeholder:${sectionId}`);
+                section.parentNode.insertBefore(placeholder, section);
+                overlayPlaceholders.set(sectionId, placeholder);
+            }
+
+            // Move section into overlay and show it
+            host.appendChild(section);
+            section.classList.remove('hidden');
+            overlay.classList.remove('hidden');
+            document.body.classList.add('no-scroll');
+
+            // Scroll overlay to top so content is immediately visible
+            overlay.scrollTop = 0;
+        }
+
+        function closeScreenOverlay(goToMenu = true) {
+            const overlay = document.getElementById('screen-overlay');
+            const host = document.getElementById('screen-overlay-content');
+            if (!overlay || !host) return;
+
+            // Move back all children sections from host to their placeholders
+            const moved = Array.from(host.children);
+            moved.forEach((node) => {
+                const sectionId = node && node.id;
+                if (!sectionId) return;
+                const placeholder = overlayPlaceholders.get(sectionId);
+                if (placeholder && placeholder.parentNode) {
+                    placeholder.parentNode.insertBefore(node, placeholder);
+                    placeholder.parentNode.removeChild(placeholder);
+                    overlayPlaceholders.delete(sectionId);
+                }
+                // Keep it hidden by default; showSection/showMainMenu will decide what to show
+                node.classList.add('hidden');
+            });
+
+            overlay.classList.add('hidden');
+            document.body.classList.remove('no-scroll');
+
+            if (goToMenu) {
+                showMainMenu();
             }
         }
 
@@ -5346,7 +5470,11 @@
             if (sectionId === 'activity') {
                 openActivityModule();
             } else {
-            document.getElementById(sectionId).classList.remove('hidden');
+                if (OVERLAY_SECTION_IDS.has(sectionId)) {
+                    openScreenOverlayForSection(sectionId);
+                } else {
+                    document.getElementById(sectionId).classList.remove('hidden');
+                }
             }
             
             // По умолчанию открываем таб "Тарелка"
@@ -6010,6 +6138,9 @@
         }
 
         function showMainMenu() {
+            if (isOverlayOpen()) {
+                closeScreenOverlay(false);
+            }
             document.getElementById('main-menu').classList.remove('hidden');
             const dailySummary = document.getElementById('daily-summary');
             if (dailySummary) dailySummary.classList.remove('hidden');
