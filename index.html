@@ -2648,36 +2648,75 @@
         // Функция для вибрации при действиях
         function hapticFeedback(type = 'light') {
             if (tg && tg.HapticFeedback) {
-                tg.HapticFeedback.impactOccurred(type);
+                try { tg.HapticFeedback.impactOccurred(type); } catch (e) {}
             }
         }
+
+        function showFatalError(message, details) {
+            try {
+                const existing = document.getElementById('fatal-error-overlay');
+                if (existing) existing.remove();
+                const overlay = document.createElement('div');
+                overlay.id = 'fatal-error-overlay';
+                overlay.style.cssText = 'position:fixed; inset:0; background: rgba(242,244,247,0.98); z-index:99999; overflow:auto; padding:20px;';
+                overlay.innerHTML = `
+                    <div class="container" style="padding-top: 40px;">
+                        <div class="card">
+                            <div style="font-weight: 900; font-size: 18px; color: #1B2B4A; margin-bottom: 10px;">Ошибка запуска</div>
+                            <div style="color:#2A2A2A; line-height:1.6; margin-bottom: 12px;">${String(message || 'Неизвестная ошибка')}</div>
+                            ${details ? `<pre style="white-space: pre-wrap; word-break: break-word; background: rgba(0,0,0,0.04); padding: 12px; border-radius: 14px; font-size: 12px; color:#111827; margin:0;">${String(details)}</pre>` : ''}
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(overlay);
+            } catch (e) {
+                try { alert(String(message || 'Ошибка запуска')); } catch (_) {}
+            }
+        }
+
+        // Глобальная защита от «белого экрана» (особенно на Telegram Desktop/macOS)
+        window.addEventListener('error', (event) => {
+            try {
+                const msg = event?.message || 'Ошибка JavaScript';
+                const details = event?.error?.stack || `${event?.filename || ''}:${event?.lineno || ''}:${event?.colno || ''}`;
+                showFatalError(msg, details);
+            } catch (e) {}
+        });
+        window.addEventListener('unhandledrejection', (event) => {
+            try {
+                const reason = event?.reason;
+                const msg = (reason && reason.message) ? reason.message : 'Необработанное отклонение Promise';
+                const details = (reason && reason.stack) ? reason.stack : String(reason || '');
+                showFatalError(msg, details);
+            } catch (e) {}
+        });
         
         // Функция для показа уведомления через Telegram
         function showTelegramAlert(message, callback) {
             if (tg && tg.showAlert) {
                 try {
-                    tg.showAlert(message, callback);
+                tg.showAlert(message, callback);
                     return;
                 } catch (e) {
                     console.warn('tg.showAlert unsupported/failed, fallback to alert()', e);
                 }
             }
-            alert(message);
-            if (callback) callback();
+                alert(message);
+                if (callback) callback();
         }
         
         // Функция для показа подтверждения через Telegram
         function showTelegramConfirm(message, callback) {
             if (tg && tg.showConfirm) {
                 try {
-                    tg.showConfirm(message, callback);
+                tg.showConfirm(message, callback);
                     return;
                 } catch (e) {
                     console.warn('tg.showConfirm unsupported/failed, fallback to confirm()', e);
                 }
             }
-            const result = confirm(message);
-            if (callback) callback(result);
+                const result = confirm(message);
+                if (callback) callback(result);
         }
         
         // Функция для открытия ссылки через Telegram
@@ -2815,7 +2854,9 @@
 
         // ===== Supabase helpers: daily_stats + meal_entries =====
         function generateUuid() {
-            if (crypto && typeof crypto.randomUUID === 'function') return crypto.randomUUID();
+            try {
+                if (typeof crypto !== 'undefined' && crypto && typeof crypto.randomUUID === 'function') return crypto.randomUUID();
+            } catch (e) {}
             // fallback (не идеален, но лучше чем ничего)
             return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
                 const r = Math.random() * 16 | 0;
@@ -3716,7 +3757,7 @@
             if (step3) step3.classList.add('hidden');
             document.getElementById('mode-selection').classList.add('hidden');
             document.getElementById('app-main').classList.add('hidden');
-
+            
             // 1) Пытаемся взять профиль из Supabase (источник истины для анкеты)
             const supaProfile = await fetchUserProfile(userId);
             if (supaProfile) {
@@ -3733,15 +3774,15 @@
             };
             if (!supaProfile) {
                 if (isProfileComplete(kairosState.profile)) {
-                    dailyTargets = {
-                        calories: kairosState.profile.target_calories || 1800,
-                        protein: kairosState.profile.protein_max || 90,
-                        carbs: Math.round((kairosState.profile.target_calories || 1800) * 0.45 / 4),
-                        fats: Math.round((kairosState.profile.target_calories || 1800) * 0.30 / 9),
-                        fiber: 30
-                    };
+                dailyTargets = {
+                    calories: kairosState.profile.target_calories || 1800,
+                    protein: kairosState.profile.protein_max || 90,
+                    carbs: Math.round((kairosState.profile.target_calories || 1800) * 0.45 / 4),
+                    fats: Math.round((kairosState.profile.target_calories || 1800) * 0.30 / 9),
+                    fiber: 30
+                };
                     await loadTodayStats();
-                    showApp();
+                showApp();
                     return;
                 }
                 document.getElementById('onboarding-step1').classList.remove('hidden');
@@ -4077,7 +4118,7 @@
                 btn.textContent = 'Рассчитать мою норму';
                 return;
             }
-
+            
             saveState();
             
             // Для обратной совместимости
@@ -4640,7 +4681,7 @@
             
             showTelegramConfirm('Удалить этот приём пищи?', (confirmed) => {
                 if (!confirmed) return;
-
+                
                 (async () => {
                     const userId = requireUserIdOrShowError();
                     if (!userId) return;
@@ -4651,7 +4692,7 @@
                     }
                     await loadTodayStats(); // перечитываем daily_stats + список блюд
                     updateHeroDisplay();
-                    showToast('Приём пищи удалён');
+                showToast('Приём пищи удалён');
                 })();
             });
         }
@@ -6454,21 +6495,21 @@
             sendDataToBot();
 
             hapticFeedback('heavy');
-            showToast('✅ Приём пищи сохранён!');
-
+                showToast('✅ Приём пищи сохранён!');
+            
             // Сбрасываем флаг и состояние конструктора
-            isSavingMeal = false;
+                isSavingMeal = false;
             currentMeal = { type: '', step: 0, selections: {}, totals: { calories: 0, protein: 0, carbs: 0, fats: 0 } };
-            showMainMenu();
-            updateDailyTotals();
-            updateDailySummary();
-            updateHeroDisplay();
-
-            if (tg) {
-                tg.MainButton.hideProgress();
-                tg.MainButton.hide();
-                tg.MainButton.offClick();
-            }
+                showMainMenu();
+                updateDailyTotals();
+                updateDailySummary();
+                updateHeroDisplay();
+                
+                if (tg) {
+                    tg.MainButton.hideProgress();
+                    tg.MainButton.hide();
+                    tg.MainButton.offClick();
+                }
 
             if (btn) {
                 btn.disabled = false;
@@ -7254,10 +7295,19 @@
             window.open('https://t.me/kairos_coach_bot', '_blank', 'noopener,noreferrer');
         }
 
-        initApp();
+        // Запускаем приложение безопасно: чтобы вместо «белого экрана» показать понятную ошибку
+        (async () => {
+            try {
+                await initApp();
+            } catch (e) {
+                console.error('initApp fatal error', e);
+                showFatalError('Не удалось запустить приложение', e && e.stack ? e.stack : String(e || ''));
+            }
+        })();
     </script>
 </body>
 </html>
+
 
 
 
