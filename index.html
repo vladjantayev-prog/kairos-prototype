@@ -2726,7 +2726,7 @@
                 closeScreenOverlay(true);
                 return;
             }
-
+            
             if (visibleSection) {
                 showMainMenu();
                 tg.HapticFeedback.impactOccurred('light');
@@ -2755,7 +2755,17 @@
         }
 
         // ===== Fullscreen overlay navigation (no "push-down" sections) =====
-        const OVERLAY_SECTION_IDS = new Set(['journal', 'calendar', 'plate-guide', 'getting-started', 'constructor']);
+        const OVERLAY_SECTION_IDS = new Set([
+            // Journal/Calendar
+            'journal', 'calendar',
+            // Meals flow
+            'plate-guide', 'getting-started', 'constructor',
+            // Menu screens that should be "full screen"
+            'activity', 'problems', 'sleep',
+            // Activity module screens
+            'activity-main', 'activity-today', 'activity-instruction', 'activity-education',
+            'activity-intro-1', 'activity-intro-2', 'activity-intro-3', 'activity-intro-4', 'activity-intro-5', 'activity-intro-6'
+        ]);
         const overlayPlaceholders = new Map(); // sectionId -> placeholderNode
 
         function isOverlayOpen() {
@@ -5472,8 +5482,8 @@
             } else {
                 if (OVERLAY_SECTION_IDS.has(sectionId)) {
                     openScreenOverlayForSection(sectionId);
-                } else {
-                    document.getElementById(sectionId).classList.remove('hidden');
+            } else {
+            document.getElementById(sectionId).classList.remove('hidden');
                 }
             }
             
@@ -6769,7 +6779,7 @@
             });
             document.getElementById('main-menu').classList.add('hidden');
             const screen = document.getElementById('activity');
-            if (screen) screen.classList.remove('hidden');
+            if (screen) openScreenOverlayForSection('activity');
             const weeklyEl = document.getElementById('activity-weekly-subtitle');
             if (weeklyEl) weeklyEl.textContent = `${weeklyActivityMinutes} / ${WEEKLY_ACTIVITY_TARGET} мин за неделю`;
             refreshWeeklyActivityMinutes();
@@ -6834,7 +6844,7 @@
             const screenId = `activity-intro-${screenNum}`;
             const screen = document.getElementById(screenId);
             if (screen) {
-                screen.classList.remove('hidden');
+                openScreenOverlayForSection(screenId);
                 document.getElementById('main-menu').classList.add('hidden');
             }
         }
@@ -6905,7 +6915,7 @@
             });
             
             document.getElementById('main-menu').classList.add('hidden');
-            document.getElementById('activity-main').classList.remove('hidden');
+            openScreenOverlayForSection('activity-main');
             
             updateActivityProgress();
         }
@@ -6951,7 +6961,7 @@
         // Показать экран выбора активности на сегодня
         function showActivityToday() {
             document.getElementById('activity-main').classList.add('hidden');
-            document.getElementById('activity-today').classList.remove('hidden');
+            openScreenOverlayForSection('activity-today');
             
             const level = kairosState.profile?.activity_level || 'beginner';
             const hasLimitations = kairosState.profile?.has_limitations || kairosState.profile?.high_bmi;
@@ -7112,7 +7122,7 @@
             currentActivityOption = option;
             
             document.getElementById('activity-today').classList.add('hidden');
-            document.getElementById('activity-instruction').classList.remove('hidden');
+            openScreenOverlayForSection('activity-instruction');
             
             const titleEl = document.getElementById('activity-inst-title');
             const contentEl = document.getElementById('activity-inst-content');
@@ -7199,7 +7209,7 @@
         // Показать образовательные карточки
         function showActivityEducation() {
             document.getElementById('activity-main').classList.add('hidden');
-            document.getElementById('activity-education').classList.remove('hidden');
+            openScreenOverlayForSection('activity-education');
             
             const cardsContainer = document.getElementById('activity-edu-cards');
             cardsContainer.innerHTML = '';
