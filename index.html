@@ -1,4 +1,5 @@
 <!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -258,6 +259,51 @@
             height: 4px;
             border-radius: 50%;
             background: #82C4FF;
+        }
+
+        /* Tips */
+        .tip-of-day-card {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 18px;
+            cursor: pointer;
+        }
+        .tip-of-day-left {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .tip-of-day-kicker {
+            font-size: 13px;
+            font-weight: 800;
+            color: #1B2B4A;
+        }
+        .tip-of-day-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: #1B2B4A;
+            line-height: 1.25;
+        }
+        .tip-of-day-teaser {
+            font-size: 13px;
+            color: #6B7280;
+            line-height: 1.35;
+            display: -webkit-box;
+            line-clamp: 3;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .tip-of-day-right {
+            flex: 0 0 auto;
+            color: #6B7280;
+            font-weight: 800;
+            font-size: 16px;
+            line-height: 1;
+            padding-top: 2px;
         }
 
         .container {
@@ -1619,6 +1665,16 @@
                 </div>
             </section>
 
+            <!-- Tip of the day -->
+            <section class="card tip-of-day-card" id="tip-of-day-card" onclick="openTipOfTheDay()">
+                <div class="tip-of-day-left">
+                    <div class="tip-of-day-kicker">💡 Совет дня</div>
+                    <div class="tip-of-day-title" id="tip-of-day-title">—</div>
+                    <div class="tip-of-day-teaser" id="tip-of-day-teaser">—</div>
+                </div>
+                <div class="tip-of-day-right">→</div>
+            </section>
+
             <!-- 2 карточки в ряд: ИИ-анализ блюда + Добавить вручную -->
             <section class="cta-grid">
                 <div class="card cta-card" style="text-align: left;">
@@ -2580,6 +2636,23 @@
                 </div>
             </section>
 
+            <!-- Tips: Detail -->
+            <section id="tips-detail" class="card hidden">
+                <div class="step-header" style="margin-bottom: 14px;">
+                    <div class="step-title" id="tip-detail-title">💡 Совет</div>
+                </div>
+                <div class="info-section" id="tip-detail-body" style="line-height: 1.8;"></div>
+                <button class="btn btn-secondary" type="button" onclick="openTipsList()" style="margin-top: 14px;">Все советы</button>
+            </section>
+
+            <!-- Tips: List -->
+            <section id="tips-list" class="card hidden">
+                <div class="step-header" style="margin-bottom: 14px;">
+                    <div class="step-title">Советы</div>
+                </div>
+                <div id="tips-list-container" style="display: flex; flex-direction: column; gap: 12px;"></div>
+            </section>
+
             <!-- Calendar Section -->
             <section id="calendar" class="card hidden">
                 <div class="step-header">
@@ -2763,6 +2836,8 @@
             'onboarding-step1',
             // Journal/Calendar
             'journal', 'calendar',
+            // Tips
+            'tips-detail', 'tips-list',
             // Meals flow
             'plate-guide', 'getting-started', 'constructor',
             // Menu screens that should be "full screen"
@@ -2946,6 +3021,146 @@
 
             fillOnboardingFormFromProfile(kairosState.profile);
             openScreenOverlayForSection('onboarding-step1');
+        }
+
+        // ===== Tips (static JSON) =====
+        let tipsData = [];
+        let currentTipId = null;
+
+        const defaultTips = [
+            { id: 'sweet_cravings', emoji: '🍰', title: 'Тяга к сладкому', teaser: 'Часто причина в том, что днём мало сытной еды. Начните с завтрака.', body: 'Тяга к сладкому обычно усиливается, когда в первой половине дня не хватает полноценной еды.\n\nЧто сделать\n— Начните с завтрака: добавьте источник белка и клетчатки.\n— Если хочется десерт, съешьте его после основного приёма пищи.\n— Проверьте сон: при недосыпе тяга к сладкому заметно усиливается.', tags: ['сладкое'] }
+        ];
+
+        async function loadTips() {
+            if (tipsData && tipsData.length) return tipsData;
+            try {
+                const res = await fetch('tips.json', { cache: 'no-cache' });
+                if (!res.ok) throw new Error(`tips.json ${res.status}`);
+                const json = await res.json();
+                if (Array.isArray(json) && json.length) {
+                    tipsData = json;
+                    return tipsData;
+                }
+            } catch (e) {
+                console.warn('Failed to load tips.json, using fallback tips', e);
+            }
+            tipsData = defaultTips;
+            return tipsData;
+        }
+
+        function hashStringToInt(str) {
+            let h = 0;
+            for (let i = 0; i < str.length; i++) {
+                h = ((h << 5) - h) + str.charCodeAt(i);
+                h |= 0;
+            }
+            return Math.abs(h);
+        }
+
+        function getTipOfTheDay() {
+            if (!tipsData || tipsData.length === 0) return null;
+            const dateStr = getTodayDate();
+            const idx = hashStringToInt(dateStr) % tipsData.length;
+            return tipsData[idx];
+        }
+
+        function renderTipOfTheDayCard() {
+            const card = document.getElementById('tip-of-day-card');
+            const titleEl = document.getElementById('tip-of-day-title');
+            const teaserEl = document.getElementById('tip-of-day-teaser');
+            if (!card || !titleEl || !teaserEl) return;
+
+            const tip = getTipOfTheDay();
+            if (!tip) {
+                card.style.display = 'none';
+                return;
+            }
+            card.style.display = '';
+            titleEl.textContent = `${tip.emoji} ${tip.title}`;
+            teaserEl.textContent = tip.teaser || '';
+        }
+
+        function openTipOfTheDay() {
+            const tip = getTipOfTheDay();
+            if (!tip) return;
+            openTipDetail(tip.id);
+        }
+
+        function escapeHtml(s) {
+            return String(s || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/\"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function renderTipBodyHtml(bodyText) {
+            const raw = String(bodyText || '');
+            const replaced = raw.replace('ДЛЯ Cursor: Добавь тут картинку palms.png.', '<img src="palms.png" alt="Ориентиры по руке" style="width: 100%; border-radius: 18px; border: 1px solid rgba(0,0,0,0.06); margin: 10px 0 6px 0;" />');
+            const parts = replaced.split('\n');
+            let html = '';
+            let inList = false;
+            for (const lineRaw of parts) {
+                const line = lineRaw.trimEnd();
+                if (!line.trim()) {
+                    if (inList) {
+                        html += '</ul>';
+                        inList = false;
+                    }
+                    html += '<div style="height: 10px;"></div>';
+                    continue;
+                }
+                if (line.startsWith('—')) {
+                    if (!inList) {
+                        html += '<ul style="margin: 0 0 0 18px; padding: 0; color: #2A2A2A; line-height: 1.8;">';
+                        inList = true;
+                    }
+                    html += `<li style="margin: 0 0 6px 0;">${escapeHtml(line.replace(/^—\s*/, ''))}</li>`;
+                    continue;
+                }
+                if (inList) {
+                    html += '</ul>';
+                    inList = false;
+                }
+                // allow our injected img tag
+                if (line.includes('<img ')) {
+                    html += line;
+                    continue;
+                }
+                html += `<p style="color: #2A2A2A; margin: 0 0 10px 0;">${escapeHtml(line)}</p>`;
+            }
+            if (inList) html += '</ul>';
+            return html;
+        }
+
+        function openTipDetail(tipId) {
+            const tip = (tipsData || []).find(t => t.id === tipId);
+            if (!tip) return;
+            currentTipId = tipId;
+            const titleEl = document.getElementById('tip-detail-title');
+            const bodyEl = document.getElementById('tip-detail-body');
+            if (titleEl) titleEl.textContent = `${tip.emoji} ${tip.title}`;
+            if (bodyEl) bodyEl.innerHTML = renderTipBodyHtml(tip.body);
+            showSection('tips-detail');
+        }
+
+        function openTipsList() {
+            const container = document.getElementById('tips-list-container');
+            if (!container) return;
+            container.innerHTML = '';
+            (tipsData || []).forEach(tip => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.style.cssText = 'padding: 16px 18px; cursor: pointer;';
+                card.onclick = () => openTipDetail(tip.id);
+                card.innerHTML = `
+                    <div style="font-weight: 900; color: #1B2B4A; margin-bottom: 6px;">${escapeHtml(tip.emoji)} ${escapeHtml(tip.title)}</div>
+                    <div style="color: #6B7280; font-size: 13px; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;">${escapeHtml(tip.teaser || '')}</div>
+                `;
+                container.appendChild(card);
+            });
+            showSection('tips-list');
         }
         
         // Функция для показа уведомления через Telegram
@@ -3994,6 +4209,8 @@
             const userId = requireUserIdOrShowError();
             if (!userId) return;
             updateHeaderTodayDate();
+            await loadTips();
+            renderTipOfTheDayCard();
             // Обновляем streak при запуске (если есть активность сегодня)
             if (kairosState.today && kairosState.today.meals.length > 0) {
             updateStreak();
@@ -5545,6 +5762,7 @@
             const dailySummary = document.getElementById('daily-summary');
             if (dailySummary) dailySummary.classList.add('hidden');
             ['plate-guide', 'getting-started', 'constructor', 'activity', 'problems', 'sleep', 
+             'tips-detail', 'tips-list',
              'snack-intro-1', 'snack-intro-2', 'snack-intro-3', 'snack-question', 
              'snack-action-choice', 'snack-recommendation', 'snack-practice',
              'snack-switch', 'snack-emotion', 'snack-body', 'snack-conscious-snack',
@@ -6235,6 +6453,7 @@
             const dailySummary = document.getElementById('daily-summary');
             if (dailySummary) dailySummary.classList.remove('hidden');
             ['plate-guide', 'getting-started', 'constructor', 'activity', 'problems', 'sleep',
+             'tips-detail', 'tips-list',
              'snack-intro-1', 'snack-intro-2', 'snack-intro-3', 'snack-question', 
              'snack-action-choice', 'snack-recommendation', 'snack-practice',
              'snack-switch', 'snack-emotion', 'snack-body', 'snack-conscious-snack',
