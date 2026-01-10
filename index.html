@@ -3353,15 +3353,15 @@
                 // Создаём новый день
                 state.today = createEmptyDay(todayStr);
                 
-                // Обновляем streak
-                updateStreak(state, oldDate);
+                // Обновляем streak (state-level, без сохранений/побочных эффектов)
+                updateStreakState(state, oldDate);
             }
             
             return state;
         }
 
-        // Обновить streak
-        function updateStreak(state, lastDate) {
+        // Обновить streak (state-level, вызывается при смене дня)
+        function updateStreakState(state, lastDate) {
             const todayStr = getTodayDate();
             const yesterdayStr = getYesterdayDateLocal();
             
@@ -7599,6 +7599,7 @@
     </script>
 </body>
 </html>
+
 
 
 
