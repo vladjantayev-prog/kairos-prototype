@@ -3653,6 +3653,8 @@
                 // Иногда схема user_profile отличается от клиента (колонка отсутствует в schema cache).
                 // Чтобы не блокировать MVP, повторяем upsert, удаляя неизвестные поля из payload.
                 let currentPayload = { ...payload };
+                const removedKeys = [];
+                let lastError = null;
                 const maxAttempts = Math.max(10, Object.keys(currentPayload).length + 2);
                 for (let attempt = 0; attempt < maxAttempts; attempt++) {
                     const { error } = await supabaseClient
@@ -3661,6 +3663,7 @@
                     if (!error) return { ok: true };
 
                     console.error('Ошибка сохранения user_profile:', error);
+                    lastError = error;
                     const msg = String(error.message || error.details || '');
 
                     // PostgREST schema cache error
@@ -3672,13 +3675,23 @@
                     const badKey = m ? m[1] : null;
                     if (badKey && badKey !== 'user_id' && Object.prototype.hasOwnProperty.call(currentPayload, badKey)) {
                         delete currentPayload[badKey];
+                        removedKeys.push(badKey);
                         continue; // retry without the unknown column
                     }
 
                     return { ok: false, error };
                 }
 
-                return { ok: false, error: { message: 'Не удалось сохранить профиль: слишком много несовпадающих полей' } };
+                const lastMsg = lastError ? String(lastError.message || lastError.details || '') : '';
+                const removed = removedKeys.length ? `\n\nНе найдены колонки: ${removedKeys.join(', ')}` : '';
+                const last = lastMsg ? `\n\nПоследняя ошибка: ${lastMsg}` : '';
+                return {
+                    ok: false,
+                    error: {
+                        message: 'Не удалось сохранить профиль: слишком много несовпадающих полей',
+                        details: `${removed}${last}`.trim()
+                    }
+                };
             } catch (e) {
                 console.error('upsertUserProfile exception', e);
                 return { ok: false, error: e };
@@ -4706,10 +4719,12 @@
             // Сохраняем профиль в Supabase (чтобы анкета не появлялась снова)
             const upsertRes = await upsertUserProfile(kairosState.profile);
             if (!upsertRes.ok) {
-                const errMsg =
-                    (upsertRes && upsertRes.error && (upsertRes.error.message || upsertRes.error.details || upsertRes.error.hint))
-                        ? String(upsertRes.error.message || upsertRes.error.details || upsertRes.error.hint)
-                        : '';
+                const err = upsertRes && upsertRes.error ? upsertRes.error : null;
+                const parts = [];
+                if (err && err.message) parts.push(String(err.message));
+                if (err && err.details) parts.push(String(err.details));
+                if (err && err.hint) parts.push(String(err.hint));
+                const errMsg = parts.filter(Boolean).join('\n');
                 showTelegramAlert(
                     'Не удалось сохранить профиль. Попробуйте ещё раз.'
                     + (errMsg ? `\n\n${errMsg}` : '')
