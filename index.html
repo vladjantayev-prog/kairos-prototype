@@ -3653,7 +3653,8 @@
                 // Иногда схема user_profile отличается от клиента (колонка отсутствует в schema cache).
                 // Чтобы не блокировать MVP, повторяем upsert, удаляя неизвестные поля из payload.
                 let currentPayload = { ...payload };
-                for (let attempt = 0; attempt < 5; attempt++) {
+                const maxAttempts = Math.max(10, Object.keys(currentPayload).length + 2);
+                for (let attempt = 0; attempt < maxAttempts; attempt++) {
                     const { error } = await supabaseClient
                         .from('user_profile')
                         .upsert(currentPayload, { onConflict: 'user_id' });
