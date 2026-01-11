@@ -3650,14 +3650,34 @@
             const payload = pickUserProfilePayload(profile);
             if (!payload) return { ok: false, error: 'no_user' };
             try {
-                const { error } = await supabaseClient
-                    .from('user_profile')
-                    .upsert(payload, { onConflict: 'user_id' });
-                if (error) {
+                // Иногда схема user_profile отличается от клиента (колонка отсутствует в schema cache).
+                // Чтобы не блокировать MVP, повторяем upsert, удаляя неизвестные поля из payload.
+                let currentPayload = { ...payload };
+                for (let attempt = 0; attempt < 5; attempt++) {
+                    const { error } = await supabaseClient
+                        .from('user_profile')
+                        .upsert(currentPayload, { onConflict: 'user_id' });
+                    if (!error) return { ok: true };
+
                     console.error('Ошибка сохранения user_profile:', error);
+                    const msg = String(error.message || error.details || '');
+
+                    // PostgREST schema cache error
+                    let m = msg.match(/Could not find the '([^']+)' column of 'user_profile' in the schema cache/i);
+                    // Postgres "column does not exist" error variants
+                    if (!m) m = msg.match(/column ["']?([^"']+)["']? of relation ["']?user_profile["']? does not exist/i);
+                    if (!m) m = msg.match(/column ["']?([^"']+)["']? does not exist/i);
+
+                    const badKey = m ? m[1] : null;
+                    if (badKey && badKey !== 'user_id' && Object.prototype.hasOwnProperty.call(currentPayload, badKey)) {
+                        delete currentPayload[badKey];
+                        continue; // retry without the unknown column
+                    }
+
                     return { ok: false, error };
                 }
-                return { ok: true };
+
+                return { ok: false, error: { message: 'Не удалось сохранить профиль: слишком много несовпадающих полей' } };
             } catch (e) {
                 console.error('upsertUserProfile exception', e);
                 return { ok: false, error: e };
