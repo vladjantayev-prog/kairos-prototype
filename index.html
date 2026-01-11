@@ -1030,6 +1030,72 @@
             padding-left: 20px;
         }
 
+        /* One-time onboarding (after questionnaire) */
+        .onboarding-once-screen .info-section { margin-bottom: 12px; }
+        .onboarding-once-screen .step-header { margin-bottom: 12px !important; }
+        .onboarding-once-screen .btn { margin-top: 12px !important; }
+        .onboarding-once-screen p { margin-bottom: 12px; }
+        .onboarding-once-screen p:last-of-type { margin-bottom: 0; }
+
+        .onboarding-plan-card {
+            padding: 20px;
+        }
+        .onboarding-plan-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #111827;
+            text-align: center;
+            margin: 0 0 10px 0;
+            letter-spacing: -0.2px;
+        }
+        .onboarding-plan-kcal {
+            font-size: 56px;
+            font-weight: 900;
+            color: #111827;
+            text-align: center;
+            line-height: 1.05;
+        }
+        .onboarding-plan-caption {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 14px;
+            color: #6B7280;
+        }
+        .onboarding-plan-macros {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 14px;
+        }
+        .onboarding-plan-macro {
+            background: rgba(255,255,255,0.92);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 18px;
+            padding: 12px 10px;
+            text-align: center;
+            box-shadow: 0 12px 34px rgba(17, 24, 39, 0.10);
+        }
+        .onboarding-plan-macro .label {
+            font-size: 12px;
+            color: #6B7280;
+            margin-bottom: 4px;
+        }
+        .onboarding-plan-macro .val {
+            font-size: 20px;
+            font-weight: 800;
+            color: #1B2B4A;
+            line-height: 1.2;
+        }
+        .onboarding-plan-macro .sub {
+            font-size: 12px;
+            color: #6B7280;
+            margin-top: 2px;
+        }
+        @media (max-width: 360px) {
+            .onboarding-plan-kcal { font-size: 48px; }
+            .onboarding-plan-macros { gap: 10px; }
+        }
+
 
         #health-orb {
             width: 190px;
@@ -1719,65 +1785,56 @@
             </section>
 
             <!-- One-time onboarding (3 screens) -->
-            <section id="onboarding-once-1" class="card hidden">
+            <section id="onboarding-once-1" class="card hidden onboarding-once-screen">
                 <div class="step-header" style="margin-bottom: 14px;">
                     <div class="step-title">Ваш дневной план готов</div>
                 </div>
 
-                <!-- Result block (same style as main header) -->
-                <div class="budget-display" style="margin-top: 4px;">
-                    <div class="budget-label">Дневной план</div>
-                    <div class="budget-amount"><span id="onboarding-remaining-calories">0</span></div>
-                    <div class="budget-caption">ккал осталось</div>
-                </div>
-                <div class="macros-grid" style="margin-top: 10px;">
-                    <div class="macro-card">
-                        <div class="macro-label">Белки</div>
-                        <div class="macro-value"><span id="onboarding-used-protein">0</span></div>
-                        <div class="macro-total">из <span id="onboarding-total-protein">0</span> г</div>
-                        <div class="macro-progress">
-                            <div class="macro-progress-fill macro-progress-fill--protein"></div>
+                <!-- Plan (same card style as onboarding) -->
+                <div class="info-section onboarding-plan-card">
+                    <div class="onboarding-plan-title">Дневной план</div>
+                    <div class="onboarding-plan-kcal"><span id="onboarding-remaining-calories">0</span></div>
+                    <div class="onboarding-plan-caption">ккал осталось</div>
+                    <div class="onboarding-plan-macros">
+                        <div class="onboarding-plan-macro">
+                            <div class="label">Белки</div>
+                            <div class="val"><span id="onboarding-used-protein">0</span></div>
+                            <div class="sub">из <span id="onboarding-total-protein">0</span> г</div>
                         </div>
-                    </div>
-                    <div class="macro-card">
-                        <div class="macro-label">Углеводы</div>
-                        <div class="macro-value"><span id="onboarding-used-carbs">0</span></div>
-                        <div class="macro-total">из <span id="onboarding-total-carbs">0</span> г</div>
-                        <div class="macro-progress">
-                            <div class="macro-progress-fill macro-progress-fill--carbs"></div>
+                        <div class="onboarding-plan-macro">
+                            <div class="label">Углеводы</div>
+                            <div class="val"><span id="onboarding-used-carbs">0</span></div>
+                            <div class="sub">из <span id="onboarding-total-carbs">0</span> г</div>
                         </div>
-                    </div>
-                    <div class="macro-card">
-                        <div class="macro-label">Жиры</div>
-                        <div class="macro-value"><span id="onboarding-used-fats">0</span></div>
-                        <div class="macro-total">из <span id="onboarding-total-fats">0</span> г</div>
-                        <div class="macro-progress">
-                            <div class="macro-progress-fill macro-progress-fill--fats"></div>
+                        <div class="onboarding-plan-macro">
+                            <div class="label">Жиры</div>
+                            <div class="val"><span id="onboarding-used-fats">0</span></div>
+                            <div class="sub">из <span id="onboarding-total-fats">0</span> г</div>
                         </div>
                     </div>
                 </div>
                 <div class="info-section">
                     <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
-                        Он показывает ориентир по калориям и БЖУ (белкам, жирам, углеводам) на день под Ваши цели.
+                        Он показывает <strong>ориентир по калориям и БЖУ</strong> (белкам, жирам, углеводам) на день под Ваши цели.
                     </p>
                 </div>
                 <p style="color: #6B7280; font-size: 13px; line-height: 1.6; margin-top: 12px;">
-                    Дальше всё просто: собирайте рацион шаг за шагом — без подсчётов и без лишних раздумий, что приготовить.
+                    Дальше всё просто: <strong>собирайте рацион шаг за шагом</strong> — без подсчётов и без лишних раздумий, что приготовить.
                 </p>
                 <button class="btn btn-primary" type="button" onclick="goOnboardingOnce(2)" style="margin-top: 14px;">Далее</button>
             </section>
 
-            <section id="onboarding-once-2" class="card hidden">
+            <section id="onboarding-once-2" class="card hidden onboarding-once-screen">
                 <div class="step-header" style="margin-bottom: 10px;">
                     <div class="step-title">Как собирать рацион / добавлять еду</div>
-                    <div class="step-subtitle">Выберите любой удобный способ</div>
+                    <div class="step-subtitle"><strong>Выберите любой удобный способ</strong></div>
                 </div>
 
                 <div class="info-section" style="margin-bottom: 12px;">
                     <h3 style="margin: 0 0 6px 0;">Конструктор питания</h3>
                     <div style="color: #6B7280; font-size: 13px; margin-bottom: 8px;">Когда не знаете, что выбрать или приготовить</div>
                     <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
-                        Соберите приём пищи из простых блоков: белок, гарнир, овощи и жиры.
+                        Соберите приём пищи из простых блоков: <strong>белок, гарнир, овощи и жиры</strong>.
                     </p>
                 </div>
 
@@ -1785,10 +1842,10 @@
                     <h3 style="margin: 0 0 6px 0;">ИИ-анализ по фото</h3>
                     <div style="color: #6B7280; font-size: 13px; margin-bottom: 8px;">Когда еда уже есть</div>
                     <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
-                        Сфотографируйте блюдо или продукт в упаковке — и получите разбор: калории, БЖУ и небольшой совет.
+                        Сфотографируйте блюдо или продукт в упаковке — и <strong>получите разбор: калории, БЖУ и небольшой совет</strong>.
                     </p>
                     <p style="color: #6B7280; font-size: 13px; line-height: 1.6; margin: 10px 0 0 0;">
-                        Чтобы план дня считался правильно, внесите полученный результат через кнопку “Добавить вручную” — тогда будет видно, сколько осталось калорий на день и что лучше добавить по БЖУ.
+                        Чтобы план дня считался правильно, внесите полученный результат через кнопку <strong>“Добавить вручную”</strong> — тогда будет видно, сколько осталось калорий на день и что лучше добавить по БЖУ.
                     </p>
                 </div>
 
@@ -1796,20 +1853,20 @@
                     <h3 style="margin: 0 0 6px 0;">Добавить вручную</h3>
                     <div style="color: #6B7280; font-size: 13px; margin-bottom: 8px;">Когда хотите внести что-то точечно</div>
                     <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
-                        Быстро добавьте калории и БЖУ, чтобы видеть остаток на день.
+                        Быстро добавьте калории и БЖУ, чтобы <strong>видеть остаток на день</strong>.
                     </p>
                 </div>
 
                 <button class="btn btn-primary" type="button" onclick="goOnboardingOnce(3)" style="margin-top: 14px;">Далее</button>
             </section>
 
-            <section id="onboarding-once-3" class="card hidden">
+            <section id="onboarding-once-3" class="card hidden onboarding-once-screen">
                 <div class="step-header" style="margin-bottom: 14px;">
                     <div class="step-title">Конструктор питания</div>
                 </div>
                 <div class="info-section">
                     <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
-                        Здесь собраны базовые продукты, из которых проще всего собрать нормальный приём пищи: белок, гарнир, овощи и полезные жиры. Это помогает быстро решить вопрос “что поесть” без рецептов и диет.
+                        Здесь собраны <strong>базовые продукты</strong>, из которых проще всего собрать нормальный приём пищи: белок, гарнир, овощи и полезные жиры. Это помогает быстро решить вопрос <strong>“что поесть”</strong> без рецептов и диет.
                     </p>
                 </div>
                 <img src="meal.png" alt="" style="width: 100%; border-radius: 18px; border: 1px solid rgba(0,0,0,0.06); margin-top: 12px;" />
