@@ -1723,6 +1723,39 @@
                 <div class="step-header" style="margin-bottom: 14px;">
                     <div class="step-title">Ваш дневной план готов</div>
                 </div>
+
+                <!-- Result block (same style as main header) -->
+                <div class="budget-display" style="margin-top: 4px;">
+                    <div class="budget-label">Дневной план</div>
+                    <div class="budget-amount"><span id="onboarding-remaining-calories">0</span></div>
+                    <div class="budget-caption">ккал осталось</div>
+                </div>
+                <div class="macros-grid" style="margin-top: 10px;">
+                    <div class="macro-card">
+                        <div class="macro-label">Белки</div>
+                        <div class="macro-value"><span id="onboarding-used-protein">0</span></div>
+                        <div class="macro-total">из <span id="onboarding-total-protein">0</span> г</div>
+                        <div class="macro-progress">
+                            <div class="macro-progress-fill macro-progress-fill--protein"></div>
+                        </div>
+                    </div>
+                    <div class="macro-card">
+                        <div class="macro-label">Углеводы</div>
+                        <div class="macro-value"><span id="onboarding-used-carbs">0</span></div>
+                        <div class="macro-total">из <span id="onboarding-total-carbs">0</span> г</div>
+                        <div class="macro-progress">
+                            <div class="macro-progress-fill macro-progress-fill--carbs"></div>
+                        </div>
+                    </div>
+                    <div class="macro-card">
+                        <div class="macro-label">Жиры</div>
+                        <div class="macro-value"><span id="onboarding-used-fats">0</span></div>
+                        <div class="macro-total">из <span id="onboarding-total-fats">0</span> г</div>
+                        <div class="macro-progress">
+                            <div class="macro-progress-fill macro-progress-fill--fats"></div>
+                        </div>
+                    </div>
+                </div>
                 <div class="info-section">
                     <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
                         Он показывает ориентир по калориям и БЖУ (белкам, жирам, углеводам) на день под Ваши цели.
@@ -4412,6 +4445,7 @@
 
             // 3) Если профиль есть и onboarding_done = false — показываем 3-экранный онбординг
             if (supaProfile.onboarding_done === false) {
+                renderOnboardingOncePlan();
                 showSection('onboarding-once-1');
                 return;
             }
@@ -4838,6 +4872,10 @@
         }
 
         function showApp() {
+            // Если какой-то экран открыт поверх (fullscreen overlay) — закрываем, иначе Home будет “под” оверлеем
+            if (isOverlayOpen()) {
+                closeScreenOverlay(false);
+            }
             document.getElementById('onboarding-step1').classList.add('hidden');
             document.getElementById('onboarding-step2').classList.add('hidden');
             const step3 = document.getElementById('onboarding-step3');
@@ -4872,7 +4910,35 @@
             updateWaterProgress();
         }
 
+        function renderOnboardingOncePlan() {
+            try {
+                const kcal = Math.round(Number(kairosState.profile?.target_calories || dailyTargets?.calories || 0) || 0);
+                const protein = Math.round(Number(kairosState.profile?.protein_grams || kairosState.profile?.protein_max || dailyTargets?.protein || 0) || 0);
+                const carbs = Math.round(Number(kairosState.profile?.carbs_grams || dailyTargets?.carbs || 0) || 0);
+                const fats = Math.round(Number(kairosState.profile?.fats_grams || dailyTargets?.fats || 0) || 0);
+
+                const elK = document.getElementById('onboarding-remaining-calories');
+                const elUP = document.getElementById('onboarding-used-protein');
+                const elUC = document.getElementById('onboarding-used-carbs');
+                const elUF = document.getElementById('onboarding-used-fats');
+                const elTP = document.getElementById('onboarding-total-protein');
+                const elTC = document.getElementById('onboarding-total-carbs');
+                const elTF = document.getElementById('onboarding-total-fats');
+
+                if (elK) elK.textContent = String(kcal);
+                if (elUP) elUP.textContent = '0';
+                if (elUC) elUC.textContent = '0';
+                if (elUF) elUF.textContent = '0';
+                if (elTP) elTP.textContent = String(protein);
+                if (elTC) elTC.textContent = String(carbs);
+                if (elTF) elTF.textContent = String(fats);
+            } catch (e) {
+                console.error('renderOnboardingOncePlan exception', e);
+            }
+        }
+
         function goOnboardingOnce(step) {
+            if (step === 1) renderOnboardingOncePlan();
             const target = `onboarding-once-${step}`;
             showSection(target);
         }
@@ -4897,6 +4963,9 @@
                 console.error('finishOnboardingOnce exception', e);
                 showTelegramAlert('Не удалось сохранить. Попробуйте ещё раз.');
                 return;
+            }
+            if (isOverlayOpen()) {
+                closeScreenOverlay(false);
             }
             await loadTodayStats();
             showApp();
