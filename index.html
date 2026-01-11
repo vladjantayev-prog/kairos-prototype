@@ -4685,7 +4685,14 @@
             // Сохраняем профиль в Supabase (чтобы анкета не появлялась снова)
             const upsertRes = await upsertUserProfile(kairosState.profile);
             if (!upsertRes.ok) {
-                showTelegramAlert('Не удалось сохранить профиль. Попробуйте ещё раз.');
+                const errMsg =
+                    (upsertRes && upsertRes.error && (upsertRes.error.message || upsertRes.error.details || upsertRes.error.hint))
+                        ? String(upsertRes.error.message || upsertRes.error.details || upsertRes.error.hint)
+                        : '';
+                showTelegramAlert(
+                    'Не удалось сохранить профиль. Попробуйте ещё раз.'
+                    + (errMsg ? `\n\n${errMsg}` : '')
+                );
                 btn.disabled = false;
                 btn.textContent = 'Рассчитать мою норму';
                 return;
