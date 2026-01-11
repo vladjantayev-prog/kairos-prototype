@@ -1718,6 +1718,71 @@
                 </div>
             </section>
 
+            <!-- One-time onboarding (3 screens) -->
+            <section id="onboarding-once-1" class="card hidden">
+                <div class="step-header" style="margin-bottom: 14px;">
+                    <div class="step-title">Ваш дневной план готов</div>
+                </div>
+                <div class="info-section">
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                        Он показывает ориентир по калориям и БЖУ (белкам, жирам, углеводам) на день под Ваши цели.
+                    </p>
+                </div>
+                <p style="color: #6B7280; font-size: 13px; line-height: 1.6; margin-top: 12px;">
+                    Дальше всё просто: собирайте рацион шаг за шагом — без подсчётов и без лишних раздумий, что приготовить.
+                </p>
+                <button class="btn btn-primary" type="button" onclick="goOnboardingOnce(2)" style="margin-top: 14px;">Далее</button>
+            </section>
+
+            <section id="onboarding-once-2" class="card hidden">
+                <div class="step-header" style="margin-bottom: 10px;">
+                    <div class="step-title">Как собирать рацион / добавлять еду</div>
+                    <div class="step-subtitle">Выберите любой удобный способ</div>
+                </div>
+
+                <div class="info-section" style="margin-bottom: 12px;">
+                    <h3 style="margin: 0 0 6px 0;">Конструктор питания</h3>
+                    <div style="color: #6B7280; font-size: 13px; margin-bottom: 8px;">Когда не знаете, что выбрать или приготовить</div>
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                        Соберите приём пищи из простых блоков: белок, гарнир, овощи и жиры.
+                    </p>
+                </div>
+
+                <div class="info-section" style="margin-bottom: 12px;">
+                    <h3 style="margin: 0 0 6px 0;">ИИ-анализ по фото</h3>
+                    <div style="color: #6B7280; font-size: 13px; margin-bottom: 8px;">Когда еда уже есть</div>
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                        Сфотографируйте блюдо или продукт в упаковке — и получите разбор: калории, БЖУ и небольшой совет.
+                    </p>
+                    <p style="color: #6B7280; font-size: 13px; line-height: 1.6; margin: 10px 0 0 0;">
+                        Чтобы план дня считался правильно, внесите полученный результат через кнопку “Добавить вручную” — тогда будет видно, сколько осталось калорий на день и что лучше добавить по БЖУ.
+                    </p>
+                </div>
+
+                <div class="info-section">
+                    <h3 style="margin: 0 0 6px 0;">Добавить вручную</h3>
+                    <div style="color: #6B7280; font-size: 13px; margin-bottom: 8px;">Когда хотите внести что-то точечно</div>
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                        Быстро добавьте калории и БЖУ, чтобы видеть остаток на день.
+                    </p>
+                </div>
+
+                <button class="btn btn-primary" type="button" onclick="goOnboardingOnce(3)" style="margin-top: 14px;">Далее</button>
+            </section>
+
+            <section id="onboarding-once-3" class="card hidden">
+                <div class="step-header" style="margin-bottom: 14px;">
+                    <div class="step-title">Конструктор питания</div>
+                </div>
+                <div class="info-section">
+                    <p style="color: #2A2A2A; line-height: 1.8; margin: 0;">
+                        Здесь собраны базовые продукты, из которых проще всего собрать нормальный приём пищи: белок, гарнир, овощи и полезные жиры. Это помогает быстро решить вопрос “что поесть” без рецептов и диет.
+                    </p>
+                </div>
+                <img src="meal.png" alt="" style="width: 100%; border-radius: 18px; border: 1px solid rgba(0,0,0,0.06); margin-top: 12px;" />
+                <button class="btn btn-primary" type="button" onclick="finishOnboardingOnce()" style="margin-top: 14px;">Понятно</button>
+            </section>
+
             <!-- Tip of the day -->
             <section class="card tip-of-day-card" id="tip-of-day-card" onclick="openTipOfTheDay()">
                 <div class="tip-of-day-left">
@@ -2889,6 +2954,8 @@
             'journal', 'calendar',
             // Tips
             'tips-detail', 'tips-list',
+            // One-time onboarding after first questionnaire
+            'onboarding-once-1', 'onboarding-once-2', 'onboarding-once-3',
             // Meals flow
             'plate-guide', 'getting-started', 'constructor',
             // Menu screens that should be "full screen"
@@ -3553,7 +3620,8 @@
                 'protein_palms', 'carb_fists', 'veg_palms',
                 'water_target_ml',
                 'mode',
-                'post_onboarding_completed'
+                'post_onboarding_completed',
+                'onboarding_done'
             ].forEach((k) => {
                 if (p[k] !== undefined && p[k] !== null) payload[k] = p[k];
             });
@@ -4286,6 +4354,12 @@
             document.getElementById('onboarding-step2').classList.add('hidden');
             const step3 = document.getElementById('onboarding-step3');
             if (step3) step3.classList.add('hidden');
+            const oo1 = document.getElementById('onboarding-once-1');
+            const oo2 = document.getElementById('onboarding-once-2');
+            const oo3 = document.getElementById('onboarding-once-3');
+            if (oo1) oo1.classList.add('hidden');
+            if (oo2) oo2.classList.add('hidden');
+            if (oo3) oo3.classList.add('hidden');
             document.getElementById('mode-selection').classList.add('hidden');
             document.getElementById('app-main').classList.add('hidden');
             
@@ -4296,52 +4370,19 @@
                 saveState();
             }
 
-            // 2) Если профиля нет в БД — в приоритете анкета,
-            // но делаем fallback на локальный профиль (на случай временного сбоя сети),
-            // чтобы анкета не всплывала «спустя время» при наличии данных.
-            const isProfileComplete = (p) => {
-                if (!p || typeof p !== 'object') return false;
-                return !!p.sex && !!p.goal && Number(p.target_calories) > 0 && Number(p.weight) > 0;
-            };
+            // 2) Если профиля нет в БД — показываем анкету (как сейчас)
             if (!supaProfile) {
-                if (isProfileComplete(kairosState.profile)) {
-                dailyTargets = {
-                    calories: kairosState.profile.target_calories || 1800,
-                    protein: kairosState.profile.protein_max || 90,
-                    carbs: Math.round((kairosState.profile.target_calories || 1800) * 0.45 / 4),
-                    fats: Math.round((kairosState.profile.target_calories || 1800) * 0.30 / 9),
-                    fiber: 30
-                };
-                    await loadTodayStats();
-                showApp();
-                    return;
-                }
                 document.getElementById('onboarding-step1').classList.remove('hidden');
                 return;
             }
 
-            // 3) Профиль есть — открываем основной поток (сохраняем текущий UX: короткий онбординг один раз)
-            dailyTargets = {
-                calories: kairosState.profile.target_calories || 1800,
-                protein: kairosState.profile.protein_max || 90,
-                carbs: Math.round((kairosState.profile.target_calories || 1800) * 0.45 / 4),
-                fats: Math.round((kairosState.profile.target_calories || 1800) * 0.30 / 9),
-                fiber: 30
-            };
-
-            if (!kairosState.profile.post_onboarding_completed) {
-                const kcalEl = document.getElementById('post-kcal');
-                const pEl = document.getElementById('post-protein');
-                const fEl = document.getElementById('post-fat');
-                const cEl = document.getElementById('post-carbs');
-                if (kcalEl) kcalEl.textContent = Math.round(kairosState.profile.target_calories || 0);
-                if (pEl) pEl.textContent = Math.round(kairosState.profile.protein_grams || kairosState.profile.protein_max || 0);
-                if (fEl) fEl.textContent = Math.round(kairosState.profile.fats_grams || 0);
-                if (cEl) cEl.textContent = Math.round(kairosState.profile.carbs_grams || 0);
-                document.getElementById('onboarding-step2').classList.remove('hidden');
+            // 3) Если профиль есть и onboarding_done = false — показываем 3-экранный онбординг
+            if (supaProfile.onboarding_done === false) {
+                showSection('onboarding-once-1');
                 return;
             }
 
+            // 4) Если onboarding_done = true (или поле пока null/true) — главный экран
             await loadTodayStats();
             showApp();
         }
@@ -4668,17 +4709,8 @@
             };
 
             // Короткий онбординг после анкеты: подставляем значения (без новых расчётов)
-            const postKcalEl = document.getElementById('post-kcal');
-            const postPEl = document.getElementById('post-protein');
-            const postFEl = document.getElementById('post-fat');
-            const postCEl = document.getElementById('post-carbs');
-            if (postKcalEl) postKcalEl.textContent = targetCalories;
-            if (postPEl) postPEl.textContent = proteinRec;
-            if (postFEl) postFEl.textContent = fatsGrams;
-            if (postCEl) postCEl.textContent = carbsGrams;
-            
             document.getElementById('onboarding-step1').classList.add('hidden');
-            document.getElementById('onboarding-step2').classList.remove('hidden');
+            goOnboardingOnce(1);
 
             btn.disabled = false;
             btn.textContent = 'Рассчитать мою норму';
@@ -4767,6 +4799,12 @@
             document.getElementById('onboarding-step2').classList.add('hidden');
             const step3 = document.getElementById('onboarding-step3');
             if (step3) step3.classList.add('hidden');
+            const oo1 = document.getElementById('onboarding-once-1');
+            const oo2 = document.getElementById('onboarding-once-2');
+            const oo3 = document.getElementById('onboarding-once-3');
+            if (oo1) oo1.classList.add('hidden');
+            if (oo2) oo2.classList.add('hidden');
+            if (oo3) oo3.classList.add('hidden');
             document.getElementById('mode-selection').classList.add('hidden');
             document.getElementById('app-main').classList.remove('hidden');
             
@@ -4789,6 +4827,36 @@
             updateDailySummary();
             updateSelfRegulationProgress();
             updateWaterProgress();
+        }
+
+        function goOnboardingOnce(step) {
+            const target = `onboarding-once-${step}`;
+            showSection(target);
+        }
+
+        async function finishOnboardingOnce() {
+            const userId = requireUserIdOrShowError();
+            if (!userId) return;
+            try {
+                const { error } = await supabaseClient
+                    .from('user_profile')
+                    .upsert({ user_id: userId, onboarding_done: true }, { onConflict: 'user_id' });
+                if (error) {
+                    console.error('Ошибка сохранения onboarding_done:', error);
+                    showTelegramAlert('Не удалось сохранить. Попробуйте ещё раз.');
+                    return;
+                }
+                if (kairosState.profile) {
+                    kairosState.profile.onboarding_done = true;
+                    saveState();
+                }
+            } catch (e) {
+                console.error('finishOnboardingOnce exception', e);
+                showTelegramAlert('Не удалось сохранить. Попробуйте ещё раз.');
+                return;
+            }
+            await loadTodayStats();
+            showApp();
         }
 
         function updateHeroDisplay() {
@@ -5819,6 +5887,7 @@
             if (dailySummary) dailySummary.classList.add('hidden');
             ['plate-guide', 'getting-started', 'constructor', 'activity', 'problems', 'sleep', 
              'tips-detail', 'tips-list',
+             'onboarding-once-1', 'onboarding-once-2', 'onboarding-once-3',
              'snack-intro-1', 'snack-intro-2', 'snack-intro-3', 'snack-question', 
              'snack-action-choice', 'snack-recommendation', 'snack-practice',
              'snack-switch', 'snack-emotion', 'snack-body', 'snack-conscious-snack',
