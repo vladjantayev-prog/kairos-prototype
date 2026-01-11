@@ -4965,6 +4965,9 @@
             updateDailySummary();
             updateSelfRegulationProgress();
             updateWaterProgress();
+            // Важно: showSection(...) скрывает main-menu и итог дня.
+            // При входе на главный экран всегда возвращаем их.
+            showMainMenu();
         }
 
         function renderOnboardingOncePlan() {
