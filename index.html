@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -35,6 +35,51 @@
                 radial-gradient(circle at 75% 85%, rgba(130, 196, 255, 0.12) 0%, transparent 55%);
             pointer-events: none;
             z-index: 0;
+        }
+
+        /* Loading screen */
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: #F2F4F7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        #loading-screen .loading-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            text-align: center;
+        }
+        #loading-screen .loading-orb {
+            width: 96px;
+            height: 96px;
+            object-fit: contain;
+        }
+        #loading-screen .loading-text {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1B2B4A;
+        }
+        #loading-screen .loading-spinner {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid rgba(27, 43, 74, 0.18);
+            border-top-color: rgba(27, 43, 74, 0.65);
+            animation: spin 0.8s linear infinite;
+        }
+        #loading-screen.fade-out {
+            opacity: 0;
+            transition: opacity 260ms ease;
+            pointer-events: none;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         /* Header wrapper on main screen: no outer card, only inner blocks (как в референсе) */
@@ -1445,6 +1490,15 @@
     </style>
 </head>
 <body>
+    <!-- Loading screen (shown immediately, before app JS runs) -->
+    <div id="loading-screen">
+        <div class="loading-inner">
+            <img src="./orb.png" alt="" class="loading-orb" />
+            <div class="loading-text">Загружаем данные…</div>
+            <div class="loading-spinner" aria-hidden="true"></div>
+        </div>
+    </div>
+
     <div class="container">
         <!-- Onboarding Step 1 -->
         <section id="onboarding-step1" class="card">
@@ -1707,10 +1761,7 @@
                     <div class="menu-subtitle" id="activity-menu-subtitle" style="font-size: 12px; color: #6B7280; margin-top: 4px;">0 / 150 мин за неделю</div>
                     <div class="menu-subtitle" id="activity-menu-note" style="font-size: 11px; color: #9CA3AF; margin-top: 2px;">Рекомендованный минимум для здоровья</div>
                 </div>
-                <div class="menu-card" onclick="showSection('problems')">
-                    <div class="menu-icon">💡</div>
-                    <div class="menu-title">Частые проблемы</div>
-                </div>
+                <!-- (removed) Частые проблемы -->
                 <div class="menu-card" onclick="showSection('sleep')">
                     <div class="menu-icon">😴</div>
                     <div class="menu-title">Сон</div>
@@ -1722,16 +1773,13 @@
                     <div id="water-progress-text" style="font-size: 12px; color: #6B7280; margin-top: 4px;">0.0 л / 2.5 л</div>
                     <div class="water-progress">
                         <div class="water-progress-fill"></div>
-                    </div>
+                </div>
                 </div>
                 <div class="menu-card" onclick="resetDailyProgress()" style="display:none;">
                     <div class="menu-icon">🔄</div>
                     <div class="menu-title">Сбросить день</div>
                 </div>
-                <div class="menu-card" onclick="resetAllData()">
-                    <div class="menu-icon">🏠</div>
-                    <div class="menu-title">Начать сначала</div>
-                </div>
+                <!-- (removed) Начать сначала -->
             </main>
 
             <!-- Daily Summary -->
@@ -1752,11 +1800,14 @@
             <div id="ai-food-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="ai-food-modal-title" onclick="closeAiFoodModal(event)">
                 <div class="modal-card">
                     <div class="modal-title" id="ai-food-modal-title">ИИ-анализ блюда</div>
-                    <ul class="modal-list">
-                        <li>Приложение скроется и вы вернетесь к чату ТГ-бота.</li>
-                        <li>Нажмите скрепку 📎 → Фото → отправьте блюдо.</li>
-                        <li>ИИ пришлёт разбор: ккал / БЖУ / Вывод + совет.</li>
-                        <li>Фото лучше делать сверху, при хорошем свете, без лишнего фона.</li>
+                    <p style="color:#2A2A2A; line-height: 1.7; margin: 0 0 12px 0;">
+                        Откроем чат с ИИ-помощником. Отправьте туда фото блюда — и получите разбор: калории, БЖУ и совет.
+                    </p>
+                    <div style="color:#2A2A2A; line-height: 1.7; margin: 0 0 8px 0; font-weight: 700;">Как сделать фото:</div>
+                    <ul class="modal-list" style="margin-top: 0;">
+                        <li>лучше сверху</li>
+                        <li>при хорошем свете</li>
+                        <li>без лишнего фона</li>
                     </ul>
                     <div class="modal-actions">
                         <button class="btn btn-primary" type="button" onclick="goToAiFoodChat()">Перейти в чат и отправить фото</button>
@@ -2938,6 +2989,15 @@
             } catch (e) {
                 try { alert(String(message || 'Ошибка запуска')); } catch (_) {}
             }
+        }
+
+        function hideLoadingScreen() {
+            const el = document.getElementById('loading-screen');
+            if (!el) return;
+            el.classList.add('fade-out');
+            setTimeout(() => {
+                try { el.remove(); } catch (e) { el.style.display = 'none'; }
+            }, 280);
         }
 
         // Глобальная защита от «белого экрана» (особенно на Telegram Desktop/macOS)
@@ -4215,6 +4275,9 @@
             updateSelfRegulationProgress();
             // Обновляем подзаголовок активности
             updateActivityMenuSubtitle();
+
+            // UI готов — скрываем загрузочный экран
+            hideLoadingScreen();
         }
 
         async function checkOnboardingStatus(userId) {
@@ -7806,14 +7869,9 @@
                 const msg = (e && e.message) ? e.message : 'Не удалось запустить приложение';
                 const details = (e && e.stack) ? e.stack : String(e || '');
                 showFatalError(msg, details);
+                hideLoadingScreen();
             }
         })();
     </script>
 </body>
 </html>
-
-
-
-
-
-
